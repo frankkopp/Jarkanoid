@@ -1,0 +1,8 @@
+.root {
+	-fx-background-image: url("../images/background.jpg");
+	-fx-background-color: #000000;
+}
+
+Text {
+	-fx-font-size: 50;
+}
