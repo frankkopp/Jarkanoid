@@ -1,11 +1,115 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.effect.Reflection?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Text?>
-
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" stylesheets="@../css/breakout.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Text layoutX="337.0" layoutY="318.0" strokeType="OUTSIDE" strokeWidth="0.0" text="TEST" />
+      <VBox layoutX="272.0" layoutY="137.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <GridPane maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" prefWidth="800.0">
+              <columnConstraints>
+                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Button fx:id="pauseButton" mnemonicParsing="false" text="Play" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets />
+                     </GridPane.margin>
+                     <styleClass>
+                        <String fx:value="play" />
+                        <String fx:value="button" />
+                     </styleClass>
+                  </Button>
+                  <Button fx:id="soundButton" mnemonicParsing="false" text="Sound Off" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets />
+                     </GridPane.margin>
+                     <styleClass>
+                        <String fx:value="sound" />
+                        <String fx:value="button" />
+                     </styleClass>
+                  </Button>
+               </children>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </GridPane>
+            <GridPane prefHeight="55.0" prefWidth="800.0">
+              <columnConstraints>
+                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Text fx:id="levelLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="Level 1" wrappingWidth="223.1171875">
+                     <styleClass>
+                        <String fx:value="info" />
+                        <String fx:value="level" />
+                     </styleClass>
+                  </Text>
+                  <Text fx:id="livesLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="5" textAlignment="CENTER" wrappingWidth="274.74609375" GridPane.columnIndex="1">
+                     <styleClass>
+                        <String fx:value="info" />
+                        <String fx:value="lives" />
+                     </styleClass>
+                  </Text>
+                  <Text fx:id="pointsLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="0000" textAlignment="RIGHT" wrappingWidth="211.9765625" GridPane.columnIndex="2">
+                     <styleClass>
+                        <String fx:value="info" />
+                        <String fx:value="score" />
+                     </styleClass>
+                  </Text>
+               </children>
+            </GridPane>
+            <AnchorPane VBox.vgrow="ALWAYS">
+               <children>
+                  <Rectangle fx:id="ceilingWall" arcHeight="5.0" arcWidth="5.0" height="10.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="800.0">
+                     <styleClass>
+                        <String fx:value="wall" />
+                        <String fx:value="ceiling" />
+                     </styleClass>
+                  </Rectangle>
+                  <Rectangle fx:id="leftWall" arcHeight="5.0" arcWidth="5.0" height="520.0" stroke="#1101a1" strokeType="INSIDE" strokeWidth="0.0" width="10.0">
+                     <styleClass>
+                        <String fx:value="wall" />
+                        <String fx:value="left" />
+                     </styleClass>
+                  </Rectangle>
+                  <Rectangle fx:id="rightWall" arcHeight="5.0" arcWidth="5.0" height="520.0" layoutX="790.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="10.0">
+                     <styleClass>
+                        <String fx:value="wall" />
+                        <String fx:value="right" />
+                     </styleClass>
+                  </Rectangle>
+                  <Rectangle fx:id="paddle" fill="DODGERBLUE" height="20.0" layoutX="325.0" layoutY="474.0" stroke="WHITE" strokeType="INSIDE" styleClass="paddle" width="150.0">
+                     <effect>
+                        <Reflection />
+                     </effect>
+                  </Rectangle>
+               </children>
+            </AnchorPane>
+         </children>
+      </VBox>
    </children>
 </AnchorPane>
