@@ -25,7 +25,13 @@ package fko.breakout.model;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanWrapper;
+import javafx.beans.property.ReadOnlyIntegerProperty;
+import javafx.beans.property.ReadOnlyIntegerWrapper;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.util.Duration;
 
@@ -36,9 +42,19 @@ import javafx.util.Duration;
  */
 public class BreakOutModel {
 
-	private static final double PADDLE_INITIAL_SPEED = 60.0; // framerate for paddle movements
+	private static final int START_LIVES = 5;
+	private static final int START_LEVEL = 1;
+
+	private static final double PADDLE_INITIAL_FRAMERATE = 60.0; // Framerate for paddle movements
 	private static final Double PADDLE_MOVE_STEPS = 5.0; // steps per animation cycle
-	
+
+	private static final int BALL_INITIAL_Y = 260;
+	private static final int BALL_INITIAL_X = 390;
+	private static final double BALL_INITIAL_FRAMERATE = 60.0;  // Framerate for ball movements
+	private static final double BALL_INITIAL_SPEED = 5.0; // Absolute speed of ball - 
+	// when vertical equals px in y
+	// when horizontal equals px in x
+
 	/* 
 	 * These valued determine the size and dimension of elements in Breakout.
 	 * In normal MVC the View would use them to build the View elements. As we
@@ -46,13 +62,13 @@ public class BreakOutModel {
 	 * Therefore we need to duplicate the in den model anyway and make sure they stay
 	 * synchronized. 
 	 */
-	
+
 	// Playfield dimensions
 	private DoubleProperty playfieldWidth = new SimpleDoubleProperty(780); // see FXML 800 - 2 * 10 Walls
 	private DoubleProperty playfieldHeight = new SimpleDoubleProperty(510); // see FXML 520 - 1 * 10 Wall
 	public DoubleProperty playfieldWidthProperty() {	return playfieldWidth; }
 	public DoubleProperty playfieldHeightProperty() { return playfieldHeight; }
-	
+
 	// Paddle dimensions and position
 	private DoubleProperty paddleWidth = new SimpleDoubleProperty(150); // see FXML
 	private DoubleProperty paddleHeight = new SimpleDoubleProperty(20); // see FXML
@@ -62,36 +78,115 @@ public class BreakOutModel {
 	public DoubleProperty paddleWidthProperty() { return paddleWidth; }
 	public DoubleProperty paddleXProperty() { return paddleX; }
 	public DoubleProperty paddleYProperty() { return paddleY; }
-	
+
 	// Ball dimensions and position
 	private DoubleProperty ballRadius = new SimpleDoubleProperty(8); // see FXML
-	private DoubleProperty ballCenterX = new SimpleDoubleProperty(390); // see FXML
-	private DoubleProperty ballCenterY = new SimpleDoubleProperty(260); // see FXML
+	private DoubleProperty ballCenterX = new SimpleDoubleProperty(BALL_INITIAL_X); // see FXML
+	private DoubleProperty ballCenterY = new SimpleDoubleProperty(BALL_INITIAL_Y); // see FXML
 	public DoubleProperty ballRadiusProperty() { return ballRadius; }
 	public DoubleProperty ballCenterXProperty() { return ballCenterX; }
 	public DoubleProperty ballCenterYProperty() { return ballCenterY; }
-	
+
+	// game status
+	private ReadOnlyBooleanWrapper isPlaying = new ReadOnlyBooleanWrapper(false);
+	public ReadOnlyBooleanProperty isPlayingProperty() { return isPlaying.getReadOnlyProperty(); }
+	private ReadOnlyBooleanWrapper isPaused = new ReadOnlyBooleanWrapper(false);
+	public ReadOnlyBooleanProperty isPausedProperty() { return isPaused.getReadOnlyProperty(); }
+	private ReadOnlyBooleanWrapper gameOver = new ReadOnlyBooleanWrapper(false);
+	public ReadOnlyBooleanProperty gameOverProperty() { return gameOver.getReadOnlyProperty(); }
+
+	// game statistics
+	private ReadOnlyIntegerWrapper currentLevel = new ReadOnlyIntegerWrapper(START_LEVEL);
+	public ReadOnlyIntegerProperty currentLevelProperty() { return currentLevel.getReadOnlyProperty(); };
+	private ReadOnlyIntegerWrapper currentRemainingLives = new ReadOnlyIntegerWrapper(START_LIVES);
+	public ReadOnlyIntegerProperty currentRemainingLivesProperty() { return currentRemainingLives.getReadOnlyProperty(); };
+	private ReadOnlyIntegerWrapper currentScore = new ReadOnlyIntegerWrapper(0);
+	public ReadOnlyIntegerProperty currentScoreProperty() { return currentScore.getReadOnlyProperty(); };
+
+	// options
+	private BooleanProperty isSoundOn = new SimpleBooleanProperty(false);
+	public BooleanProperty isSoundOnProperty() { return isSoundOn; }
+
 	// animations
 	private Timeline paddleMovementTimeline = new Timeline();
 	private Timeline ballMovementTimeline = new Timeline();;
-	
+
 	// called when key is pressed/released to indicate paddle movement to movement animation
 	private boolean paddleLeft;
 	private boolean paddleRight;
+
 	public void setPaddleLeft(boolean b) { paddleLeft = b; }
 	public void setPaddleRight(boolean b) { paddleRight = b; }
-	
+
+	// ball speeds in each direction
+	private double vX = 1;
+	private double vY = BALL_INITIAL_SPEED;
+
+	/**
+	 * Constructor
+	 */
 	public BreakOutModel() {
-		
+
 		// start the paddle movements
 		paddleMovementTimeline.setCycleCount(Timeline.INDEFINITE);
 		KeyFrame movePaddle = 
-				new KeyFrame(Duration.seconds(1/PADDLE_INITIAL_SPEED), e -> { movePaddles();	});
+				new KeyFrame(Duration.seconds(1/PADDLE_INITIAL_FRAMERATE), e -> { movePaddles();	});
 		paddleMovementTimeline.getKeyFrames().add(movePaddle);
 		paddleMovementTimeline.play();
+
+		// prepare ball movements (will be start in startGame())
+		ballMovementTimeline.setCycleCount(Timeline.INDEFINITE);
+		KeyFrame moveBall = 
+				new KeyFrame(Duration.seconds(1/BALL_INITIAL_FRAMERATE), e -> {	moveBall();	});
+		ballMovementTimeline.getKeyFrames().add(moveBall);
+
+	}
+
+	/**
+	 * Called by the <code>ballMovementTimeline</code> animation event to move the ball.
+	 */
+	private void moveBall() {
+		ballCenterX.setValue(ballCenterX.get() + vX);
+		ballCenterY.setValue(ballCenterY.get() + vY);
+		checkCollision();
+	}
+
+	/**
+	 * Checks if the ball has hit a wall, the paddle, a block or has left 
+	 * through the bottom. Calculates new speeds for each direction or calls
+	 * <code>ballLost()</code> when ball has left through bottom.
+	 */
+	private void checkCollision() {
+		// hit wall left or right
+		if (ballCenterX.get() - ballRadius.get() <= 0 // left
+				|| ballCenterX.get() + ballRadius.get() >= playfieldWidth.get()) { // right
+			vX *= -1;
+		}
+
+		// hit wall top
+		if (ballCenterY.get() - ballRadius.get() <= 0) { // left
+			vY *= -1;
+		}
+
+		// lost through bottom
+		if (ballCenterY.get() - ballRadius.get() >= playfieldHeight.get()) { // left
+			vY *= -1;
+			if (decreaseRemainingLives() < 0) {
+				currentRemainingLives.set(0);
+				gameOver();
+			};
+		}
+		
+		// hit paddle
+
 	
 	}
 
+	private void gameOver() {
+		stopPlaying();
+		gameOver.set(true);
+	}
+	
 	/**
 	 * Called by the <code>paddleMovementTimeline<code> animation event to move the paddles.
 	 */
@@ -105,7 +200,7 @@ public class BreakOutModel {
 			paddleX.setValue(paddleX.getValue() + PADDLE_MOVE_STEPS);
 		}
 	}
-	
+
 	/**
 	 * Called from controller by mouse move events. Moves the paddle according to the mouse's x position
 	 * when mouse is in window. The paddle's center will be set to the current mouse position. 
@@ -123,4 +218,59 @@ public class BreakOutModel {
 		}
 	}
 
+	public void startPlaying() {
+		isPlaying.set(true);
+		isPaused.set(false);
+		gameOver.set(false);
+
+		// initialize new game
+		currentLevel.set(START_LEVEL);
+		currentRemainingLives.set(START_LIVES);
+		currentScore.set(0);
+		ballCenterX.set(BALL_INITIAL_X);
+		ballCenterY.set(BALL_INITIAL_Y);
+
+		// start the ball movement
+		ballMovementTimeline.play();
+
+	}
+
+	public void stopPlaying() {
+		isPlaying.set(false);
+		isPaused.set(false);
+		gameOver.set(false);
+		// stop ball movement
+		ballMovementTimeline.stop();
+	}
+
+	public boolean isPlaying() {
+		return isPlaying.get();
+	}
+
+	public void pausePlaying() {
+		if (!isPlaying()) return; // ignore if not playing
+		isPaused.set(true);
+		ballMovementTimeline.pause();
+	}
+
+	public void resumePlaying() {
+		if (!isPlaying() && !isPaused()) return; // ignore if not playing
+		isPaused.set(false);
+		ballMovementTimeline.play();
+
+	}
+
+	public boolean isPaused() {
+		return isPaused.get();
+	}
+
+	private int increaseScore(int i) { 
+		currentScore.set(currentScore.get()+i); 
+		return currentScore.get();
+	};
+	
+	private int decreaseRemainingLives() {
+		currentRemainingLives.set(currentRemainingLives.get() - 1);
+		return currentRemainingLives.get();
+	}
 }

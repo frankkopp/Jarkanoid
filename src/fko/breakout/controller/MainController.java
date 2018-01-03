@@ -27,6 +27,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import fko.breakout.model.BreakOutModel;
+import fko.breakout.view.MainView;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -45,6 +47,7 @@ import javafx.scene.text.Text;
 public class MainController implements Initializable {
 
 	private BreakOutModel model;
+	private MainView view;
 
 	/**
 	 * @param model
@@ -58,53 +61,115 @@ public class MainController implements Initializable {
 	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-
-		System.out.println("HELLO from CONTROLLER");
 		
 	}
 
 	/**
+	 * @param view 
 	 * @param model
 	 */
-	public void bindModelToView() {
+	public void bindModelToView(MainView view) {
+		this.view = view;
+		
+		// add keyboard handlers
+		view.asParent().getScene().setOnKeyPressed(event -> keyPressedAction(event));
+		view.asParent().getScene().setOnKeyReleased(event -> keyReleasedAction(event));
+		
+		// add mouse handlers
+		view.asParent().getScene().setOnMouseMoved(event -> mouseMovedAction(event));
+		
 		// playfield
 		playfieldPane.prefWidthProperty().bind(model.playfieldWidthProperty());
 		playfieldPane.prefHeightProperty().bind(model.playfieldHeightProperty());
+		
 		// paddle
-		System.out.println(model.paddleWidthProperty().get());
-		System.out.println(paddle.widthProperty().get());
 		paddle.widthProperty().bind(model.paddleWidthProperty());
 		paddle.heightProperty().bind(model.paddleHeightProperty());
+		paddle.xProperty().bind(model.paddleXProperty());
+		paddle.yProperty().bind(model.paddleYProperty());
 		
-		System.out.println(model.paddleXProperty().get()+":"+model.paddleYProperty().get());
-		System.out.println(paddle.xProperty().get()+":"+paddle.yProperty().get());
-		System.out.println(paddle.translateXProperty().get()+":"+paddle.translateYProperty().get());
-		System.out.println(paddle.layoutXProperty().get()+":"+paddle.layoutYProperty().get());
+		// ball
+		ball.radiusProperty().bind(model.ballRadiusProperty());
+		ball.centerXProperty().bind(model.ballCenterXProperty());
+		ball.centerYProperty().bind(model.ballCenterYProperty());
 		
-		paddle.layoutXProperty().bind(model.paddleXProperty());
-		paddle.layoutYProperty().bind(model.paddleYProperty());
+		// startstopButton text
+		model.isPlayingProperty().addListener((v, o, n) -> {
+			if (n == true) {
+				startStopButton.setText("Stop");
+			} else {
+				startStopButton.setText("Play");
+			}
+		});
 		
-//		// ball
-//		ball.radiusProperty().bind(model.ballRadiusProperty());
-//		ball.centerXProperty().bind(model.ballCenterXProperty());
-//		ball.centerYProperty().bind(model.ballCenterYProperty());
+		// pauseResumeButton text
+		model.isPausedProperty().addListener((v, o, n) -> {
+			if (n == true) {
+				pauseResumeButton.setText("Resume");
+			} else {
+				pauseResumeButton.setText("Pause");
+			}
+		});
+		
+		// pauseResumeButton text
+		model.isSoundOnProperty().addListener((v, o, n) -> {
+			if (n == true) {
+				soundButton.setText("Sound Off");
+			} else {
+				soundButton.setText("Sound On");
+			}
+		});
+		
+		// Level text
+		levelLabel.textProperty().bind(new SimpleStringProperty("Level ").concat(model.currentLevelProperty()));
+		// remaining lives text
+		livesLabel.textProperty().bind(model.currentRemainingLivesProperty().asString());
+		// score text
+		pointsLabel.textProperty().bind(model.currentScoreProperty().asString("%0,6d"));
+		
+		// game over splash text
+		gameOverSplash.visibleProperty().bind(model.gameOverProperty());
 		
 	}
 	
-	/**
-	 * @param b
-	 */
+	private void keyPressedAction(KeyEvent event) {
+		System.out.println("Key Pressed: "+event);
+		switch (event.getCode()) {
+		// game control
+		case SPACE: 		startStopButtonAction(new ActionEvent()); break;
+		case P: 			pauseResumeButtonAction(new ActionEvent());; break;
+		// paddle control
+		case LEFT:		onPaddleLeftAction(true); break;
+		case RIGHT:		onPaddleRightAction(true); break;
+		default:
+		}
+	}
+
+	private void keyReleasedAction(KeyEvent event) {
+		System.out.println("Key Released: "+event);
+		switch (event.getCode()) {
+		// game control
+		case SPACE: 		break;
+		case P: 			break;
+		// paddle control
+		case LEFT: 		onPaddleLeftAction(false); break;
+		case RIGHT:		onPaddleRightAction(false); break;
+		default:
+		}
+	}
+
 	private void onPaddleLeftAction(boolean b) {
 		if (b) model.setPaddleLeft(true);
 		else model.setPaddleLeft(false);	
 	}
-	
-	/**
-	 * @param b
-	 */
+
 	private void onPaddleRightAction(boolean b) {
 		if (b) model.setPaddleRight(true);
 		else model.setPaddleRight(false);
+	}
+
+	private void mouseMovedAction(MouseEvent event) {
+		model.setMouseXPosition(event.getX());
 	}
 
 	/* ********************************************************
@@ -146,52 +211,9 @@ public class MainController implements Initializable {
 
 	@FXML
 	private Rectangle paddle;
-
+	
 	@FXML
-	void keyPressedAction(KeyEvent event) {
-		System.out.println("Key Pressed: "+event);
-		switch (event.getCode()) {
-		// game control
-		case SPACE: 		; break;
-		case ESCAPE:		; break;
-		case P: 			; break;
-		// paddle control
-		case LEFT:		onPaddleLeftAction(true); break;
-		case RIGHT:		onPaddleRightAction(true); break;
-		default:
-		}
-		
-	}
-
-	@FXML
-	void keyReleasedAction(KeyEvent event) {
-		System.out.println("Key Released: "+event);
-		switch (event.getCode()) {
-		// game control
-		case SPACE: 		; break;
-		case ESCAPE:		; break;
-		case P: 			; break;
-		// paddle control
-		case LEFT: 		onPaddleLeftAction(false); break;
-		case RIGHT:		onPaddleRightAction(false); break;
-		default:
-		}
-	}
-
-	@FXML
-	void mouseEnteredAction(MouseEvent event) {
-		//System.out.println("Mouse Entered: "+event);
-	}
-
-	@FXML
-	void mouseExitedAction(MouseEvent event) {
-		//System.out.println("Mouse Exited: "+event);
-	}
-
-	@FXML
-	void mouseMovedAction(MouseEvent event) {
-		model.setMouseXPosition(event.getX());
-	}
+    private Text gameOverSplash;
 
 	@FXML
 	void paddleMouseClickAction(MouseEvent event) {
@@ -206,16 +228,33 @@ public class MainController implements Initializable {
 	@FXML
 	void startStopButtonAction(ActionEvent event) {
 		System.out.println("Button StartStop: "+event);
+		if (model.isPlaying()) {
+			model.stopPlaying();
+		} else {
+			model.startPlaying();
+		}
 	}
 	
 	@FXML
     void pauseResumeButtonAction(ActionEvent event) {
 		System.out.println("Button PauseResume: "+event);
+		if (model.isPlaying()) {
+			if (model.isPaused()) {
+				model.resumePlaying();
+			} else {
+				model.pausePlaying();
+			}
+		}
     }
 
 	@FXML
 	void soundButtonAction(ActionEvent event) {
 		System.out.println("Button Sound: "+event);
+			if (model.isSoundOnProperty().get()) {
+				model.isSoundOnProperty().set(false);
+			} else {
+				model.isSoundOnProperty().set(true);
+			}
 	}
 
 
