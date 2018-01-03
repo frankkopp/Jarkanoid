@@ -29,6 +29,7 @@ import fko.breakout.controller.MainController;
 import fko.breakout.model.BreakOutModel;
 import fko.breakout.view.MainView;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -61,6 +62,13 @@ public class BreakOut extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.centerOnScreen();
 		primaryStage.setResizable(false);
+
+		// closeAction - close through close action
+		primaryStage.setOnCloseRequest(event -> {
+			Platform.exit();
+			System.exit(0);
+			event.consume();
+		});
 
 		primaryStage.show();
 
