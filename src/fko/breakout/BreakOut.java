@@ -23,11 +23,14 @@ SOFTWARE.
  */
 package fko.breakout;
 
+import java.net.URL;
+
 import fko.breakout.controller.MainController;
 import fko.breakout.model.BreakOutModel;
 import fko.breakout.view.MainView;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 /**
@@ -52,15 +55,32 @@ public class BreakOut extends Application {
 		MainView view = new MainView(model, controller); 
 
 		Scene scene = new Scene(view.asParent());
-		
+
 		controller.bindModelToView(view);
-		
+
 		primaryStage.setScene(scene);
 		primaryStage.centerOnScreen();
 		primaryStage.setResizable(false);
-		
+
 		primaryStage.show();
 
+	}
+
+	/**
+	 * @see javafx.application.Application#init()
+	 */
+	@Override
+	public void init() throws Exception {
+		super.init();
+		final URL urlResource = BreakOut.class.getResource("/fonts/AstronomicMono.otf");
+		if (urlResource == null) {
+			System.err.println("Font could not be found!");
+		} else {
+			final String url = urlResource.toExternalForm();
+			if (Font.loadFont(url, 40) == null) {
+				System.err.println("Font could not be loaded!");
+			};
+		}
 	}
 
 	/**

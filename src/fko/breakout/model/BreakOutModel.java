@@ -44,14 +44,17 @@ public class BreakOutModel {
 
 	private static final int START_LIVES = 5;
 	private static final int START_LEVEL = 1;
+	private static final long SLEEP_BETWEEN_LIVES = 500;
 
 	private static final double PADDLE_INITIAL_FRAMERATE = 60.0; // Framerate for paddle movements
 	private static final Double PADDLE_MOVE_STEPS = 5.0; // steps per animation cycle
 
-	private static final int BALL_INITIAL_Y = 260;
+	private static final double BALL_MAX_3ANGLE = 60;
 	private static final int BALL_INITIAL_X = 390;
+	private static final int BALL_INITIAL_Y = 450;
 	private static final double BALL_INITIAL_FRAMERATE = 60.0;  // Framerate for ball movements
 	private static final double BALL_INITIAL_SPEED = 5.0; // Absolute speed of ball - 
+	
 	// when vertical equals px in y
 	// when horizontal equals px in x
 
@@ -65,7 +68,7 @@ public class BreakOutModel {
 
 	// Playfield dimensions
 	private DoubleProperty playfieldWidth = new SimpleDoubleProperty(780); // see FXML 800 - 2 * 10 Walls
-	private DoubleProperty playfieldHeight = new SimpleDoubleProperty(510); // see FXML 520 - 1 * 10 Wall
+	private DoubleProperty playfieldHeight = new SimpleDoubleProperty(710); // see FXML 520 - 1 * 10 Wall
 	public DoubleProperty playfieldWidthProperty() {	return playfieldWidth; }
 	public DoubleProperty playfieldHeightProperty() { return playfieldHeight; }
 
@@ -73,7 +76,7 @@ public class BreakOutModel {
 	private DoubleProperty paddleWidth = new SimpleDoubleProperty(150); // see FXML
 	private DoubleProperty paddleHeight = new SimpleDoubleProperty(20); // see FXML
 	private DoubleProperty paddleX = new SimpleDoubleProperty(315); // see FXML
-	private DoubleProperty paddleY = new SimpleDoubleProperty(475); // see FXML
+	private DoubleProperty paddleY = new SimpleDoubleProperty(670); // see FXML
 	public DoubleProperty paddleHeightProperty() { return paddleHeight; }
 	public DoubleProperty paddleWidthProperty() { return paddleWidth; }
 	public DoubleProperty paddleXProperty() { return paddleX; }
@@ -119,8 +122,8 @@ public class BreakOutModel {
 	public void setPaddleRight(boolean b) { paddleRight = b; }
 
 	// ball speeds in each direction
-	private double vX = 1;
-	private double vY = BALL_INITIAL_SPEED;
+	private double ball_vX = 1;
+	private double ball_vY = BALL_INITIAL_SPEED;
 
 	/**
 	 * Constructor
@@ -146,8 +149,8 @@ public class BreakOutModel {
 	 * Called by the <code>ballMovementTimeline</code> animation event to move the ball.
 	 */
 	private void moveBall() {
-		ballCenterX.setValue(ballCenterX.get() + vX);
-		ballCenterY.setValue(ballCenterY.get() + vY);
+		ballCenterX.setValue(ballCenterX.get() + ball_vX);
+		ballCenterY.setValue(ballCenterY.get() + ball_vY);
 		checkCollision();
 	}
 
@@ -157,29 +160,62 @@ public class BreakOutModel {
 	 * <code>ballLost()</code> when ball has left through bottom.
 	 */
 	private void checkCollision() {
+		// convenience variables 
+		final double ballUpperBound = ballCenterY.get() - ballRadius.get();
+		final double ballLowerBound = ballCenterY.get() + ballRadius.get();
+		final double ballLeftBound = ballCenterX.get() - ballRadius.get();
+		final double ballRightBound = ballCenterX.get() + ballRadius.get();
+		
+		final double paddleUpperBound = paddleY.get();
+		final double paddleLowerBound = paddleY.get() + paddleHeight.get();
+		final double paddleLeftBound = paddleX.get();
+		final double paddleRightBound = paddleX.get() + paddleWidth.get();
+		
 		// hit wall left or right
-		if (ballCenterX.get() - ballRadius.get() <= 0 // left
+		if (ballLeftBound <= 0 // left
 				|| ballCenterX.get() + ballRadius.get() >= playfieldWidth.get()) { // right
-			vX *= -1;
+			ball_vX *= -1;
 		}
 
 		// hit wall top
-		if (ballCenterY.get() - ballRadius.get() <= 0) { // left
-			vY *= -1;
+		if (ballUpperBound <= 0) {
+			ball_vY *= -1;
 		}
 
 		// lost through bottom
-		if (ballCenterY.get() - ballRadius.get() >= playfieldHeight.get()) { // left
-			vY *= -1;
+		if (ballUpperBound >= playfieldHeight.get()) { // left
 			if (decreaseRemainingLives() < 0) {
 				currentRemainingLives.set(0);
 				gameOver();
+				return;
 			};
+			// pause animation
+			ballMovementTimeline.pause();
+			// reset the ball position and speed
+			resetBall();
+			// pause for some time
+			try { Thread.sleep(SLEEP_BETWEEN_LIVES);	} catch (InterruptedException e) {}
+			// restart ball movement
+			ballMovementTimeline.play();
 		}
 		
 		// hit paddle
-
-	
+		if (ballLowerBound >= paddleUpperBound && ballLowerBound <= paddleLowerBound) {
+			if (ballRightBound > paddleLeftBound && ballLeftBound < paddleRightBound) {
+				// HIT
+				increaseScore(1); // TODO: just for DEBUG
+				
+				// determine where the ball hit the paddle
+				double hitPointAbsolute = ballCenterX.get() - paddleLeftBound;
+				// normalize value to -1 (left), 0 (center), +1 (right)
+				double hitPointRelative = 2 * ((hitPointAbsolute / paddleWidth.get()) - 0.5);
+				// determine new angle
+				double newAngle = hitPointRelative * BALL_MAX_3ANGLE;
+				
+				ball_vX = Math.sin(Math.toRadians(newAngle)) * BALL_INITIAL_SPEED;
+				ball_vY = -Math.cos(Math.toRadians(newAngle)) * BALL_INITIAL_SPEED;
+			}
+		}
 	}
 
 	private void gameOver() {
@@ -201,6 +237,18 @@ public class BreakOutModel {
 		}
 	}
 
+	/**
+	 * 
+	 */
+	private void resetBall() {
+		// reset ball speed and direction (straight down)
+		ball_vX = 0;
+		ball_vY = BALL_INITIAL_SPEED;
+		
+		// reset ball position
+		ballCenterX.set(BALL_INITIAL_X);
+		ballCenterY.set(BALL_INITIAL_Y);
+	}
 	/**
 	 * Called from controller by mouse move events. Moves the paddle according to the mouse's x position
 	 * when mouse is in window. The paddle's center will be set to the current mouse position. 
@@ -227,14 +275,14 @@ public class BreakOutModel {
 		currentLevel.set(START_LEVEL);
 		currentRemainingLives.set(START_LIVES);
 		currentScore.set(0);
-		ballCenterX.set(BALL_INITIAL_X);
-		ballCenterY.set(BALL_INITIAL_Y);
+
+		// reset the ball position and speed
+		resetBall();
 
 		// start the ball movement
 		ballMovementTimeline.play();
 
 	}
-
 	public void stopPlaying() {
 		isPlaying.set(false);
 		isPaused.set(false);

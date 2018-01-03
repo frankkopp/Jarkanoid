@@ -61,7 +61,7 @@ public class MainController implements Initializable {
 	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		
+
 	}
 
 	/**
@@ -70,29 +70,29 @@ public class MainController implements Initializable {
 	 */
 	public void bindModelToView(MainView view) {
 		this.view = view;
-		
+
 		// add keyboard handlers
 		view.asParent().getScene().setOnKeyPressed(event -> keyPressedAction(event));
 		view.asParent().getScene().setOnKeyReleased(event -> keyReleasedAction(event));
-		
+
 		// add mouse handlers
 		view.asParent().getScene().setOnMouseMoved(event -> mouseMovedAction(event));
-		
+
 		// playfield
 		playfieldPane.prefWidthProperty().bind(model.playfieldWidthProperty());
 		playfieldPane.prefHeightProperty().bind(model.playfieldHeightProperty());
-		
+
 		// paddle
 		paddle.widthProperty().bind(model.paddleWidthProperty());
 		paddle.heightProperty().bind(model.paddleHeightProperty());
 		paddle.xProperty().bind(model.paddleXProperty());
 		paddle.yProperty().bind(model.paddleYProperty());
-		
+
 		// ball
 		ball.radiusProperty().bind(model.ballRadiusProperty());
 		ball.centerXProperty().bind(model.ballCenterXProperty());
 		ball.centerYProperty().bind(model.ballCenterYProperty());
-		
+
 		// startstopButton text
 		model.isPlayingProperty().addListener((v, o, n) -> {
 			if (n == true) {
@@ -101,7 +101,7 @@ public class MainController implements Initializable {
 				startStopButton.setText("Play");
 			}
 		});
-		
+
 		// pauseResumeButton text
 		model.isPausedProperty().addListener((v, o, n) -> {
 			if (n == true) {
@@ -110,7 +110,7 @@ public class MainController implements Initializable {
 				pauseResumeButton.setText("Pause");
 			}
 		});
-		
+
 		// pauseResumeButton text
 		model.isSoundOnProperty().addListener((v, o, n) -> {
 			if (n == true) {
@@ -119,21 +119,20 @@ public class MainController implements Initializable {
 				soundButton.setText("Sound On");
 			}
 		});
-		
+
 		// Level text
 		levelLabel.textProperty().bind(new SimpleStringProperty("Level ").concat(model.currentLevelProperty()));
 		// remaining lives text
 		livesLabel.textProperty().bind(model.currentRemainingLivesProperty().asString());
 		// score text
 		pointsLabel.textProperty().bind(model.currentScoreProperty().asString("%0,6d"));
-		
+
 		// game over splash text
 		gameOverSplash.visibleProperty().bind(model.gameOverProperty());
-		
+
 	}
-	
+
 	private void keyPressedAction(KeyEvent event) {
-		System.out.println("Key Pressed: "+event);
 		switch (event.getCode()) {
 		// game control
 		case SPACE: 		startStopButtonAction(new ActionEvent()); break;
@@ -146,7 +145,6 @@ public class MainController implements Initializable {
 	}
 
 	private void keyReleasedAction(KeyEvent event) {
-		System.out.println("Key Released: "+event);
 		switch (event.getCode()) {
 		// game control
 		case SPACE: 		break;
@@ -196,9 +194,9 @@ public class MainController implements Initializable {
 
 	@FXML
 	private Text pointsLabel;
-	
+
 	@FXML
-    private Pane playfieldPane;
+	private Pane playfieldPane;
 
 	@FXML
 	private Rectangle ceilingWall;
@@ -211,9 +209,9 @@ public class MainController implements Initializable {
 
 	@FXML
 	private Rectangle paddle;
-	
+
 	@FXML
-    private Text gameOverSplash;
+	private Text gameOverSplash;
 
 	@FXML
 	void paddleMouseClickAction(MouseEvent event) {
@@ -227,17 +225,15 @@ public class MainController implements Initializable {
 
 	@FXML
 	void startStopButtonAction(ActionEvent event) {
-		System.out.println("Button StartStop: "+event);
 		if (model.isPlaying()) {
 			model.stopPlaying();
 		} else {
 			model.startPlaying();
 		}
 	}
-	
+
 	@FXML
-    void pauseResumeButtonAction(ActionEvent event) {
-		System.out.println("Button PauseResume: "+event);
+	void pauseResumeButtonAction(ActionEvent event) {
 		if (model.isPlaying()) {
 			if (model.isPaused()) {
 				model.resumePlaying();
@@ -245,16 +241,15 @@ public class MainController implements Initializable {
 				model.pausePlaying();
 			}
 		}
-    }
+	}
 
 	@FXML
 	void soundButtonAction(ActionEvent event) {
-		System.out.println("Button Sound: "+event);
-			if (model.isSoundOnProperty().get()) {
-				model.isSoundOnProperty().set(false);
-			} else {
-				model.isSoundOnProperty().set(true);
-			}
+		if (model.isSoundOnProperty().get()) {
+			model.isSoundOnProperty().set(false);
+		} else {
+			model.isSoundOnProperty().set(true);
+		}
 	}
 
 
