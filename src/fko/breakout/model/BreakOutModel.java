@@ -23,20 +23,20 @@ SOFTWARE.
  */
 package fko.breakout.model;
 
+import java.util.Observable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import fko.breakout.model.Sounds.Clips;
+import fko.breakout.events.GameEvent;
+import fko.breakout.events.GameEvent.GameEventType;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.util.Duration;
 
@@ -45,7 +45,7 @@ import javafx.util.Duration;
  * 02.01.2018
  * @author Frank Kopp
  */
-public class BreakOutModel {
+public class BreakOutModel extends Observable {
 
 	private static final int START_LIVES = 5;
 	private static final int START_LEVEL = 1;
@@ -111,10 +111,6 @@ public class BreakOutModel {
 	private ReadOnlyIntegerWrapper currentScore = new ReadOnlyIntegerWrapper(0);
 	public ReadOnlyIntegerProperty currentScoreProperty() { return currentScore.getReadOnlyProperty(); };
 
-	// options
-	private BooleanProperty isSoundOn = new SimpleBooleanProperty(false);
-	public BooleanProperty isSoundOnProperty() { return isSoundOn; }
-
 	// animations
 	private Timeline paddleMovementTimeline = new Timeline();
 	private Timeline ballMovementTimeline = new Timeline();;
@@ -131,9 +127,6 @@ public class BreakOutModel {
 	private double ball_vY = BALL_INITIAL_SPEED;
 	private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
-	// sounds
-	private Sounds sounds = Sounds.getInstance();
-	
 	/**
 	 * Constructor
 	 */
@@ -151,11 +144,6 @@ public class BreakOutModel {
 		KeyFrame moveBall = 
 				new KeyFrame(Duration.seconds(1/BALL_INITIAL_FRAMERATE), e -> {	moveBall();	});
 		ballMovementTimeline.getKeyFrames().add(moveBall);
-
-		isSoundOn.addListener((v,o,n) -> {
-			if (n==true) sounds.soundOn();
-			else sounds.soundOff();
-		});
 	}
 
 	/**
@@ -202,29 +190,36 @@ public class BreakOutModel {
 		if (ballLeftBound <= 0) { // left
 			ballCenterX.set(0+ballRadius.get()); // in case it was <0
 			ball_vX *= -1;
-			sounds.playClip(Clips.WALL);
+			setChanged();
 		}
 		if (ballRightBound >= playfieldWidth.get()) { // right
 			ballCenterX.set(playfieldWidth.get()-ballRadius.get()); // in case it was >playFieldWidth
 			ball_vX *= -1;
-			sounds.playClip(Clips.WALL);
+			setChanged();
 		}
 
 		// hit wall top
 		if (ballUpperBound <= 0) {
 			ball_vY *= -1;
-			sounds.playClip(Clips.WALL);
+			setChanged();
 		}
+
+		// hit wall notification
+		notifyObservers(new GameEvent(GameEventType.HIT_WALL));
 
 		// lost through bottom
 		if (ballUpperBound >= playfieldHeight.get()) {
-			sounds.playClip(Clips.BALL_LOST);
 			
 			if (decreaseRemainingLives() < 0) {
 				currentRemainingLives.set(0);
 				gameOver();
+				setChanged();
+				notifyObservers(new GameEvent(GameEventType.GAME_OVER));
 				return;
 			};
+			
+			setChanged();
+			notifyObservers(new GameEvent(GameEventType.BALL_LOST));
 			
 			// pause animation
 			ballMovementTimeline.pause();
@@ -236,7 +231,7 @@ public class BreakOutModel {
 		// hit paddle
 		if (ballLowerBound >= paddleUpperBound && ballLowerBound <= paddleLowerBound) {
 			if (ballRightBound > paddleLeftBound && ballLeftBound < paddleRightBound) {
-
+				
 				increaseScore(1); // TODO: just for DEBUG
 				
 				// determine where the ball hit the paddle
@@ -249,7 +244,9 @@ public class BreakOutModel {
 				ball_vX = Math.sin(Math.toRadians(newAngle)) * BALL_INITIAL_SPEED;
 				ball_vY = -Math.cos(Math.toRadians(newAngle)) * BALL_INITIAL_SPEED;
 				
-				sounds.playClip(Clips.PADDLE);
+				setChanged();
+				notifyObservers(new GameEvent(GameEventType.HIT_PADDLE));
+				
 			}
 		}
 	}
@@ -263,7 +260,10 @@ public class BreakOutModel {
 		// reset the ball position and speed
 		resetBall();
 		// show the ball for a short time then start the animation
-		executor.schedule(() -> ballMovementTimeline.play() , SLEEP_BETWEEN_LIVES, TimeUnit.MILLISECONDS);
+		executor.schedule(() -> {
+			if (!isPlaying()) return; // maybe the game has already been stopped
+			ballMovementTimeline.play(); 
+			}, SLEEP_BETWEEN_LIVES, TimeUnit.MILLISECONDS);
 	}
 	
 	private void resetBall() {
@@ -297,14 +297,18 @@ public class BreakOutModel {
 		isPlaying.set(true);
 		isPaused.set(false);
 		gameOver.set(false);
-
+		
 		// initialize new game
 		currentLevel.set(START_LEVEL);
 		currentRemainingLives.set(START_LIVES);
 		currentScore.set(0);
+		
+		setChanged();
+		notifyObservers(new GameEvent(GameEventType.GAME_START));
 
 		// start the ball movement
 		startRound();
+		
 
 	}
 	public void stopPlaying() {

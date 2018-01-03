@@ -24,9 +24,14 @@ SOFTWARE.
 package fko.breakout.controller;
 
 import java.net.URL;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.ResourceBundle;
 
+import fko.breakout.events.GameEvent;
 import fko.breakout.model.BreakOutModel;
+import fko.breakout.model.Sounds;
+import fko.breakout.model.Sounds.Clips;
 import fko.breakout.view.MainView;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
@@ -44,10 +49,13 @@ import javafx.scene.text.Text;
  * 02.01.2018
  * @author Frank Kopp
  */
-public class MainController implements Initializable {
+public class MainController implements Initializable, Observer {
 
 	private BreakOutModel model;
 	private MainView view;
+	
+	// sounds
+	private Sounds sounds = Sounds.getInstance();
 
 	/**
 	 * @param model
@@ -70,6 +78,9 @@ public class MainController implements Initializable {
 	 */
 	public void bindModelToView(MainView view) {
 		this.view = view;
+		
+		// add controller as listener of model for events
+		model.addObserver(this);
 
 		// add keyboard handlers
 		view.asParent().getScene().setOnKeyPressed(event -> keyPressedAction(event));
@@ -111,15 +122,6 @@ public class MainController implements Initializable {
 			}
 		});
 
-		// pauseResumeButton text
-		model.isSoundOnProperty().addListener((v, o, n) -> {
-			if (n == true) {
-				soundButton.setText("Sound Off");
-			} else {
-				soundButton.setText("Sound On");
-			}
-		});
-
 		// Level text
 		levelLabel.textProperty().bind(new SimpleStringProperty("Level ").concat(model.currentLevelProperty()));
 		// remaining lives text
@@ -130,6 +132,23 @@ public class MainController implements Initializable {
 		// game over splash text
 		gameOverSplash.visibleProperty().bind(model.gameOverProperty());
 
+	}
+
+	/**
+	 * We use the Observable notification for certain events to enable animations and sound.
+	 * Most other model changes are handled through Bindings. 
+	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+	 */
+	@Override
+	public void update(Observable o, Object arg) {
+			GameEvent event = (GameEvent) arg;
+			System.out.println(event);
+			switch (event.getEventType()) {
+			case HIT_PADDLE: sounds.playClip(Clips.PADDLE); break;
+			case HIT_WALL: sounds.playClip(Clips.WALL); break;
+			case BALL_LOST: sounds.playClip(Clips.BALL_LOST); break;
+			default: 
+			}
 	}
 
 	private void keyPressedAction(KeyEvent event) {
@@ -243,10 +262,12 @@ public class MainController implements Initializable {
 
 	@FXML
 	void soundButtonAction(ActionEvent event) {
-		if (model.isSoundOnProperty().get()) {
-			model.isSoundOnProperty().set(false);
+		if (sounds.isSoundOn()) {
+			soundButton.setText("Sound On");
+			sounds.soundOff();
 		} else {
-			model.isSoundOnProperty().set(true);
+			soundButton.setText("Sound Off");
+			sounds.soundOn();
 		}
 	}
 

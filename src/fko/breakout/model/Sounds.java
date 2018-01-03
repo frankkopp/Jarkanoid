@@ -151,5 +151,6 @@ public class Sounds {
 	
 	public void soundOff() { soundOn=false; }
 	public void soundOn() {	soundOn=true; }
+	public boolean isSoundOn() { return soundOn; }
 
 }
