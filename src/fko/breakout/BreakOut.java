@@ -50,13 +50,14 @@ public class BreakOut extends Application {
 		BreakOutModel model = new BreakOutModel();
 		MainController controller = new MainController(model);
 		MainView view = new MainView(model, controller); 
-		
-		controller.bindModelToView();
 
 		Scene scene = new Scene(view.asParent());
 		
+		controller.bindModelToView(view);
+		
 		primaryStage.setScene(scene);
 		primaryStage.centerOnScreen();
+		primaryStage.setResizable(false);
 		
 		primaryStage.show();
 
