@@ -1,3 +1,8 @@
+@font-face {
+    font-family: AstronomicMono;
+    src: url('../fonts/AstronomicMono.otf');
+}
+
 .root  {
 	-fx-background-color: #000000;
 }
@@ -8,6 +13,7 @@
 
 .info {
 	-fx-font-size: 40;
+	-fx-font-family: AstronomicMono;
 }
 
 .score {

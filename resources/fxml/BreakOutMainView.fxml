@@ -15,11 +15,11 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane minHeight="-Infinity" minWidth="-Infinity" stylesheets="@../css/breakout.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane stylesheets="@../css/breakout.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <center>
-            <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" styleClass="backgroundpane">
+            <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" styleClass="backgroundpane">
                <children>
                   <GridPane maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" prefWidth="800.0">
                     <columnConstraints>
@@ -62,14 +62,14 @@
                         <Insets top="5.0" />
                      </VBox.margin>
                   </GridPane>
-                  <GridPane prefHeight="55.0" prefWidth="800.0">
+                  <GridPane alignment="BOTTOM_CENTER" prefHeight="55.0" prefWidth="800.0">
                     <columnConstraints>
                       <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                       <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                         <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
                     <rowConstraints>
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="BOTTOM" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
                         <Text fx:id="levelLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="Level 1" wrappingWidth="223.1171875">
@@ -77,6 +77,9 @@
                               <String fx:value="info" />
                               <String fx:value="level" />
                            </styleClass>
+                           <GridPane.margin>
+                              <Insets />
+                           </GridPane.margin>
                         </Text>
                         <Text fx:id="livesLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="5" textAlignment="CENTER" wrappingWidth="274.74609375" GridPane.columnIndex="1">
                            <styleClass>
@@ -92,11 +95,11 @@
                         </Text>
                      </children>
                   </GridPane>
-                  <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="520.0" prefWidth="800.0" VBox.vgrow="ALWAYS">
+                  <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" VBox.vgrow="ALWAYS">
                      <children>
-                        <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="520.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <left>
-                              <Rectangle fx:id="leftWall" arcHeight="5.0" arcWidth="5.0" height="520.0" stroke="#1101a1" strokeType="INSIDE" strokeWidth="0.0" width="10.0" BorderPane.alignment="CENTER">
+                              <Rectangle fx:id="leftWall" arcHeight="5.0" arcWidth="5.0" height="720.0" stroke="#1101a1" strokeType="INSIDE" strokeWidth="0.0" width="10.0" BorderPane.alignment="CENTER">
                                  <styleClass>
                                     <String fx:value="wall" />
                                     <String fx:value="left" />
@@ -112,7 +115,7 @@
                               </Rectangle>
                            </top>
                            <right>
-                              <Rectangle fx:id="rightWall" arcHeight="5.0" arcWidth="5.0" height="520.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="10.0" BorderPane.alignment="CENTER">
+                              <Rectangle fx:id="rightWall" arcHeight="5.0" arcWidth="5.0" height="720.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="10.0" BorderPane.alignment="CENTER">
                                  <styleClass>
                                     <String fx:value="wall" />
                                     <String fx:value="right" />
@@ -120,14 +123,14 @@
                               </Rectangle>
                            </right>
                            <center>
-                              <Pane fx:id="playfieldPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="510.0" prefWidth="780.0" BorderPane.alignment="CENTER">
+                              <Pane fx:id="playfieldPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="710.0" prefWidth="780.0" BorderPane.alignment="CENTER">
                                  <children>
-                                    <Rectangle fx:id="paddle" fill="DODGERBLUE" height="20.0" onMouseClicked="#paddleMouseClickAction" onMouseReleased="#paddleMouseReleasedAction" stroke="WHITE" strokeType="INSIDE" styleClass="paddle" width="150.0" x="315.0" y="475.0">
+                                    <Rectangle fx:id="paddle" fill="DODGERBLUE" height="20.0" onMouseClicked="#paddleMouseClickAction" onMouseReleased="#paddleMouseReleasedAction" stroke="WHITE" strokeType="INSIDE" styleClass="paddle" width="150.0" x="315.0" y="670.0">
                                        <effect>
                                           <Reflection />
                                        </effect>
                                     </Rectangle>
-                                    <Circle fx:id="ball" centerX="390.0" centerY="260.0" fill="DODGERBLUE" radius="8.0" stroke="BLACK" strokeType="INSIDE" styleClass="ball" />
+                                    <Circle fx:id="ball" centerX="390.0" centerY="450.0" fill="DODGERBLUE" radius="8.0" stroke="BLACK" strokeType="INSIDE" styleClass="ball" />
                                     <Text fx:id="gameOverSplash" fill="#ffd400" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="gameover" text="Game Over" textAlignment="CENTER" />
                                  </children>
                               </Pane>
