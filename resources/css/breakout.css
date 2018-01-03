@@ -1,10 +1,13 @@
-.root {
-	-fx-background-image: url("../images/background.jpg");
+.root  {
 	-fx-background-color: #000000;
 }
 
+.backgroundpane {
+	-fx-background-image: url("../images/background.jpg");
+}
+
 .info {
-	-fx-font-size: 40;	
+	-fx-font-size: 40;
 }
 
 .score {
@@ -25,11 +28,11 @@
 
 .wall.ceiling {
 	
-} 
+}
 
 .wall.left {
 	
-} 
+}
 
 .wall.right {
 	
@@ -42,7 +45,10 @@
 	-fx-stroke: white;
 	-fx-stroke-type: INSIDE;
 	-fx-stroke-width: 1;
-	-fx-effect: Reflection;
+}
+
+.ball {
+	-fx-fill: #1e90ff;
 }
 
 .button {
@@ -54,6 +60,6 @@
 	
 }
 
-button.sound {
+.button.sound {
 	
 }
