@@ -23,6 +23,7 @@ SOFTWARE.
  */
 package fko.breakout;
 
+import fko.breakout.controller.MainController;
 import fko.breakout.model.BreakOutModel;
 import fko.breakout.view.MainView;
 import javafx.application.Application;
@@ -47,11 +48,16 @@ public class BreakOut extends Application {
 	public void start(Stage primaryStage) throws Exception {
 
 		BreakOutModel model = new BreakOutModel();
-		MainView view = new MainView(model); // controller will be set via FXMLloader
+		MainController controller = new MainController(model);
+		MainView view = new MainView(model, controller); 
+		
+		controller.bindModelToView();
 
 		Scene scene = new Scene(view.asParent());
 		
 		primaryStage.setScene(scene);
+		primaryStage.centerOnScreen();
+		
 		primaryStage.show();
 
 	}
