@@ -39,29 +39,30 @@ import javafx.scene.layout.AnchorPane;
 public class MainView {
 
 	private BreakOutModel model;
+	private MainController controller;
 	
 	private AnchorPane root;
 
 	/**
 	 * @param model
+	 * @param controller2
 	 * @throws IOException 
 	 */
-	public MainView(BreakOutModel model) throws IOException {
+	public MainView(BreakOutModel model, MainController controller) throws IOException {
 		this.model = model;
+		this.controller = controller;
 
 		// read FXML file and setup UI
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/BreakOutMainView.fxml"));
+		fxmlLoader.setController(controller);
 		root = (AnchorPane) fxmlLoader.load();
-		
-		MainController controller = fxmlLoader.getController();
 		
 	}
 
 	/**
-	 * @return
+	 * @return root pane from loaded FXML
 	 */
 	public Parent asParent() {
-		// TODO Auto-generated method stub
 		return root;
 	}
 
