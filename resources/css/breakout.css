@@ -63,3 +63,10 @@
 .button.sound {
 	
 }
+
+.gameover {
+	-fx-font-size: 80;
+	-fx-fill: #ffd400;
+	-fx-translate-x: 179;
+	-fx-translate-y: 221;
+}

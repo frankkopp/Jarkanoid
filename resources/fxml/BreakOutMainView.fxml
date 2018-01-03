@@ -15,7 +15,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#keyPressedAction" onKeyReleased="#keyReleasedAction" onMouseEntered="#mouseEnteredAction" onMouseExited="#mouseExitedAction" onMouseMoved="#mouseMovedAction" stylesheets="@../css/breakout.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane minHeight="-Infinity" minWidth="-Infinity" stylesheets="@../css/breakout.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <center>
@@ -42,7 +42,7 @@
                               <String fx:value="button" />
                            </styleClass>
                         </Button>
-                        <Button fx:id="pauseResumeButton" defaultButton="true" focusTraversable="false" mnemonicParsing="false" onAction="#pauseResumeButtonAction" text="Pause" GridPane.columnIndex="2">
+                        <Button fx:id="pauseResumeButton" focusTraversable="false" mnemonicParsing="false" onAction="#pauseResumeButtonAction" text="Pause" GridPane.columnIndex="2">
                            <styleClass>
                               <String fx:value="play" />
                               <String fx:value="button" />
@@ -122,12 +122,13 @@
                            <center>
                               <Pane fx:id="playfieldPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="510.0" prefWidth="780.0" BorderPane.alignment="CENTER">
                                  <children>
-                                    <Rectangle fx:id="paddle" fill="DODGERBLUE" height="20.0" layoutX="315.0" layoutY="475.0" onMouseClicked="#paddleMouseClickAction" onMouseReleased="#paddleMouseReleasedAction" stroke="WHITE" strokeType="INSIDE" styleClass="paddle" width="150.0">
+                                    <Rectangle fx:id="paddle" fill="DODGERBLUE" height="20.0" onMouseClicked="#paddleMouseClickAction" onMouseReleased="#paddleMouseReleasedAction" stroke="WHITE" strokeType="INSIDE" styleClass="paddle" width="150.0" x="315.0" y="475.0">
                                        <effect>
                                           <Reflection />
                                        </effect>
                                     </Rectangle>
-                                    <Circle fx:id="ball" fill="DODGERBLUE" layoutX="390.0" layoutY="260.0" radius="8.0" stroke="BLACK" strokeType="INSIDE" styleClass="ball" />
+                                    <Circle fx:id="ball" centerX="390.0" centerY="260.0" fill="DODGERBLUE" radius="8.0" stroke="BLACK" strokeType="INSIDE" styleClass="ball" />
+                                    <Text fx:id="gameOverSplash" fill="#ffd400" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="gameover" text="Game Over" textAlignment="CENTER" />
                                  </children>
                               </Pane>
                            </center>
