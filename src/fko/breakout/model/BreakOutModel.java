@@ -23,6 +23,10 @@ SOFTWARE.
  */
 package fko.breakout.model;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.property.BooleanProperty;
@@ -44,7 +48,7 @@ public class BreakOutModel {
 
 	private static final int START_LIVES = 5;
 	private static final int START_LEVEL = 1;
-	private static final long SLEEP_BETWEEN_LIVES = 500;
+	private static final long SLEEP_BETWEEN_LIVES = 1000; // in ms
 
 	private static final double PADDLE_INITIAL_FRAMERATE = 60.0; // Framerate for paddle movements
 	private static final Double PADDLE_MOVE_STEPS = 5.0; // steps per animation cycle
@@ -124,6 +128,7 @@ public class BreakOutModel {
 	// ball speeds in each direction
 	private double ball_vX = 1;
 	private double ball_vY = BALL_INITIAL_SPEED;
+	private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
 	/**
 	 * Constructor
@@ -146,11 +151,25 @@ public class BreakOutModel {
 	}
 
 	/**
+	 * Called by the <code>paddleMovementTimeline<code> animation event to move the paddles.
+	 */
+	private void movePaddles() {
+		if (paddleLeft 
+				&& paddleX.get() > 0.0) {
+			paddleX.setValue(paddleX.getValue() - PADDLE_MOVE_STEPS);
+		}
+		if (paddleRight 
+				&& paddleX.get() + paddleWidth.get() < playfieldWidth.get()) {
+			paddleX.setValue(paddleX.getValue() + PADDLE_MOVE_STEPS);
+		}
+	}
+	
+	/**
 	 * Called by the <code>ballMovementTimeline</code> animation event to move the ball.
 	 */
 	private void moveBall() {
-		ballCenterX.setValue(ballCenterX.get() + ball_vX);
-		ballCenterY.setValue(ballCenterY.get() + ball_vY);
+		ballCenterX.set(ballCenterX.get() + ball_vX);
+		ballCenterY.set(ballCenterY.get() + ball_vY);
 		checkCollision();
 	}
 
@@ -172,8 +191,12 @@ public class BreakOutModel {
 		final double paddleRightBound = paddleX.get() + paddleWidth.get();
 		
 		// hit wall left or right
-		if (ballLeftBound <= 0 // left
-				|| ballCenterX.get() + ballRadius.get() >= playfieldWidth.get()) { // right
+		if (ballLeftBound <= 0) { // left
+			ballCenterX.set(0+ballRadius.get()); // in case it was <0
+			ball_vX *= -1;
+		}
+		if (ballRightBound >= playfieldWidth.get()) { // right
+			ballCenterX.set(playfieldWidth.get()-ballRadius.get()); // in case it was >playFieldWidth
 			ball_vX *= -1;
 		}
 
@@ -183,20 +206,18 @@ public class BreakOutModel {
 		}
 
 		// lost through bottom
-		if (ballUpperBound >= playfieldHeight.get()) { // left
+		if (ballUpperBound >= playfieldHeight.get()) {
 			if (decreaseRemainingLives() < 0) {
 				currentRemainingLives.set(0);
 				gameOver();
 				return;
 			};
+			
 			// pause animation
 			ballMovementTimeline.pause();
-			// reset the ball position and speed
-			resetBall();
-			// pause for some time
-			try { Thread.sleep(SLEEP_BETWEEN_LIVES);	} catch (InterruptedException e) {}
-			// restart ball movement
-			ballMovementTimeline.play();
+			
+			// start new round
+			startRound();
 		}
 		
 		// hit paddle
@@ -223,23 +244,13 @@ public class BreakOutModel {
 		gameOver.set(true);
 	}
 	
-	/**
-	 * Called by the <code>paddleMovementTimeline<code> animation event to move the paddles.
-	 */
-	private void movePaddles() {
-		if (paddleLeft 
-				&& paddleX.get() > 0.0) {
-			paddleX.setValue(paddleX.getValue() - PADDLE_MOVE_STEPS);
-		}
-		if (paddleRight 
-				&& paddleX.get() + paddleWidth.get() < playfieldWidth.get()) {
-			paddleX.setValue(paddleX.getValue() + PADDLE_MOVE_STEPS);
-		}
+	private void startRound() {
+		// reset the ball position and speed
+		resetBall();
+		// show the ball for a short time then start the animation
+		executor.schedule(() -> ballMovementTimeline.play() , SLEEP_BETWEEN_LIVES, TimeUnit.MILLISECONDS);
 	}
-
-	/**
-	 * 
-	 */
+	
 	private void resetBall() {
 		// reset ball speed and direction (straight down)
 		ball_vX = 0;
@@ -249,6 +260,7 @@ public class BreakOutModel {
 		ballCenterX.set(BALL_INITIAL_X);
 		ballCenterY.set(BALL_INITIAL_Y);
 	}
+	
 	/**
 	 * Called from controller by mouse move events. Moves the paddle according to the mouse's x position
 	 * when mouse is in window. The paddle's center will be set to the current mouse position. 
@@ -276,11 +288,8 @@ public class BreakOutModel {
 		currentRemainingLives.set(START_LIVES);
 		currentScore.set(0);
 
-		// reset the ball position and speed
-		resetBall();
-
 		// start the ball movement
-		ballMovementTimeline.play();
+		startRound();
 
 	}
 	public void stopPlaying() {
