@@ -97,5 +97,52 @@ public class BreakOut extends Application {
 	public static void main(String[] args) {
 		launch(args);
 	}
+	
+	/**
+	 * Clean up and exit the application
+	 */
+	public static void exit() {
+		exit(0);
+	}
+
+	/**
+	 * Clean up and exit the application
+	 */
+	private static void exit(int returnCode) {
+		Platform.exit();
+		System.exit(returnCode);
+	}
+
+	/**
+	 * Called when there is an unexpected unrecoverable error.<br/>
+	 * Prints a stack trace together with a provided message.<br/>
+	 * Terminates with <tt>exit(1)</tt>.
+	 * @param message to be displayed with the exception message
+	 */
+	public static void fatalError(String message) {
+		Exception e = new Exception(message);
+		e.printStackTrace();
+		exit(1);
+	}
+
+	/**
+	 * Called when there is an unexpected but recoverable error.<br/>
+	 * Prints a stack trace together with a provided message.<br/>
+	 * @param message to be displayed with the exception message
+	 */
+	public static void criticalError(String message) {
+		Exception e = new Exception(message);
+		e.printStackTrace();
+	}
+
+	/**
+	 * Called when there is an unexpected minor error.<br/>
+	 * Prints a provided message.<br/>
+	 * @param message to be displayed
+	 */
+	public static void minorError(String message) {
+		System.err.println(message);
+	}
+
 
 }

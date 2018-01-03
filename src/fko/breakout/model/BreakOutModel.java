@@ -27,6 +27,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import fko.breakout.model.Sounds.Clips;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.property.BooleanProperty;
@@ -130,6 +131,9 @@ public class BreakOutModel {
 	private double ball_vY = BALL_INITIAL_SPEED;
 	private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
+	// sounds
+	private Sounds sounds = Sounds.getInstance();
+	
 	/**
 	 * Constructor
 	 */
@@ -148,6 +152,10 @@ public class BreakOutModel {
 				new KeyFrame(Duration.seconds(1/BALL_INITIAL_FRAMERATE), e -> {	moveBall();	});
 		ballMovementTimeline.getKeyFrames().add(moveBall);
 
+		isSoundOn.addListener((v,o,n) -> {
+			if (n==true) sounds.soundOn();
+			else sounds.soundOff();
+		});
 	}
 
 	/**
@@ -194,19 +202,24 @@ public class BreakOutModel {
 		if (ballLeftBound <= 0) { // left
 			ballCenterX.set(0+ballRadius.get()); // in case it was <0
 			ball_vX *= -1;
+			sounds.playClip(Clips.WALL);
 		}
 		if (ballRightBound >= playfieldWidth.get()) { // right
 			ballCenterX.set(playfieldWidth.get()-ballRadius.get()); // in case it was >playFieldWidth
 			ball_vX *= -1;
+			sounds.playClip(Clips.WALL);
 		}
 
 		// hit wall top
 		if (ballUpperBound <= 0) {
 			ball_vY *= -1;
+			sounds.playClip(Clips.WALL);
 		}
 
 		// lost through bottom
 		if (ballUpperBound >= playfieldHeight.get()) {
+			sounds.playClip(Clips.BALL_LOST);
+			
 			if (decreaseRemainingLives() < 0) {
 				currentRemainingLives.set(0);
 				gameOver();
@@ -223,7 +236,7 @@ public class BreakOutModel {
 		// hit paddle
 		if (ballLowerBound >= paddleUpperBound && ballLowerBound <= paddleLowerBound) {
 			if (ballRightBound > paddleLeftBound && ballLeftBound < paddleRightBound) {
-				// HIT
+
 				increaseScore(1); // TODO: just for DEBUG
 				
 				// determine where the ball hit the paddle
@@ -235,6 +248,8 @@ public class BreakOutModel {
 				
 				ball_vX = Math.sin(Math.toRadians(newAngle)) * BALL_INITIAL_SPEED;
 				ball_vY = -Math.cos(Math.toRadians(newAngle)) * BALL_INITIAL_SPEED;
+				
+				sounds.playClip(Clips.PADDLE);
 			}
 		}
 	}

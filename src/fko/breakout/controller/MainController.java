@@ -136,7 +136,8 @@ public class MainController implements Initializable {
 		switch (event.getCode()) {
 		// game control
 		case SPACE: 		startStopButtonAction(new ActionEvent()); break;
-		case P: 			pauseResumeButtonAction(new ActionEvent());; break;
+		case P: 			pauseResumeButtonAction(new ActionEvent()); break;
+		case S:			soundButtonAction(new ActionEvent()); break;
 		// paddle control
 		case LEFT:		onPaddleLeftAction(true); break;
 		case RIGHT:		onPaddleRightAction(true); break;
@@ -146,9 +147,6 @@ public class MainController implements Initializable {
 
 	private void keyReleasedAction(KeyEvent event) {
 		switch (event.getCode()) {
-		// game control
-		case SPACE: 		break;
-		case P: 			break;
 		// paddle control
 		case LEFT: 		onPaddleLeftAction(false); break;
 		case RIGHT:		onPaddleRightAction(false); break;
