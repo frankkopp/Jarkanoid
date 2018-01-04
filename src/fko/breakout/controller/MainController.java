@@ -33,6 +33,9 @@ import fko.breakout.model.BreakOutModel;
 import fko.breakout.model.Sounds;
 import fko.breakout.model.Sounds.Clips;
 import fko.breakout.view.MainView;
+import javafx.animation.ParallelTransition;
+import javafx.animation.ScaleTransition;
+import javafx.animation.StrokeTransition;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -41,9 +44,12 @@ import javafx.scene.control.Button;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
+
 /**
  * MainController
  * 02.01.2018
@@ -53,9 +59,18 @@ public class MainController implements Initializable, Observer {
 
 	private BreakOutModel model;
 	private MainView view;
-	
+
 	// sounds
 	private Sounds sounds = Sounds.getInstance();
+	
+	// animations
+	private ScaleTransition hitPaddleScaleTransition;
+	private StrokeTransition hitPaddleStrokeTransition;
+	private ScaleTransition hitBallScaleTransition;
+	private StrokeTransition hitBallStrokeTransition;
+	
+	private ParallelTransition paddleHitAnimation;
+	private ParallelTransition wallHitAnimation;
 
 	/**
 	 * @param model
@@ -78,7 +93,7 @@ public class MainController implements Initializable, Observer {
 	 */
 	public void bindModelToView(MainView view) {
 		this.view = view;
-		
+
 		// add controller as listener of model for events
 		model.addObserver(this);
 
@@ -131,7 +146,34 @@ public class MainController implements Initializable, Observer {
 
 		// game over splash text
 		gameOverSplash.visibleProperty().bind(model.gameOverProperty());
+		
+		defineAnimations();
 
+	}
+
+	private void defineAnimations() {
+		hitPaddleScaleTransition = new ScaleTransition(Duration.millis(50), paddle);
+		hitPaddleScaleTransition.setByX(0.1);
+		hitPaddleScaleTransition.setByY(0.1);
+		hitPaddleScaleTransition.setCycleCount(2);
+		hitPaddleScaleTransition.setAutoReverse(true);
+		
+		hitPaddleStrokeTransition = new StrokeTransition(Duration.millis(50), paddle, Color.WHITE , Color.BLACK);
+		hitPaddleStrokeTransition.setCycleCount(2);
+		hitPaddleStrokeTransition.setAutoReverse(true);
+		
+		hitBallScaleTransition = new ScaleTransition(Duration.millis(50), ball);
+		hitBallScaleTransition.setByX(0.1);
+		hitBallScaleTransition.setByY(0.1);
+		hitBallScaleTransition.setCycleCount(2);
+		hitBallScaleTransition.setAutoReverse(true);
+		
+		hitBallStrokeTransition = new StrokeTransition(Duration.millis(50), ball, Color.BLACK , Color.WHITE);
+		hitBallStrokeTransition.setCycleCount(2);
+		hitBallStrokeTransition.setAutoReverse(true);
+		
+		paddleHitAnimation = new ParallelTransition(hitPaddleScaleTransition, hitPaddleStrokeTransition, hitBallScaleTransition, hitBallStrokeTransition);
+		wallHitAnimation = new ParallelTransition(hitBallScaleTransition, hitBallStrokeTransition);
 	}
 
 	/**
@@ -141,14 +183,14 @@ public class MainController implements Initializable, Observer {
 	 */
 	@Override
 	public void update(Observable o, Object arg) {
-			GameEvent event = (GameEvent) arg;
-			System.out.println(event);
-			switch (event.getEventType()) {
-			case HIT_PADDLE: sounds.playClip(Clips.PADDLE); break;
-			case HIT_WALL: sounds.playClip(Clips.WALL); break;
-			case BALL_LOST: sounds.playClip(Clips.BALL_LOST); break;
-			default: 
-			}
+		GameEvent event = (GameEvent) arg;
+		System.out.println(event);
+		switch (event.getEventType()) {
+		case HIT_PADDLE: paddleHitAnimation.play(); sounds.playClip(Clips.PADDLE); break;
+		case HIT_WALL: wallHitAnimation.play(); sounds.playClip(Clips.WALL); break;
+		case BALL_LOST: sounds.playClip(Clips.BALL_LOST); break;
+		default: 
+		}
 	}
 
 	private void keyPressedAction(KeyEvent event) {
@@ -229,7 +271,7 @@ public class MainController implements Initializable, Observer {
 
 	@FXML
 	private Text gameOverSplash;
-
+	
 	@FXML
 	void paddleMouseClickAction(MouseEvent event) {
 		System.out.println("Mouse Click: "+event);

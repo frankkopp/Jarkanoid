@@ -87,7 +87,7 @@
                               <String fx:value="lives" />
                            </styleClass>
                         </Text>
-                        <Text fx:id="pointsLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="0000" textAlignment="RIGHT" wrappingWidth="211.9765625" GridPane.columnIndex="2">
+                        <Text fx:id="pointsLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="000000" textAlignment="RIGHT" wrappingWidth="211.9765625" GridPane.columnIndex="2">
                            <styleClass>
                               <String fx:value="info" />
                               <String fx:value="score" />
