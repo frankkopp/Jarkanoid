@@ -26,7 +26,7 @@ package fko.breakout.view;
 import java.io.IOException;
 
 import fko.breakout.controller.MainController;
-import fko.breakout.model.BreakOutModel;
+import fko.breakout.model.BreakOutGame;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.layout.AnchorPane;
@@ -38,7 +38,7 @@ import javafx.scene.layout.AnchorPane;
  */
 public class MainView {
 
-	private BreakOutModel model;
+	private BreakOutGame model;
 	private MainController controller;
 	
 	private AnchorPane root;
@@ -48,7 +48,7 @@ public class MainView {
 	 * @param controller2
 	 * @throws IOException 
 	 */
-	public MainView(BreakOutModel model, MainController controller) throws IOException {
+	public MainView(BreakOutGame model, MainController controller) throws IOException {
 		this.model = model;
 		this.controller = controller;
 
@@ -56,7 +56,6 @@ public class MainView {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/BreakOutMainView.fxml"));
 		fxmlLoader.setController(controller);
 		root = (AnchorPane) fxmlLoader.load();
-		
 	}
 
 	/**
