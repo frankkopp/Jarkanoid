@@ -26,7 +26,8 @@ package fko.breakout;
 import java.net.URL;
 
 import fko.breakout.controller.MainController;
-import fko.breakout.model.BreakOutModel;
+import fko.breakout.model.BreakOutGame;
+import fko.breakout.model.LevelLoader;
 import fko.breakout.view.MainView;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -50,8 +51,10 @@ public class BreakOut extends Application {
 	 */
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		
+		LevelLoader ll = LevelLoader.getInstance();
 
-		BreakOutModel model = new BreakOutModel();
+		BreakOutGame model = new BreakOutGame();
 		MainController controller = new MainController(model);
 		MainView view = new MainView(model, controller); 
 

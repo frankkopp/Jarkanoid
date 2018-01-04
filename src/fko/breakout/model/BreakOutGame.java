@@ -45,10 +45,12 @@ import javafx.util.Duration;
  * 02.01.2018
  * @author Frank Kopp
  */
-public class BreakOutModel extends Observable {
+public class BreakOutGame extends Observable {
 
-	private static final int START_LIVES = 5;
 	private static final int START_LEVEL = 1;
+	private static final int MAX_LEVEL 	= 2;
+	
+	private static final int START_LIVES = 5;
 	private static final long SLEEP_BETWEEN_LIVES = 1000; // in ms
 
 	private static final double PADDLE_INITIAL_FRAMERATE = 60.0; // Framerate for paddle movements
@@ -59,7 +61,10 @@ public class BreakOutModel extends Observable {
 	private static final int BALL_INITIAL_Y = 450;
 	private static final double BALL_INITIAL_FRAMERATE = 60.0;  // Framerate for ball movements
 	private static final double BALL_INITIAL_SPEED = 5.0; // Absolute speed of ball - 
+
+	private static final double BRICK_GAP = 2;
 	
+
 	// when vertical equals px in y
 	// when horizontal equals px in x
 
@@ -126,11 +131,19 @@ public class BreakOutModel extends Observable {
 	private double ball_vX = 1;
 	private double ball_vY = BALL_INITIAL_SPEED;
 	private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+	
+	private final BrickLayout brickLayout;
 
 	/**
 	 * Constructor
 	 */
-	public BreakOutModel() {
+	public BreakOutGame() {
+		
+		// setup BrickLayout
+		brickLayout = new BrickLayout(BRICK_GAP, playfieldWidth, playfieldHeight);
+		
+		// load first level
+		brickLayout.setMatrix(LevelLoader.getLevel(1));
 
 		// start the paddle movements
 		paddleMovementTimeline.setCycleCount(Timeline.INDEFINITE);
@@ -159,7 +172,7 @@ public class BreakOutModel extends Observable {
 			paddleX.setValue(paddleX.getValue() + PADDLE_MOVE_STEPS);
 		}
 	}
-	
+
 	/**
 	 * Called by the <code>ballMovementTimeline</code> animation event to move the ball.
 	 */
@@ -175,41 +188,70 @@ public class BreakOutModel extends Observable {
 	 * <code>ballLost()</code> when ball has left through bottom.
 	 */
 	private void checkCollision() {
+		
 		// convenience variables 
 		final double ballUpperBound = ballCenterY.get() - ballRadius.get();
 		final double ballLowerBound = ballCenterY.get() + ballRadius.get();
 		final double ballLeftBound = ballCenterX.get() - ballRadius.get();
 		final double ballRightBound = ballCenterX.get() + ballRadius.get();
-		
+
 		final double paddleUpperBound = paddleY.get();
 		final double paddleLowerBound = paddleY.get() + paddleHeight.get();
 		final double paddleLeftBound = paddleX.get();
 		final double paddleRightBound = paddleX.get() + paddleWidth.get();
-		
+
 		// hit wall left or right
 		if (ballLeftBound <= 0) { // left
 			ballCenterX.set(0+ballRadius.get()); // in case it was <0
 			ball_vX *= -1;
 			setChanged();
+			notifyObservers(new GameEvent(GameEventType.HIT_WALL));
+			return;
 		}
 		if (ballRightBound >= playfieldWidth.get()) { // right
 			ballCenterX.set(playfieldWidth.get()-ballRadius.get()); // in case it was >playFieldWidth
 			ball_vX *= -1;
 			setChanged();
+			notifyObservers(new GameEvent(GameEventType.HIT_WALL));
+			return;
 		}
 
 		// hit wall top
 		if (ballUpperBound <= 0) {
 			ball_vY *= -1;
 			setChanged();
+			notifyObservers(new GameEvent(GameEventType.HIT_WALL));
+			return;
 		}
 
-		// hit wall notification
-		notifyObservers(new GameEvent(GameEventType.HIT_WALL));
+		// hit paddle
+		if (ballLowerBound >= paddleUpperBound && ballLowerBound <= paddleLowerBound) {
+			if (ballRightBound > paddleLeftBound && ballLeftBound < paddleRightBound) {
+
+				increaseScore(1); // TODO: just for DEBUG
+
+				// determine where the ball hit the paddle
+				double hitPointAbsolute = ballCenterX.get() - paddleLeftBound;
+				// normalize value to -1 (left), 0 (center), +1 (right)
+				double hitPointRelative = 2 * ((hitPointAbsolute / paddleWidth.get()) - 0.5);
+				// determine new angle
+				double newAngle = hitPointRelative * BALL_MAX_3ANGLE;
+
+				ball_vX = Math.sin(Math.toRadians(newAngle)) * BALL_INITIAL_SPEED;
+				ball_vY = -Math.cos(Math.toRadians(newAngle)) * BALL_INITIAL_SPEED;
+
+				setChanged();
+				notifyObservers(new GameEvent(GameEventType.HIT_PADDLE));
+				return;
+			}
+		}
+
+		// hit brick
+		// TODO: hit brick
 
 		// lost through bottom
 		if (ballUpperBound >= playfieldHeight.get()) {
-			
+
 			if (decreaseRemainingLives() < 0) {
 				currentRemainingLives.set(0);
 				gameOver();
@@ -217,45 +259,24 @@ public class BreakOutModel extends Observable {
 				notifyObservers(new GameEvent(GameEventType.GAME_OVER));
 				return;
 			};
-			
+
 			setChanged();
 			notifyObservers(new GameEvent(GameEventType.BALL_LOST));
-			
+
 			// pause animation
 			ballMovementTimeline.pause();
-			
+
 			// start new round
 			startRound();
 		}
-		
-		// hit paddle
-		if (ballLowerBound >= paddleUpperBound && ballLowerBound <= paddleLowerBound) {
-			if (ballRightBound > paddleLeftBound && ballLeftBound < paddleRightBound) {
-				
-				increaseScore(1); // TODO: just for DEBUG
-				
-				// determine where the ball hit the paddle
-				double hitPointAbsolute = ballCenterX.get() - paddleLeftBound;
-				// normalize value to -1 (left), 0 (center), +1 (right)
-				double hitPointRelative = 2 * ((hitPointAbsolute / paddleWidth.get()) - 0.5);
-				// determine new angle
-				double newAngle = hitPointRelative * BALL_MAX_3ANGLE;
-				
-				ball_vX = Math.sin(Math.toRadians(newAngle)) * BALL_INITIAL_SPEED;
-				ball_vY = -Math.cos(Math.toRadians(newAngle)) * BALL_INITIAL_SPEED;
-				
-				setChanged();
-				notifyObservers(new GameEvent(GameEventType.HIT_PADDLE));
-				
-			}
-		}
+
 	}
 
 	private void gameOver() {
 		stopPlaying();
 		gameOver.set(true);
 	}
-	
+
 	private void startRound() {
 		// reset the ball position and speed
 		resetBall();
@@ -263,19 +284,19 @@ public class BreakOutModel extends Observable {
 		executor.schedule(() -> {
 			if (!isPlaying()) return; // maybe the game has already been stopped
 			ballMovementTimeline.play(); 
-			}, SLEEP_BETWEEN_LIVES, TimeUnit.MILLISECONDS);
+		}, SLEEP_BETWEEN_LIVES, TimeUnit.MILLISECONDS);
 	}
-	
+
 	private void resetBall() {
 		// reset ball speed and direction (straight down)
 		ball_vX = 0;
 		ball_vY = BALL_INITIAL_SPEED;
-		
+
 		// reset ball position
 		ballCenterX.set(BALL_INITIAL_X);
 		ballCenterY.set(BALL_INITIAL_Y);
 	}
-	
+
 	/**
 	 * Called from controller by mouse move events. Moves the paddle according to the mouse's x position
 	 * when mouse is in window. The paddle's center will be set to the current mouse position. 
@@ -297,18 +318,18 @@ public class BreakOutModel extends Observable {
 		isPlaying.set(true);
 		isPaused.set(false);
 		gameOver.set(false);
-		
+
 		// initialize new game
 		currentLevel.set(START_LEVEL);
 		currentRemainingLives.set(START_LIVES);
 		currentScore.set(0);
-		
+
 		setChanged();
 		notifyObservers(new GameEvent(GameEventType.GAME_START));
 
 		// start the ball movement
 		startRound();
-		
+
 
 	}
 	public void stopPlaying() {
@@ -344,7 +365,7 @@ public class BreakOutModel extends Observable {
 		currentScore.set(currentScore.get()+i); 
 		return currentScore.get();
 	};
-	
+
 	private int decreaseRemainingLives() {
 		currentRemainingLives.set(currentRemainingLives.get() - 1);
 		return currentRemainingLives.get();

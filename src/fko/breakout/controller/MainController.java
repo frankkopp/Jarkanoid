@@ -28,8 +28,9 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
 
+import fko.breakout.BreakOut;
 import fko.breakout.events.GameEvent;
-import fko.breakout.model.BreakOutModel;
+import fko.breakout.model.BreakOutGame;
 import fko.breakout.model.Sounds;
 import fko.breakout.model.Sounds.Clips;
 import fko.breakout.view.MainView;
@@ -57,7 +58,7 @@ import javafx.util.Duration;
  */
 public class MainController implements Initializable, Observer {
 
-	private BreakOutModel model;
+	private BreakOutGame model;
 	private MainView view;
 
 	// sounds
@@ -75,7 +76,7 @@ public class MainController implements Initializable, Observer {
 	/**
 	 * @param model
 	 */
-	public MainController(BreakOutModel model) {
+	public MainController(BreakOutGame model) {
 		this.model = model;
 	}
 
@@ -174,6 +175,15 @@ public class MainController implements Initializable, Observer {
 		
 		paddleHitAnimation = new ParallelTransition(hitPaddleScaleTransition, hitPaddleStrokeTransition, hitBallScaleTransition, hitBallStrokeTransition);
 		wallHitAnimation = new ParallelTransition(hitBallScaleTransition, hitBallStrokeTransition);
+	
+//		EXAMPLE:
+//		Duration time = new Duration(10000);
+//			KeyValue keyValue = new KeyValue(circle.translateXProperty(), 300);
+//			KeyFrame keyFrame = new KeyFrame(time, keyValue);
+//			timeline.getKeyFrames().add(keyFrame);
+//			timeline.setCycleCount(2);
+//			timeline.setAutoReverse(true);
+//			timeline.play();
 	}
 
 	/**
@@ -183,8 +193,12 @@ public class MainController implements Initializable, Observer {
 	 */
 	@Override
 	public void update(Observable o, Object arg) {
+		if (!(arg instanceof GameEvent)) {
+			BreakOut.fatalError("Unknown event type. Event is not of type GameEvent");
+		}
 		GameEvent event = (GameEvent) arg;
 		System.out.println(event);
+		
 		switch (event.getEventType()) {
 		case HIT_PADDLE: paddleHitAnimation.play(); sounds.playClip(Clips.PADDLE); break;
 		case HIT_WALL: wallHitAnimation.play(); sounds.playClip(Clips.WALL); break;
