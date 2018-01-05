@@ -7,23 +7,24 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import fko.breakout.model.exceptions.LevelLoaderFormatException;
 import fko.breakout.model.exceptions.LevelLoaderIOException;
+import fko.breakout.model.exceptions.LevelLoaderNoLevelFilesException;
 
 public class LevelLoaderTest {
 
 	private String folderTest1 = "/levelsTest/test1/";
 	private String folderTest2 = "/levelsTest/test2/";
-	private String folderEmpty = "/levelsTest/test2/";
+	private String folderEmpty = "/levelsTest/test1/empty/";
 	private String folderProd = "/levels/";
 	private String preFix = "Level-";
 	private String fileType = ".txt";
 
-	@BeforeEach
-	public void setUp() throws Exception {
+	@BeforeAll
+	public static void setUp() throws Exception {
 	}
 
 	@Test
@@ -128,6 +129,26 @@ public class LevelLoaderTest {
 				System.out.println();
 			}
 		}
+	}
+
+	@Test
+	public void testInitialize() throws Exception {
+		LevelLoader ll =  LevelLoader.getNewInstanceForUnitTest(folderProd, preFix, fileType);
+		assertNotNull(ll);
+		
+		// folder has other files
+		Exception e = assertThrows(
+				LevelLoaderFormatException.class, 
+				() -> ll.initialize(folderTest1));
+		System.out.println(e); 
+		
+		// folder empty, files not found
+		e = assertThrows(
+				LevelLoaderNoLevelFilesException.class, 
+				() -> ll.initialize(folderEmpty));
+		System.out.println(e);
+
+		
 	}
 
 }

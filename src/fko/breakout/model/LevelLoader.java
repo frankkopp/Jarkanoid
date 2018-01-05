@@ -28,15 +28,16 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.jar.JarFile;
 import java.util.stream.Collectors;
-
-import org.apache.commons.io.IOUtils;
 
 import fko.breakout.BreakOut;
 import fko.breakout.model.exceptions.LevelLoaderFormatException;
@@ -47,12 +48,14 @@ import fko.breakout.model.exceptions.LevelLoaderNoLevelFilesException;
  * LevelLoader
  * 04.01.2018
  * @author Frank Kopp
+ * 
+ * TODO: Code Documentation
  */
 public class LevelLoader {
 
 	private static LevelLoader instance; // Singleton
 
-	private String folder = "/levels/";
+	private String defaultFolder = "/levels/";
 	private String preFix = "Level-";
 	private String fileType = ".txt";
 
@@ -74,34 +77,35 @@ public class LevelLoader {
 	}
 
 	private LevelLoader() {
-		initialize();
+		initialize(defaultFolder); // default folder
 	}
 
 	private LevelLoader(String folder, String preFix, String fileType) {
-		this.folder = folder;
+		this.defaultFolder = folder;
 		this.preFix = preFix;
 		this.fileType = fileType;
-		initialize();
+		initialize(folder);
 	}
 
-	protected void initialize() {
+	protected void initialize(String folder) throws LevelLoaderNoLevelFilesException {
 		List<String> files = getLevelFiles(folder);
-		//		System.out.println("Number of Level files: "+files.size());
+		//System.out.println("Number of Level files: "+files.size());
 		if (files.isEmpty()) {
 			throw new LevelLoaderNoLevelFilesException("Level load could not find any level files.");
 		}
 		for (String file : files) {
+//			System.out.println(file);
 			final List<String> lines = getLinesFromLevelFile(folder, file);
 			//			System.out.println(file +" has "+ lines.size() + " lines.");
 			// read lines into data structure
 			processLinesFromLevel(file, lines);
 		}
-		System.out.println("Levels Total: "+levels.size());
-		System.out.println("Levels: "+levels.keySet().toString());
+//		System.out.println("Levels Total: "+levels.size());
+//		System.out.println("Levels: "+levels.keySet().toString());
 
 	}
 
-	protected List<String> getLevelFiles(String folder) {
+	protected List<String> getLevelFiles(String folder) throws LevelLoaderIOException {
 		List<String> files = null;
 
 		/*
@@ -116,6 +120,7 @@ public class LevelLoader {
 			JarFile jar;
 			try {
 				jar = new JarFile(jarFile);
+				
 				String filterString = folder.substring(1) + preFix;
 
 				files = jar.stream()
@@ -132,19 +137,22 @@ public class LevelLoader {
 
 		} else { // Run with IDE
 
-			final InputStream folderAsStream = BreakOut.class.getResourceAsStream(folder);
-			if (folderAsStream == null) {
-				throw new LevelLoaderIOException("While loading levels: Folder not found");
+			final URL folderURL = BreakOut.class.getResource(folder);
+			if (folderURL == null) {
+				throw new LevelLoaderIOException("While loading levels: Folder not found: "+folder);
 			}
 
 			String filterString = preFix;
 
 			try {
-				files = IOUtils.readLines(folderAsStream, Charset.defaultCharset())
-						.stream()
+//				System.out.println(folderURL);
+//				System.out.println(Files.list(FileSystems.getDefault().getPath(folderURL.getPath())).count());
+				files = Files.list(FileSystems.getDefault().getPath(folderURL.getPath()))
+						.map(m -> m.toFile().getName())
 						.filter(f -> f.lastIndexOf(filterString) >= 0 )
 						.filter(f -> f.endsWith(fileType))
 						.collect(Collectors.toList());
+//				System.out.println(files.size());
 			} catch (IOException e) {
 				throw new LevelLoaderIOException(e);
 			}
