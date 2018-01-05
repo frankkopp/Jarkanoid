@@ -30,6 +30,7 @@ import fko.breakout.model.BreakOutGame;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 
 /**
  * MainView
@@ -41,7 +42,8 @@ public class MainView {
 	private BreakOutGame model;
 	private MainController controller;
 	
-	private AnchorPane root;
+	private final AnchorPane root;
+	private final BrickLayoutView brickLayoutView = new BrickLayoutView();
 
 	/**
 	 * @param model
@@ -56,6 +58,9 @@ public class MainView {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/BreakOutMainView.fxml"));
 		fxmlLoader.setController(controller);
 		root = (AnchorPane) fxmlLoader.load();
+		
+		Pane playFieldPane = (Pane) fxmlLoader.getNamespace().get("playfieldPane");
+		playFieldPane.getChildren().add(brickLayoutView);
 	}
 
 	/**
@@ -63,6 +68,13 @@ public class MainView {
 	 */
 	public Parent asParent() {
 		return root;
+	}
+
+	/**
+	 * @return the brickLayoutView
+	 */
+	public BrickLayoutView getBrickLayoutView() {
+		return brickLayoutView;
 	}
 
 }
