@@ -44,12 +44,13 @@ import javafx.util.Duration;
  * BreakOutModel
  * 02.01.2018
  * @author Frank Kopp
+ * TODO: Code Documentation
  */
 public class BreakOutGame extends Observable {
 
 	private static final int START_LEVEL = 1;
 	private static final int MAX_LEVEL 	= 2;
-	
+
 	private static final int START_LIVES = 5;
 	private static final long SLEEP_BETWEEN_LIVES = 1000; // in ms
 
@@ -63,7 +64,7 @@ public class BreakOutGame extends Observable {
 	private static final double BALL_INITIAL_SPEED = 5.0; // Absolute speed of ball - 
 
 	private static final double BRICK_GAP = 2;
-	
+
 
 	// when vertical equals px in y
 	// when horizontal equals px in x
@@ -118,7 +119,7 @@ public class BreakOutGame extends Observable {
 
 	// animations
 	private Timeline paddleMovementTimeline = new Timeline();
-	private Timeline ballMovementTimeline = new Timeline();;
+	private Timeline ballMovementTimeline = new Timeline();
 
 	// called when key is pressed/released to indicate paddle movement to movement animation
 	private boolean paddleLeft;
@@ -131,19 +132,16 @@ public class BreakOutGame extends Observable {
 	private double ball_vX = 1;
 	private double ball_vY = BALL_INITIAL_SPEED;
 	private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-	
+
 	private final BrickLayout brickLayout;
 
 	/**
 	 * Constructor
 	 */
 	public BreakOutGame() {
-		
+
 		// setup BrickLayout
 		brickLayout = new BrickLayout(BRICK_GAP, playfieldWidth, playfieldHeight);
-		
-		// load first level
-		brickLayout.setMatrix(LevelLoader.getInstance().getLevel(1));
 
 		// start the paddle movements
 		paddleMovementTimeline.setCycleCount(Timeline.INDEFINITE);
@@ -188,7 +186,7 @@ public class BreakOutGame extends Observable {
 	 * <code>ballLost()</code> when ball has left through bottom.
 	 */
 	private void checkCollision() {
-		
+
 		// convenience variables 
 		final double ballUpperBound = ballCenterY.get() - ballRadius.get();
 		final double ballLowerBound = ballCenterY.get() + ballRadius.get();
@@ -297,6 +295,14 @@ public class BreakOutGame extends Observable {
 		ballCenterY.set(BALL_INITIAL_Y);
 	}
 
+	private int increaseScore(int i) { 
+		currentScore.set(currentScore.get()+i); 
+		return currentScore.get();
+	}
+	private int decreaseRemainingLives() {
+		currentRemainingLives.set(currentRemainingLives.get() - 1);
+		return currentRemainingLives.get();
+	}
 	/**
 	 * Called from controller by mouse move events. Moves the paddle according to the mouse's x position
 	 * when mouse is in window. The paddle's center will be set to the current mouse position. 
@@ -319,6 +325,10 @@ public class BreakOutGame extends Observable {
 		isPaused.set(false);
 		gameOver.set(false);
 
+		// load first level
+		brickLayout.setMatrix(LevelLoader.getInstance().getLevel(1));
+		//System.out.println(brickLayout.toString());
+
 		// initialize new game
 		currentLevel.set(START_LEVEL);
 		currentRemainingLives.set(START_LIVES);
@@ -329,9 +339,8 @@ public class BreakOutGame extends Observable {
 
 		// start the ball movement
 		startRound();
-
-
 	}
+	
 	public void stopPlaying() {
 		isPlaying.set(false);
 		isPaused.set(false);
@@ -360,14 +369,9 @@ public class BreakOutGame extends Observable {
 	public boolean isPaused() {
 		return isPaused.get();
 	}
-
-	private int increaseScore(int i) { 
-		currentScore.set(currentScore.get()+i); 
-		return currentScore.get();
-	};
-
-	private int decreaseRemainingLives() {
-		currentRemainingLives.set(currentRemainingLives.get() - 1);
-		return currentRemainingLives.get();
+	
+	public BrickLayout getBrickLayout() {
+		return brickLayout;
 	}
+	
 }
