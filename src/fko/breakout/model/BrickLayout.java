@@ -44,16 +44,27 @@ public class BrickLayout {
 
 	public static final int ROWS = 18;
 	public static final int COLUMNS = 11;
-	
+
 	private double brickGap;
 	private DoubleProperty playfieldWidth;
 	private DoubleProperty playfieldHeight;
 
 	private Brick[][] brickMatrix = new Brick[ROWS][COLUMNS];
-	
-	private DoubleProperty brickWidth = new SimpleDoubleProperty();;
-	private DoubleProperty brickHeight = new SimpleDoubleProperty();;
-	
+
+	private DoubleProperty brickWidth = new SimpleDoubleProperty();
+	private DoubleProperty brickHeight = new SimpleDoubleProperty();
+
+	// boundaries of the matrix with existing bricks - need to update after every change in
+	// the matrix
+	private int upperRow = -1;
+	private int lowerRow = -1;
+	private int leftCol  = -1;
+	private int rightCol = -1;
+	private double upperBound = -1;
+	private double lowerBound = -1;
+	private double leftBound  = -1;
+	private double rightBound = -1;
+
 	/**
 	 * Creates an empty BrickLayout.
 	 * 
@@ -71,24 +82,74 @@ public class BrickLayout {
 				brickMatrix[rows][cols] = null;
 			}
 		}
-		
+
 		// calculated bind of brick size to playfield size
 		brickWidth.bind((playfieldWidth
 				.subtract((COLUMNS+1)*brickGap))
 				.divide(COLUMNS));
 		brickHeight.bind((playfieldHeight
-				.subtract(playfieldHeight.get()*0.5)
+				.subtract(playfieldHeight.get()*0.3)
 				.subtract((ROWS+1)*brickGap))
 				.divide(ROWS));
-				
+
+	}
+
+	/**
+	 * @param row
+	 * @param col
+	 */
+	public void hitBrick(int row, int col) {
+		System.out.println(String.format("Hit brick %d:%d",row,col));		
+		final Brick brick = brickMatrix[row][col];
+		if (brick.increaseHitCount() == 0) {
+			brickMatrix[row][col] = null; 
+		}
 	}
 
 	public Brick[][] getMatrix() {
 		return brickMatrix;
 	}
-	
+
 	public void setMatrix(Brick[][] newMatrix) {
 		this.brickMatrix = newMatrix;
+		updateBoundsforMatrix();
+	}
+
+	/**
+	 * update the upper and lower most y and x value
+	 */
+	private void updateBoundsforMatrix() {
+		upperBound = lowerBound = leftBound = rightBound = -1;
+		
+		// readability
+		final double vGap = getBrickGap();
+		final double hGap = getBrickGap();
+		final double brickWidth = getBrickWidth();
+		final double brickHeight = getBrickHeight(); 
+
+		for(int row=0; row<brickMatrix.length;row++) {
+			for (int col=0; col<brickMatrix[row].length; col++) {
+				if (brickMatrix[row][col] != null) { // found a brick
+					if (upperRow < 0) { // new upper bound
+						upperRow = row;
+						upperBound = vGap + (upperRow*vGap) + upperRow * brickHeight; 
+					}
+					if (leftCol < 0 // new left bound
+							|| leftCol > col) { // update left bound
+						leftCol = col;
+						leftBound = hGap + (leftCol*hGap) + leftCol * brickWidth; 
+					}
+					if (rightCol < col) { // update right bound
+						rightCol = col;
+						rightBound = hGap + (rightCol*hGap) + rightCol * brickWidth + brickWidth;
+					}
+					if (lowerRow < row) {
+						lowerRow = row;
+						lowerBound =  vGap + (lowerRow*vGap) + lowerRow * brickHeight + brickHeight;
+					}
+				}
+			}
+		}
 	}
 
 	public Brick[] getRow(int row) {
@@ -145,6 +206,38 @@ public class BrickLayout {
 		return brickHeight.get();
 	}
 
+	public double getUpperBound() {
+		return upperBound;
+	}
+
+	public double getLowerBound() {
+		return lowerBound;
+	}
+
+	public double getLeftBound() {
+		return leftBound;
+	}
+
+	public double getRightBound() {
+		return rightBound;
+	}
+	
+	public int getUpperRow() {
+		return upperRow;
+	}
+
+	public int getLowerRow() {
+		return lowerRow;
+	}
+
+	public int getLeftCol() {
+		return leftCol;
+	}
+
+	public int getRightCol() {
+		return rightCol;
+	}
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
@@ -158,6 +251,7 @@ public class BrickLayout {
 		builder.append(", playfieldHeight=");
 		builder.append(playfieldHeight);
 		builder.append(", brickMatrix=");
+		builder.append(System.lineSeparator());
 		for (int row=0; row<brickMatrix.length; row++) {
 			for (int col=0; col<brickMatrix[row].length; col++) {
 				if (brickMatrix[row][col] == null) {

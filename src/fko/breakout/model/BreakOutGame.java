@@ -247,6 +247,73 @@ public class BreakOutGame extends Observable {
 		// hit brick
 		// TODO: hit brick
 
+		//		System.out.println(ballUpperBound + " " +brickLayout.getLowerBound());
+		//		System.out.println(ballLowerBound + " " +brickLayout.getUpperBound());
+		//		System.out.println(ballRightBound + " " +brickLayout.getLeftBound());
+		//		System.out.println(ballLeftBound + " " +brickLayout.getRightBound());
+		//		System.out.println();
+		// first check if ball is in bounds of part of matrix with bricks (hotzone)
+		// TODO: check if this is necessary or efficient
+		if (ballUpperBound <= brickLayout.getLowerBound() // above lowest brick
+				&& ballLowerBound >= brickLayout.getUpperBound() // below highest brick
+				&& ballRightBound >= brickLayout.getLeftBound() // right of most left brick
+				&& ballLeftBound <= brickLayout.getRightBound()) { // left of most right brick
+
+			// calculate ball edge's brick cell
+			int ballCenterRow = (int) (ballCenterYProperty().get() 
+					/ (brickLayout.getBrickHeight()+brickLayout.getBrickGap()));
+			int ballCenterCol = (int) (ballCenterXProperty().get() 
+					/ (brickLayout.getBrickWidth()+brickLayout.getBrickGap()));
+
+			int ballUpperRow = (int) (ballUpperBound 
+					/ (brickLayout.getBrickHeight()+brickLayout.getBrickGap()));
+			int ballLowerRow = (int) ((ballLowerBound - brickLayout.getBrickGap())
+					/ (brickLayout.getBrickHeight()+brickLayout.getBrickGap()));
+			int ballLeftCol = (int) (ballLeftBound 
+					/ (brickLayout.getBrickWidth() + brickLayout.getBrickGap()));	
+			int ballRightCol = (int) ((ballRightBound - brickLayout.getBrickGap())
+					/ (brickLayout.getBrickWidth() + brickLayout.getBrickGap()));	
+
+			// hit above
+			if (brickLayout.getBrick(ballUpperRow, ballCenterCol) != null) {
+//				System.out.println("HIT TOP");
+				brickLayout.hitBrick(ballUpperRow, ballCenterCol);
+				ball_vY *= -1;
+				setChanged();
+				notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballUpperRow, ballCenterCol));
+			}
+			// hit below
+			if (brickLayout.getBrick(ballLowerRow, ballCenterCol) != null) {
+//				System.out.println("HIT BOTTOM");
+				brickLayout.hitBrick(ballLowerRow, ballCenterCol);
+				ball_vY *= -1;
+				setChanged();
+				notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballLowerRow, ballCenterCol));
+			}
+			// hit left
+			if (brickLayout.getBrick(ballCenterRow, ballLeftCol) != null) {
+//				System.out.println("HIT LEFT");
+				brickLayout.hitBrick(ballCenterRow, ballLeftCol);
+				ball_vX *= -1;
+				setChanged();
+				notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballCenterRow, ballLeftCol));
+			}
+			// hit right
+			if (brickLayout.getBrick(ballCenterRow, ballRightCol) != null) {
+//				System.out.println("HIT RIGHT");
+				brickLayout.hitBrick(ballCenterRow, ballRightCol);
+				ball_vX *= -1;
+				setChanged();
+				notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballCenterRow, ballRightCol));
+			}
+			
+
+//			System.out.println(String.format("cr: %d cc: %d up: %d lo: %d le: %d ri: %d"
+//					,ballCenterRow, ballCenterCol
+//					,ballUpperRow, ballLowerRow, ballLeftCol, ballRightCol));
+
+		}
+
 		// lost through bottom
 		if (ballUpperBound >= playfieldHeight.get()) {
 
@@ -326,7 +393,7 @@ public class BreakOutGame extends Observable {
 		gameOver.set(false);
 
 		// load first level
-		brickLayout.setMatrix(LevelLoader.getInstance().getLevel(1));
+		brickLayout.setMatrix(LevelLoader.getInstance().getLevel(3));
 		//System.out.println(brickLayout.toString());
 
 		// initialize new game
@@ -340,7 +407,7 @@ public class BreakOutGame extends Observable {
 		// start the ball movement
 		startRound();
 	}
-	
+
 	public void stopPlaying() {
 		isPlaying.set(false);
 		isPaused.set(false);
@@ -369,9 +436,9 @@ public class BreakOutGame extends Observable {
 	public boolean isPaused() {
 		return isPaused.get();
 	}
-	
+
 	public BrickLayout getBrickLayout() {
 		return brickLayout;
 	}
-	
+
 }

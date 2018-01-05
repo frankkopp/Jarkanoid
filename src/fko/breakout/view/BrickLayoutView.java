@@ -43,15 +43,17 @@ public class BrickLayoutView extends Group {
 	}
 
 	public void draw(BrickLayout brickLayout) {
-		if (brickLayout == null) {
-			this.getChildren().clear();
-			return;
-		} 
+		// we might need to do this more selective to save time
+		this.getChildren().clear();
+//		if (brickLayout == null) {
+//			this.getChildren().clear();
+//			return;
+//		} 
 		 
 		// create cache for all BrickViews
-		if (allBricks == null) {
-			allBricks = new BrickView[BrickLayout.ROWS][BrickLayout.COLUMNS];
-		}
+//		if (allBricks == null) {
+//			allBricks = new BrickView[BrickLayout.ROWS][BrickLayout.COLUMNS];
+//		}
 		
 		// readability
 		final double vGap = brickLayout.getBrickGap();
@@ -64,8 +66,11 @@ public class BrickLayoutView extends Group {
 				double y = vGap + (row*vGap) + row * brickHeight;
 				double x = hGap + (col*hGap) + col * brickWidth;
 				if (brickLayout.getBrick(row, col) != null) {
-					allBricks[row][col] = new BrickView(x, y, brickWidth, brickHeight,brickLayout.getBrick(row, col));
-					this.getChildren().add(allBricks[row][col]);
+//					allBricks[row][col] = new BrickView(x, y, 
+//							brickWidth, brickHeight,brickLayout.getBrick(row, col));
+//					this.getChildren().add(allBricks[row][col]);
+					this.getChildren().add(new BrickView(x, y, 
+							brickWidth, brickHeight,brickLayout.getBrick(row, col)));
 				}
 			}
 		}
