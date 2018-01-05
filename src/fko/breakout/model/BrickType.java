@@ -32,24 +32,26 @@ import javafx.scene.paint.Color;
  */
 public enum BrickType {
 
-	GREY 	(50,  1, Color.GREY),
-	ORANGE 	(60,  1, Color.ORANGE),
-	CYAN 	(70,  1, Color.CYAN),
-	GREEN	(80,  1, Color.GREEN),
-	RED		(90,  1, Color.RED),
-	BLUE		(100, 1, Color.BLUE),
-	PURPLE	(110, 1, Color.PURPLE),
-	YELLOW	(120, 1, Color.YELLOW),
-	SILVER	(150, 3, Color.SILVER),
-	GOLD		(0, Integer.MAX_VALUE, Color.GOLD);
+	GREY 	(50,  1, "GY", Color.GREY),
+	ORANGE 	(60,  1, "OR", Color.ORANGE),
+	CYAN 	(70,  1, "CY", Color.CYAN),
+	GREEN	(80,  1, "GR", Color.GREEN),
+	RED		(90,  1, "RE", Color.RED),
+	BLUE		(100, 1, "BL", Color.BLUE),
+	PURPLE	(110, 1, "PU", Color.PURPLE),
+	YELLOW	(120, 1, "YE", Color.YELLOW),
+	SILVER	(150, 3, "SI", Color.SILVER),
+	GOLD		(0, Integer.MAX_VALUE, "GO", Color.GOLD);
 	
 	public final int points;
 	public final int hits;
+	public final String sign;
 	public final Color color;
 
-	private BrickType(int points, int hits, Color color) {
+	private BrickType(int points, int hits, String sign, Color color) {
 		this.points = points;
 		this.hits = hits;
+		this.sign = sign;
 		this.color = color;
 	}
 }

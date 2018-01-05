@@ -122,8 +122,8 @@ public class BreakOut extends Application {
 	 * Terminates with <tt>exit(1)</tt>.
 	 * @param message to be displayed with the exception message
 	 */
-	public static void fatalError(String message) {
-		Exception e = new Exception(message);
+	public static void fatalError(String message, Object... args) {
+		Exception e = new Exception(String.format(message, args));
 		e.printStackTrace();
 		exit(1);
 	}
@@ -133,8 +133,8 @@ public class BreakOut extends Application {
 	 * Prints a stack trace together with a provided message.<br/>
 	 * @param message to be displayed with the exception message
 	 */
-	public static void criticalError(String message) {
-		Exception e = new Exception(message);
+	public static void criticalError(String message, Object... args) {
+		Exception e = new Exception(String.format(message, args));
 		e.printStackTrace();
 	}
 
@@ -143,8 +143,8 @@ public class BreakOut extends Application {
 	 * Prints a provided message.<br/>
 	 * @param message to be displayed
 	 */
-	public static void minorError(String message) {
-		System.err.println(message);
+	public static void minorError(String message,  Object... args) {
+		System.err.println(String.format(message, args));
 	}
 
 

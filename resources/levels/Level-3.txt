@@ -1,13 +1,14 @@
+# Level 3
 ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
 ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
 ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
 ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
-GRNO GRNO GRNO GRNO GRNO GRNO GRNO GRNO GRNO GRNO GRNO 
-RENO RENO RENO RENO RENO RENO RENO RENO RENO RENO RENO 
-YENO YENO YENO YENO YENO YENO YENO YENO YENO YENO YENO 
-BLNO BLNO BLNO BLNO BLNO BLNO BLNO BLNO BLNO BLNO BLNO 
-PUNO PUNO PUNO PUNO PUNO PUNO PUNO PUNO PUNO PUNO PUNO 
-GRNO GRNO GRNO GRNO GRNO GRNO GRNO GRNO GRNO GRNO GRNO 
+---- ---- GYNO GYNO GYNO GYNO GYNO GYNO GYNO ---- ---- 
+---- ---- RENO RENO RENO RENO RENO RENO RENO ---- ---- 
+---- ---- YENO YENO YENO YENO YENO YENO YENO ---- ---- 
+---- ---- BLNO BLNO BLNO BLNO BLNO BLNO BLNO ---- ---- 
+---- ---- PUNO PUNO PUNO PUNO PUNO PUNO PUNO ---- ---- 
+---- ---- GRNO GRNO GRNO GRNO GRNO GRNO GRNO ---- ---- 
 ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
 ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
 ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
@@ -15,3 +16,11 @@ GRNO GRNO GRNO GRNO GRNO GRNO GRNO GRNO GRNO GRNO GRNO
 ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
 ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
 ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
+---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
+
+
+
+
+
+
+

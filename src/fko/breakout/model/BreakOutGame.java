@@ -143,7 +143,7 @@ public class BreakOutGame extends Observable {
 		brickLayout = new BrickLayout(BRICK_GAP, playfieldWidth, playfieldHeight);
 		
 		// load first level
-		brickLayout.setMatrix(LevelLoader.getLevel(1));
+		brickLayout.setMatrix(LevelLoader.getInstance().getLevel(1));
 
 		// start the paddle movements
 		paddleMovementTimeline.setCycleCount(Timeline.INDEFINITE);

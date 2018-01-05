@@ -123,7 +123,7 @@ public class Brick {
 	}
 	
 	public String toShortString() {
-		return String.format("%2.2s%2.2s", brickType.name(),powerType.name());
+		return String.format("%2.2s%2.2s", brickType.sign,powerType.name());
 	}
 
 	/**
