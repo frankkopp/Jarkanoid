@@ -24,6 +24,7 @@ SOFTWARE.
 package fko.breakout.model;
 
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 
 /**
  * BrickLayout
@@ -41,12 +42,18 @@ import javafx.beans.property.DoubleProperty;
  */
 public class BrickLayout {
 
+	public static final int ROWS = 18;
+	public static final int COLUMNS = 11;
+	
 	private double brickGap;
 	private DoubleProperty playfieldWidth;
 	private DoubleProperty playfieldHeight;
 
-	private Brick[][] brickMatrix = new Brick[18][11];
-
+	private Brick[][] brickMatrix = new Brick[ROWS][COLUMNS];
+	
+	private DoubleProperty brickWidth = new SimpleDoubleProperty();;
+	private DoubleProperty brickHeight = new SimpleDoubleProperty();;
+	
 	/**
 	 * Creates an empty BrickLayout.
 	 * 
@@ -64,6 +71,16 @@ public class BrickLayout {
 				brickMatrix[rows][cols] = null;
 			}
 		}
+		
+		// calculated bind of brick size to playfield size
+		brickWidth.bind((playfieldWidth
+				.subtract((COLUMNS+1)*brickGap))
+				.divide(COLUMNS));
+		brickHeight.bind((playfieldHeight
+				.subtract(playfieldHeight.get()*0.5)
+				.subtract((ROWS+1)*brickGap))
+				.divide(ROWS));
+				
 	}
 
 	public Brick[][] getMatrix() {
@@ -114,6 +131,20 @@ public class BrickLayout {
 		return playfieldHeight.get();
 	}
 
+	/**
+	 * @return
+	 */
+	public double getBrickWidth() {
+		return brickWidth.get();
+	}
+
+	/**
+	 * @return
+	 */
+	public double getBrickHeight() {
+		return brickHeight.get();
+	}
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
@@ -140,10 +171,5 @@ public class BrickLayout {
 		builder.append("]");
 		return builder.toString();
 	}
-
-
-
-
-
 
 }
