@@ -59,7 +59,7 @@ class BrickLayoutTest {
 	 */
 	@Test
 	void testBrickLayout() {
-		BrickLayout bl = new BrickLayout(2, playfieldWidth, playfieldWidth);
+		BrickLayout bl = new BrickLayout(2, playfieldWidth, playfieldHeight);
 		assertNotNull(bl);
 		assertEquals(2, bl.getBrickGap());
 		assertEquals(780, bl.getPlayfieldWidth());
