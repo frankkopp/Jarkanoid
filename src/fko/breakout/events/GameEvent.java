@@ -31,8 +31,9 @@ package fko.breakout.events;
 public class GameEvent {
 	
 	private final GameEventType eventType;
+	private Object args;
 	
-	public GameEvent(GameEventType eventType) {
+	public GameEvent(GameEventType eventType, Object...args) {
 		this.eventType = eventType;
 	}
 	
@@ -45,8 +46,6 @@ public class GameEvent {
 		return "GameEvent [eventType=" + eventType + "]";
 	}
 
-
-
 	public enum GameEventType {
 		NONE,
 		HIT_PADDLE,
@@ -56,5 +55,9 @@ public class GameEvent {
 		GAME_START,
 		GAME_OVER,
 		NEW_BALL;
+	}
+	
+	public Object getEventParameter() {
+		return args;
 	}
 }
