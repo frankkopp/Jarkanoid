@@ -54,7 +54,10 @@ public class GameEvent {
 		BALL_LOST,
 		GAME_START,
 		GAME_OVER,
-		NEW_BALL;
+		NEW_BALL, 
+		LEVEL_COMPLETE,
+		LEVEL_START, 
+		GAME_WON;
 	}
 	
 	public Object getEventParameter() {

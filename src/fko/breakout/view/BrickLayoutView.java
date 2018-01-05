@@ -33,7 +33,7 @@ import javafx.scene.Group;
  */
 public class BrickLayoutView extends Group {
 	
-	private BrickView[][] allBricks;
+//	private BrickView[][] allBricks;
 
 	/**
 	 * Creates empty BrickLayout

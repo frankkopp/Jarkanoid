@@ -74,6 +74,7 @@ public class MainController implements Initializable, Observer {
 
 	private ParallelTransition paddleHitAnimation;
 	private ParallelTransition wallHitAnimation;
+	private ParallelTransition brickHitAnimation;
 	
 	/**
 	 * @param model
@@ -145,7 +146,7 @@ public class MainController implements Initializable, Observer {
 		// remaining lives text
 		livesLabel.textProperty().bind(model.currentRemainingLivesProperty().asString());
 		// score text
-		pointsLabel.textProperty().bind(model.currentScoreProperty().asString("%0,6d"));
+		pointsLabel.textProperty().bind(model.currentScoreProperty().asString("%06d"));
 
 		// game over splash text
 		gameOverSplash.visibleProperty().bind(model.gameOverProperty());
@@ -177,6 +178,7 @@ public class MainController implements Initializable, Observer {
 
 		paddleHitAnimation = new ParallelTransition(hitPaddleScaleTransition, hitPaddleStrokeTransition, hitBallScaleTransition, hitBallStrokeTransition);
 		wallHitAnimation = new ParallelTransition(hitBallScaleTransition, hitBallStrokeTransition);
+		brickHitAnimation = new ParallelTransition(hitBallScaleTransition, hitBallStrokeTransition);
 
 		//		EXAMPLE:
 		//		Duration time = new Duration(10000);
@@ -200,12 +202,15 @@ public class MainController implements Initializable, Observer {
 		}
 		
 		GameEvent gameEvent = (GameEvent) e;
-		System.out.println(gameEvent);
+//		System.out.println(gameEvent);
 
 		switch (gameEvent.getEventType()) {
 		case HIT_PADDLE: paddleHitAnimation.play(); sounds.playClip(Clips.PADDLE); break;
 		case HIT_WALL: wallHitAnimation.play(); sounds.playClip(Clips.WALL); break;
+		case HIT_BRICK: brickHitAnimation.play(); sounds.playClip(Clips.BRICK); break;
 		case BALL_LOST: sounds.playClip(Clips.BALL_LOST); break;
+		case LEVEL_COMPLETE: break;
+		case LEVEL_START: break;
 		default: 
 		}
 		
@@ -215,7 +220,7 @@ public class MainController implements Initializable, Observer {
 				|| gameEvent.getEventType().equals(GameEventType.HIT_BRICK)) {
 			Platform.runLater(() -> view.getBrickLayoutView().draw(model.getBrickLayout()));
 		}
-		System.out.println(String.format("Drawing bricks took %,d ns", System.nanoTime()-start));
+//		System.out.println(String.format("Drawing bricks took %,d ns", System.nanoTime()-start));
 
 	}
 
