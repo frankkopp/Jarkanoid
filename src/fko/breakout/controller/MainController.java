@@ -169,6 +169,9 @@ public class MainController implements Initializable, Observer {
 		prepareAnimations();
 	}
 
+	/**
+	 * create the animations for later playing
+	 */
 	private void prepareAnimations() {
 		hitPaddleScaleTransition = new ScaleTransition(Duration.millis(50), paddle);
 		hitPaddleScaleTransition.setByX(0.1);
