@@ -71,6 +71,8 @@ public class BreakOut extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.centerOnScreen();
 		primaryStage.setResizable(false);
+		
+		primaryStage.setTitle("BreakOut Clone by Frank Kopp");
 
 		// closeAction
 		primaryStage.setOnCloseRequest(event -> {
