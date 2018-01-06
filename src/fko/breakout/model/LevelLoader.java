@@ -54,7 +54,7 @@ import fko.breakout.model.exceptions.LevelLoaderNoLevelFilesException;
  * There must be 18 rows.<br>
  * Each row has 11 token.<br>
  * Each token has 4 characters and a space in between.<br>
- * A token with '----' represents an emtpy cell<br>
+ * A token with '----' represents an empty cell<br>
  * A taken with 4 letters represent a brick. The first two letters are 
  * from the <code>BrickType.sign</code> and the last two letters represent
  * the fixed power type this brick has. (Usually powers are randomized but
@@ -193,7 +193,9 @@ public class LevelLoader {
 
 			try {
 				
-				files = Files.list(FileSystems.getDefault().getPath(folderURL.getPath()))
+				String platformIndependedPathString = folderURL.getPath().replaceFirst("^/(.:/)", "$1");
+				
+				files = Files.list(FileSystems.getDefault().getPath(platformIndependedPathString))
 						.map(m -> m.toFile().getName())
 						.filter(f -> f.lastIndexOf(filterString) >= 0 ) // match "Level-"
 						.filter(f -> f.endsWith(fileType)) // match "*.txt"
