@@ -37,6 +37,9 @@ import javafx.scene.Group;
  */
 public class BrickLayoutView extends Group {
 	
+	// store of created BrickViews to be able to selectively delete them
+	private BrickView[][] allBricks;
+	
 	/**
 	 * Creates empty BrickLayout
 	 */
@@ -44,9 +47,21 @@ public class BrickLayoutView extends Group {
 		super();
 	}
 
+	/**
+	 * draws the BrickView. Bricks are removed selectively by using a storage array.
+	 * @param brickLayout
+	 */
 	public void draw(BrickLayout brickLayout) {
 		// we might need to do this more selective to save time
-		this.getChildren().clear();
+		if (brickLayout == null) {
+			this.getChildren().clear();
+			return;
+		} 
+		 
+		// create a store for all BrickViews
+		if (allBricks == null) {
+			allBricks = new BrickView[BrickLayout.ROWS][BrickLayout.COLUMNS];
+		}
 		
 		// readability
 		final double vGap = brickLayout.getBrickGap();
@@ -59,12 +74,36 @@ public class BrickLayoutView extends Group {
 			for (int col=0; col<BrickLayout.COLUMNS; col++) {
 				double y = vGap + (row*vGap) + row * brickHeight;
 				double x = hGap + (col*hGap) + col * brickWidth;
-				if (brickLayout.getBrick(row, col) != null) {
-					this.getChildren().add(
-							new BrickView(x, y, 
-							brickWidth, brickHeight,brickLayout.getBrick(row, col)));
-				}
+				
+				// brick exists in model but not in view
+				if (brickLayout.getBrick(row, col) != null
+						&& allBricks[row][col] == null) {
+					
+					allBricks[row][col] = new BrickView(x, y, 
+							brickWidth, brickHeight,brickLayout.getBrick(row, col));
+					this.getChildren().add(allBricks[row][col]);
+
+				// brick exists in view but not in model - erase BrickView
+				} else if (brickLayout.getBrick(row, col) == null
+						&& allBricks[row][col] != null) {
+					
+					this.getChildren().remove(allBricks[row][col]);
+					allBricks[row][col] = null;
+
+				} 
 			} // end for col
 		} //end for row
+	}
+
+	/**
+	 * @param row
+	 * @param col
+	 * @return
+	 */
+	public BrickView getBrickView(int row, int col) {
+		if (row<0 || col<0 || row>=allBricks.length || col>=allBricks[row].length) {
+			return null;
+		}
+		return allBricks[row][col];
 	}
 }
