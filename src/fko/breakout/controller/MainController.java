@@ -164,6 +164,7 @@ public class MainController implements Initializable, Observer {
 		pointsLabel.textProperty().bind(model.currentScoreProperty().asString("%06d"));
 
 		// game over splash text
+		// TODO: GAME_OVER vs. GAME_WIN
 		gameOverSplash.visibleProperty().bind(model.gameOverProperty());
 
 		prepareAnimations();
@@ -218,7 +219,7 @@ public class MainController implements Initializable, Observer {
 
 	/**
 	 * We use the Observable notification for certain events to enable animations and sound.
-	 * Most other model changes are handled through Property indings. 
+	 * Most other model changes are handled through Property Bindings. 
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
 	@Override
@@ -255,7 +256,6 @@ public class MainController implements Initializable, Observer {
 	 * @param event 
 	 */
 	private void handleHitBrickEvent(GameEvent event) {
-		System.out.println(event);
 		if (event.getEventParameter() != null) {
 			Object[] param = (Object[]) event.getEventParameter();
 			int row = (int) param[0];
