@@ -80,7 +80,7 @@ public class BrickLayout {
 	/**
 	 * @param row
 	 * @param col
-	 * @return number of bricks left
+	 * @return number of points for this hit
 	 */
 	public int hitBrick(int row, int col) {
 		final Brick brick = brickMatrix[row][col];
@@ -88,8 +88,9 @@ public class BrickLayout {
 		if (brick.increaseHitCount() == 0) {
 			brickMatrix[row][col] = null;
 			numberOfBricks--;
+			return points;
 		}
-		return points;
+		return 0;
 	}
 
 	public Brick[][] getMatrix() {
