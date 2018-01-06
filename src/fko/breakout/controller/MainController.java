@@ -34,10 +34,7 @@ import fko.breakout.events.GameEvent.GameEventType;
 import fko.breakout.model.BreakOutGame;
 import fko.breakout.model.Sounds;
 import fko.breakout.model.Sounds.Clips;
-import fko.breakout.view.BrickView;
 import fko.breakout.view.MainView;
-import javafx.animation.FillTransition;
-import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.StrokeTransition;
@@ -87,9 +84,7 @@ public class MainController implements Initializable, Observer {
 	private StrokeTransition hitBallStrokeTransition;
 	private ParallelTransition paddleHitAnimation;
 	private ParallelTransition wallHitAnimation;
-	private ParallelTransition brickHitBallAnimation;
-
-	private FillTransition solidBrickHitTimeline;
+	private ParallelTransition brickHitAnimation;
 
 	/**
 	 * @param model
@@ -179,8 +174,7 @@ public class MainController implements Initializable, Observer {
 		hitPaddleScaleTransition.setCycleCount(2);
 		hitPaddleScaleTransition.setAutoReverse(true);
 
-		hitPaddleStrokeTransition = new StrokeTransition(Duration.millis(50), paddle);
-		hitPaddleStrokeTransition.setToValue(Color.BLACK);
+		hitPaddleStrokeTransition = new StrokeTransition(Duration.millis(50), paddle, Color.WHITE , Color.BLACK);
 		hitPaddleStrokeTransition.setCycleCount(2);
 		hitPaddleStrokeTransition.setAutoReverse(true);
 
@@ -190,30 +184,23 @@ public class MainController implements Initializable, Observer {
 		hitBallScaleTransition.setCycleCount(2);
 		hitBallScaleTransition.setAutoReverse(true);
 
-		hitBallStrokeTransition = new StrokeTransition(Duration.millis(50), ball);
-		hitBallStrokeTransition.setToValue(Color.WHITE);
+		hitBallStrokeTransition = new StrokeTransition(Duration.millis(50), ball, Color.BLACK , Color.WHITE);
 		hitBallStrokeTransition.setCycleCount(2);
 		hitBallStrokeTransition.setAutoReverse(true);
-
-		solidBrickHitTimeline = new FillTransition(Duration.millis(75));
-		solidBrickHitTimeline.setToValue(Color.WHITE);
-		solidBrickHitTimeline.setInterpolator(Interpolator.EASE_BOTH);
-		solidBrickHitTimeline.setCycleCount(2);
-		solidBrickHitTimeline.setAutoReverse(true);
 
 		// combined animations
 		paddleHitAnimation = new ParallelTransition(hitPaddleScaleTransition, hitPaddleStrokeTransition, hitBallScaleTransition, hitBallStrokeTransition);
 		wallHitAnimation = new ParallelTransition(hitBallScaleTransition, hitBallStrokeTransition);
-		brickHitBallAnimation = new ParallelTransition(hitBallScaleTransition, hitBallStrokeTransition);
+		brickHitAnimation = new ParallelTransition(hitBallScaleTransition, hitBallStrokeTransition);
 
 		//		EXAMPLE for animations over arbitrary properties:
-		//		final Timeline timeline = new Timeline();
-		//		timeline.setCycleCount(Timeline.INDEFINITE);
-		//		timeline.setAutoReverse(true);
-		//		final KeyValue kv = new KeyValue(rectBasicTimeline.xProperty(), 300);
-		//		final KeyFrame kf = new KeyFrame(Duration.millis(500), kv);
-		//		timeline.getKeyFrames().add(kf);
-		//		timeline.play();
+		//		Duration time = new Duration(10000);
+		//			KeyValue keyValue = new KeyValue(circle.translateXProperty(), 300);
+		//			KeyFrame keyFrame = new KeyFrame(time, keyValue);
+		//			timeline.getKeyFrames().add(keyFrame);
+		//			timeline.setCycleCount(2);
+		//			timeline.setAutoReverse(true);
+		//			timeline.play();
 	}
 
 	/**
@@ -233,7 +220,7 @@ public class MainController implements Initializable, Observer {
 		switch (gameEvent.getEventType()) {
 		case HIT_PADDLE: paddleHitAnimation.play(); sounds.playClip(Clips.PADDLE); break;
 		case HIT_WALL: wallHitAnimation.play(); sounds.playClip(Clips.WALL); break;
-		case HIT_BRICK: handleHitBrickEvent(gameEvent); break;
+		case HIT_BRICK: brickHitAnimation.play(); sounds.playClip(Clips.BRICK); break;
 		case BALL_LOST: sounds.playClip(Clips.BALL_LOST); break;
 		case LEVEL_COMPLETE: break;
 		case LEVEL_START: break;
@@ -241,33 +228,14 @@ public class MainController implements Initializable, Observer {
 		}
 
 		// update brickLayoutView
-		final long start = System.nanoTime();
+		//		final long start = System.nanoTime();
 		if (gameEvent.getEventType().equals(GameEventType.GAME_START) 
 				|| gameEvent.getEventType().equals(GameEventType.HIT_BRICK)) {
 			Platform.runLater(() -> view.getBrickLayoutView().draw(model.getBrickLayout()));
 		}
-		final long nanoTime = System.nanoTime()-start;
-		System.out.println(String.format("Drawing bricks took %,d ns", nanoTime));
+		//		final long nanoTime = System.nanoTime()-start;
+		//		System.out.println(String.format("Drawing bricks took %,d ns", nanoTime));
 
-	}
-
-	/**
-	 * @param event 
-	 */
-	private void handleHitBrickEvent(GameEvent event) {
-		System.out.println(event);
-		if (event.getEventParameter() != null) {
-			Object[] param = (Object[]) event.getEventParameter();
-			int row = (int) param[0];
-			int col = (int) param[1];
-			if (model.getBrickLayout().getBrick(row, col) != null) {
-				BrickView bv = view.getBrickLayoutView().getBrickView(row, col);
-				solidBrickHitTimeline.setShape(bv);
-				solidBrickHitTimeline.play();
-			}
-		}
-		brickHitBallAnimation.play(); 
-		sounds.playClip(Clips.BRICK);
 	}
 
 	/**
@@ -325,7 +293,7 @@ public class MainController implements Initializable, Observer {
 	private void mouseMovedAction(MouseEvent event) {
 		model.setMouseXPosition(event.getX());
 	}
-
+	
 	/**
 	 * Toggles Start/Stop game 
 	 */
@@ -367,7 +335,7 @@ public class MainController implements Initializable, Observer {
 			sounds.soundOn();
 		}
 	}
-
+	
 	@FXML
 	void paddleMouseClickAction(MouseEvent event) {
 		// not used
