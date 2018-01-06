@@ -45,6 +45,7 @@ public class GameEvent {
 	 */
 	public GameEvent(GameEventType eventType, Object...args) {
 		this.eventType = eventType;
+		this.args = args;
 	}
 	
 	/**
@@ -59,7 +60,7 @@ public class GameEvent {
 	 * event specific.
 	 */
 	public Object getEventParameter() {
-		return args;
+		return this.args;
 	}
 
 	@Override
