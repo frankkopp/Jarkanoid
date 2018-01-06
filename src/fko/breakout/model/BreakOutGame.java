@@ -42,9 +42,14 @@ import javafx.util.Duration;
 
 /**
  * BreakOutModel
+ * <p>
+ * Handles the BreakOut game status and calculations.<br>
+ * <p>
+ * It has not yet its own Thread - could become necessary later if performance/rendering issue occur. 
+ * <p>
  * 02.01.2018
  * @author Frank Kopp
- * TODO: Code Documentation
+ * TODO: add separate thread
  */
 public class BreakOutGame extends Observable {
 
@@ -52,7 +57,7 @@ public class BreakOutGame extends Observable {
 
 	private static final int 	START_LIVES = 5;
 	private static final long 	SLEEP_BETWEEN_LIVES = 1000; // in ms
-	private static final long 	SLEEP_BETWEEN_LEVELS = 3000;
+	private static final long 	SLEEP_BETWEEN_LEVELS = 3000; // in ms
 
 	private static final double 	PADDLE_INITIAL_FRAMERATE = 60.0; // Framerate for paddle movements
 	private static final Double 	PADDLE_MOVE_STEPS = 5.0; // steps per animation cycle
@@ -61,19 +66,19 @@ public class BreakOutGame extends Observable {
 	private static final int 	BALL_INITIAL_X = 390;
 	private static final int 	BALL_INITIAL_Y = 450;
 	private static final double 	BALL_INITIAL_FRAMERATE = 60.0;  // Framerate for ball movements
-	private static final double 	BALL_INITIAL_SPEED = 5.0; // Absolute speed of ball - 
-
-	private static final double 	BRICK_GAP = 2;
-
+	// Absolute speed of ball 
 	// when vertical equals px in y
 	// when horizontal equals px in x
+	private static final double 	BALL_INITIAL_SPEED = 5.0; 
+
+	private static final double 	BRICK_GAP = 2;
 
 	/* 
 	 * These values determine the size and dimension of elements in Breakout.
 	 * In normal MVC the View would use them to build the View elements. As we
-	 * us JavaFX and FXML with Scene Builder we already have these values in the View.
-	 * Therefore we need to duplicate them in den model anyway and make sure they stay
-	 * synchronized. 
+	 * us JavaFX and FXML with Scene Builder these values are already set by the FXML.
+	 * Therefore we duplicate them in den model and make sure they stay synchronized through 
+	 * property bindings. 
 	 */
 
 	// Playfield dimensions
@@ -116,14 +121,13 @@ public class BreakOutGame extends Observable {
 	private ReadOnlyIntegerWrapper currentScore = new ReadOnlyIntegerWrapper(0);
 	public ReadOnlyIntegerProperty currentScoreProperty() { return currentScore.getReadOnlyProperty(); };
 
-	// animations
+	// ball and paddle movement Timelines
 	private Timeline paddleMovementTimeline = new Timeline();
 	private Timeline ballMovementTimeline = new Timeline();
 
 	// called when key is pressed/released to indicate paddle movement to movement animation
 	private boolean paddleLeft;
 	private boolean paddleRight;
-
 	public void setPaddleLeft(boolean b) { paddleLeft = b; }
 	public void setPaddleRight(boolean b) { paddleRight = b; }
 
@@ -132,10 +136,11 @@ public class BreakOutGame extends Observable {
 	private double ball_vY = BALL_INITIAL_SPEED;
 	private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
+	// the brick layout holds all bricks and its positions of the games
 	private final BrickLayout brickLayout;
 
 	/**
-	 * Constructor
+	 * Constructor - prepares the brick layout and the movement Timelines.
 	 */
 	public BreakOutGame() {
 
@@ -171,7 +176,8 @@ public class BreakOutGame extends Observable {
 	}
 
 	/**
-	 * Called by the <code>ballMovementTimeline</code> animation event to move the ball.
+	 * Called by the <code>ballMovementTimeline</code> animation event to move the ball.<br>
+	 * Calls <code>checkCollision()</code>
 	 */
 	private void moveBall() {
 		ballCenterX.set(ballCenterX.get() + ball_vX);
@@ -181,8 +187,9 @@ public class BreakOutGame extends Observable {
 
 	/**
 	 * Checks if the ball has hit a wall, the paddle, a block or has left 
-	 * through the bottom. Calculates new speeds for each direction or calls
-	 * <code>ballLost()</code> when ball has left through bottom.
+	 * through the bottom. Calculates new speeds for each direction, tells brickLayout 
+	 * if the ball hits a brick and calls <code>ballLost()</code> when ball has left 
+	 * through bottom.
 	 */
 	private void checkCollision() {
 
@@ -198,134 +205,26 @@ public class BreakOutGame extends Observable {
 		final double paddleRightBound = paddleX.get() + paddleWidth.get();
 
 		// hit wall left or right
-		if (ballLeftBound <= 0) { // left
-			ballCenterX.set(0+ballRadius.get()); // in case it was <0
-			ball_vX *= -1;
-			setChanged();
-			notifyObservers(new GameEvent(GameEventType.HIT_WALL));
-			return;
-		}
-		if (ballRightBound >= playfieldWidth.get()) { // right
-			ballCenterX.set(playfieldWidth.get()-ballRadius.get()); // in case it was >playFieldWidth
-			ball_vX *= -1;
-			setChanged();
-			notifyObservers(new GameEvent(GameEventType.HIT_WALL));
-			return;
-		}
+		checkSideWallCollision(ballLeftBound, ballRightBound);
 
 		// hit wall top
-		if (ballUpperBound <= 0) {
-			ballCenterY.set(ballRadius.get()); // in case it was <0
-			ball_vY *= -1;
-			setChanged();
-			notifyObservers(new GameEvent(GameEventType.HIT_WALL));
-			return;
-		}
-
-		// hit paddle
-		if (ballLowerBound >= paddleUpperBound && ballLowerBound <= paddleLowerBound) {
-			if (ballRightBound > paddleLeftBound && ballLeftBound < paddleRightBound) {
-
-				// determine where the ball hit the paddle
-				double hitPointAbsolute = ballCenterX.get() - paddleLeftBound;
-				// normalize value to -1 (left), 0 (center), +1 (right)
-				double hitPointRelative = 2 * ((hitPointAbsolute / paddleWidth.get()) - 0.5);
-				// determine new angle
-				double newAngle = hitPointRelative * BALL_MAX_3ANGLE;
-
-				ball_vX = Math.sin(Math.toRadians(newAngle)) * BALL_INITIAL_SPEED;
-				ball_vY = -Math.cos(Math.toRadians(newAngle)) * BALL_INITIAL_SPEED;
-
-				setChanged();
-				notifyObservers(new GameEvent(GameEventType.HIT_PADDLE));
-				return;
-			}
-		}
+		checkTopWallCollision(ballUpperBound);
 
 		// hit brick
-		// TODO: hit brick
+		checkBrickCollision(ballUpperBound, ballLowerBound, ballLeftBound, ballRightBound);
 
-		//		System.out.println(ballUpperBound + " " +brickLayout.getLowerBound());
-		//		System.out.println(ballLowerBound + " " +brickLayout.getUpperBound());
-		//		System.out.println(ballRightBound + " " +brickLayout.getLeftBound());
-		//		System.out.println(ballLeftBound + " " +brickLayout.getRightBound());
-		//		System.out.println();
-		// first check if ball is in bounds of part of matrix with bricks (hotzone)
-		// TODO: check if this is necessary or efficient
-		//		if (ballUpperBound <= brickLayout.getLowerBound() // above lowest brick
-		//				&& ballLowerBound >= brickLayout.getUpperBound() // below highest brick
-		//				&& ballRightBound >= brickLayout.getLeftBound() // right of most left brick
-		//				&& ballLeftBound <= brickLayout.getRightBound()) { // left of most right brick
-
-		// calculate ball edge's brick cell
-		int ballCenterRow = (int) (ballCenterYProperty().get() 
-				/ (brickLayout.getBrickHeight()+brickLayout.getBrickGap()));
-		int ballCenterCol = (int) (ballCenterXProperty().get() 
-				/ (brickLayout.getBrickWidth()+brickLayout.getBrickGap()));
-
-		int ballUpperRow = (int) (ballUpperBound 
-				/ (brickLayout.getBrickHeight()+brickLayout.getBrickGap()));
-		int ballLowerRow = (int) ((ballLowerBound - brickLayout.getBrickGap())
-				/ (brickLayout.getBrickHeight()+brickLayout.getBrickGap()));
-		int ballLeftCol = (int) (ballLeftBound 
-				/ (brickLayout.getBrickWidth() + brickLayout.getBrickGap()));	
-		int ballRightCol = (int) ((ballRightBound - brickLayout.getBrickGap())
-				/ (brickLayout.getBrickWidth() + brickLayout.getBrickGap()));	
-
-		// hit above
-		if (brickLayout.getBrick(ballUpperRow, ballCenterCol) != null) {
-			//				System.out.println("HIT TOP");
-			currentScore.set(currentScore.get() + brickLayout.hitBrick(ballUpperRow, ballCenterCol));
-			ball_vY *= -1;
-			setChanged();
-			notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballUpperRow, ballCenterCol));
-		}
-		// hit below
-		if (brickLayout.getBrick(ballLowerRow, ballCenterCol) != null) {
-			//				System.out.println("HIT BOTTOM");
-			currentScore.set(currentScore.get() + brickLayout.hitBrick(ballLowerRow, ballCenterCol));
-			ball_vY *= -1;
-			setChanged();
-			notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballLowerRow, ballCenterCol));
-		}
-		// hit left
-		if (brickLayout.getBrick(ballCenterRow, ballLeftCol) != null) {
-			//				System.out.println("HIT LEFT");
-			currentScore.set(currentScore.get() + brickLayout.hitBrick(ballCenterRow, ballLeftCol));
-			ball_vX *= -1;
-			setChanged();
-			notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballCenterRow, ballLeftCol));
-		}
-		// hit right
-		if (brickLayout.getBrick(ballCenterRow, ballRightCol) != null) {
-			//				System.out.println("HIT RIGHT");
-			increaseScore(brickLayout.hitBrick(ballCenterRow, ballRightCol));
-			ball_vX *= -1;
-			setChanged();
-			notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballCenterRow, ballRightCol));
-		}
-
-		if (brickLayout.getNumberOfBricks() == 0) {
-			// Level done
-			setChanged();
-			notifyObservers(new GameEvent(GameEventType.LEVEL_COMPLETE));
-
-			// load new level or game over WON
-			loadNextLevel();
-
-			// Level done
-			setChanged();
-			notifyObservers(new GameEvent(GameEventType.LEVEL_START));
-		}
-
-
-		//			System.out.println(String.format("cr: %d cc: %d up: %d lo: %d le: %d ri: %d"
-		//					,ballCenterRow, ballCenterCol
-		//					,ballUpperRow, ballLowerRow, ballLeftCol, ballRightCol));
-
-		//		}
+		// hit paddle
+		checkPaddleCollision(ballLowerBound, ballLeftBound, ballRightBound, paddleUpperBound, paddleLowerBound,
+				paddleLeftBound, paddleRightBound);
 
 		// lost through bottom
+		checkBallLostThroughBottom(ballUpperBound);
+
+	}
+	/**
+	 * @param ballUpperBound
+	 */
+	private void checkBallLostThroughBottom(final double ballUpperBound) {
 		if (ballUpperBound >= playfieldHeight.get()) {
 
 			if (decreaseRemainingLives() < 0) {
@@ -345,7 +244,137 @@ public class BreakOutGame extends Observable {
 			// start new round
 			startRound(SLEEP_BETWEEN_LIVES);
 		}
+	}
 
+	/**
+	 * @param ballUpperBound
+	 * @param ballLowerBound
+	 * @param ballLeftBound
+	 * @param ballRightBound
+	 */
+	private void checkBrickCollision(final double ballUpperBound, final double ballLowerBound,
+			final double ballLeftBound, final double ballRightBound) {
+		// calculate ball edge's brick cell
+		int ballCenterRow = (int) (ballCenterYProperty().get() 
+				/ (brickLayout.getBrickHeight()+brickLayout.getBrickGap()));
+		int ballCenterCol = (int) (ballCenterXProperty().get() 
+				/ (brickLayout.getBrickWidth()+brickLayout.getBrickGap()));
+
+		int ballUpperRow = (int) (ballUpperBound 
+				/ (brickLayout.getBrickHeight()+brickLayout.getBrickGap()));
+		int ballLowerRow = (int) ((ballLowerBound - brickLayout.getBrickGap())
+				/ (brickLayout.getBrickHeight()+brickLayout.getBrickGap()));
+		int ballLeftCol = (int) (ballLeftBound 
+				/ (brickLayout.getBrickWidth() + brickLayout.getBrickGap()));	
+		int ballRightCol = (int) ((ballRightBound - brickLayout.getBrickGap())
+				/ (brickLayout.getBrickWidth() + brickLayout.getBrickGap()));	
+
+		// hit above
+		if (brickLayout.getBrick(ballUpperRow, ballCenterCol) != null) {
+			currentScore.set(currentScore.get() + brickLayout.hitBrick(ballUpperRow, ballCenterCol));
+			ball_vY *= -1;
+			setChanged();
+			notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballUpperRow, ballCenterCol));
+		}
+		// hit below
+		if (brickLayout.getBrick(ballLowerRow, ballCenterCol) != null) {
+			currentScore.set(currentScore.get() + brickLayout.hitBrick(ballLowerRow, ballCenterCol));
+			ball_vY *= -1;
+			setChanged();
+			notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballLowerRow, ballCenterCol));
+		}
+		// hit left
+		if (brickLayout.getBrick(ballCenterRow, ballLeftCol) != null) {
+			currentScore.set(currentScore.get() + brickLayout.hitBrick(ballCenterRow, ballLeftCol));
+			ball_vX *= -1;
+			setChanged();
+			notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballCenterRow, ballLeftCol));
+		}
+		// hit right
+		if (brickLayout.getBrick(ballCenterRow, ballRightCol) != null) {
+			increaseScore(brickLayout.hitBrick(ballCenterRow, ballRightCol));
+			ball_vX *= -1;
+			setChanged();
+			notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballCenterRow, ballRightCol));
+		}
+
+		if (brickLayout.getNumberOfBricks() == 0) {
+			// Level done
+			setChanged();
+			notifyObservers(new GameEvent(GameEventType.LEVEL_COMPLETE));
+
+			// load new level or game over WON
+			loadNextLevel();
+
+			// Level done
+			setChanged();
+			notifyObservers(new GameEvent(GameEventType.LEVEL_START));
+		}
+	}
+
+	/**
+	 * @param ballLowerBound
+	 * @param ballLeftBound
+	 * @param ballRightBound
+	 * @param paddleUpperBound
+	 * @param paddleLowerBound
+	 * @param paddleLeftBound
+	 * @param paddleRightBound
+	 * @return true if ball touches paddle
+	 */
+	private void checkPaddleCollision(final double ballLowerBound, final double ballLeftBound,
+			final double ballRightBound, final double paddleUpperBound, final double paddleLowerBound,
+			final double paddleLeftBound, final double paddleRightBound) {
+
+		if (ballLowerBound >= paddleUpperBound && ballLowerBound <= paddleLowerBound) { // ball on correct height
+			if (ballRightBound > paddleLeftBound && ballLeftBound < paddleRightBound) { // ball touches the paddle
+
+				// determine where the ball hit the paddle
+				double hitPointAbsolute = ballCenterX.get() - paddleLeftBound;
+				// normalize value to -1 (left), 0 (center), +1 (right)
+				double hitPointRelative = 2 * ((hitPointAbsolute / paddleWidth.get()) - 0.5);
+				// determine new angle
+				double newAngle = hitPointRelative * BALL_MAX_3ANGLE;
+
+				ball_vX = Math.sin(Math.toRadians(newAngle)) * BALL_INITIAL_SPEED;
+				ball_vY = -Math.cos(Math.toRadians(newAngle)) * BALL_INITIAL_SPEED;
+
+				setChanged();
+				notifyObservers(new GameEvent(GameEventType.HIT_PADDLE));
+			}
+		}
+	}
+
+	/**
+	 * @param ballUpperBound
+	 * @return true if ball touches top wall
+	 */
+	private void checkTopWallCollision(final double ballUpperBound) {
+		if (ballUpperBound <= 0) {
+			ballCenterY.set(ballRadius.get()); // in case it was <0
+			ball_vY *= -1;
+			setChanged();
+			notifyObservers(new GameEvent(GameEventType.HIT_WALL));
+		}
+	}
+
+	/**
+	 * @param ballLeftBound
+	 * @param ballRightBound
+	 * @return true if ball touches one of the side wall
+	 */
+	private void checkSideWallCollision(final double ballLeftBound, final double ballRightBound) {
+		if (ballLeftBound <= 0) { // left
+			ballCenterX.set(0+ballRadius.get()); // in case it was <0
+			ball_vX *= -1;
+			setChanged();
+			notifyObservers(new GameEvent(GameEventType.HIT_WALL));
+		} else if (ballRightBound >= playfieldWidth.get()) { // right
+			ballCenterX.set(playfieldWidth.get()-ballRadius.get()); // in case it was >playFieldWidth
+			ball_vX *= -1;
+			setChanged();
+			notifyObservers(new GameEvent(GameEventType.HIT_WALL));
+		}
 	}
 
 	/**
@@ -369,12 +398,18 @@ public class BreakOutGame extends Observable {
 		startRound(SLEEP_BETWEEN_LEVELS);
 	}
 
+	/**
+	 * called when out of balls or after last level
+	 */
 	private void gameOver() {
 		stopPlaying();
 		gameOver.set(true);
 	}
 
-
+	/**
+	 * Starts a new round after loosing a ball or completing a level
+	 * @param pause
+	 */
 	private void startRound(long pause) {
 		// reset the ball position and speed
 		resetBall();
@@ -385,6 +420,9 @@ public class BreakOutGame extends Observable {
 		}, pause, TimeUnit.MILLISECONDS);
 	}
 
+	/**
+	 * resets the ball's location and speed
+	 */
 	private void resetBall() {
 		// reset ball speed and direction (straight down)
 		ball_vX = 0;
@@ -395,14 +433,25 @@ public class BreakOutGame extends Observable {
 		ballCenterY.set(BALL_INITIAL_Y);
 	}
 
+	/**
+	 * increasing the score after hitting a brick
+	 * @param i
+	 * @return
+	 */
 	private int increaseScore(int i) { 
 		currentScore.set(currentScore.get()+i); 
 		return currentScore.get();
 	}
+	
+	/**
+	 * decreases the remaining lives after loosing a ball
+	 * @return remaining lives
+	 */
 	private int decreaseRemainingLives() {
 		currentRemainingLives.set(currentRemainingLives.get() - 1);
 		return currentRemainingLives.get();
 	}
+	
 	/**
 	 * Called from controller by mouse move events. Moves the paddle according to the mouse's x position
 	 * when mouse is in window. The paddle's center will be set to the current mouse position. 
@@ -420,6 +469,9 @@ public class BreakOutGame extends Observable {
 		}
 	}
 
+	/**
+	 * Starts a new game.
+	 */
 	public void startPlaying() {
 		isPlaying.set(true);
 		isPaused.set(false);
@@ -427,7 +479,6 @@ public class BreakOutGame extends Observable {
 
 		// load first level
 		brickLayout.setMatrix(LevelLoader.getInstance().getLevel(currentLevel.get()));
-		//System.out.println(brickLayout.toString());
 
 		// initialize new game
 		currentLevel.set(START_LEVEL);
@@ -441,6 +492,9 @@ public class BreakOutGame extends Observable {
 		startRound(SLEEP_BETWEEN_LIVES);
 	}
 
+	/**
+	 * stops the current game
+	 */
 	public void stopPlaying() {
 		isPlaying.set(false);
 		isPaused.set(false);
@@ -449,16 +503,25 @@ public class BreakOutGame extends Observable {
 		ballMovementTimeline.stop();
 	}
 
+	/**
+	 * @return true of game is running
+	 */
 	public boolean isPlaying() {
 		return isPlaying.get();
 	}
 
+	/**
+	 * pauses a running game 
+	 */
 	public void pausePlaying() {
 		if (!isPlaying()) return; // ignore if not playing
 		isPaused.set(true);
 		ballMovementTimeline.pause();
 	}
 
+	/**
+	 * resumes a paused running game
+	 */
 	public void resumePlaying() {
 		if (!isPlaying() && !isPaused()) return; // ignore if not playing
 		isPaused.set(false);
@@ -466,10 +529,16 @@ public class BreakOutGame extends Observable {
 
 	}
 
+	/**
+	 * @return true if game is paused
+	 */
 	public boolean isPaused() {
 		return isPaused.get();
 	}
 
+	/**
+	 * @return the current brick layout
+	 */
 	public BrickLayout getBrickLayout() {
 		return brickLayout;
 	}

@@ -55,11 +55,22 @@ import javafx.util.Duration;
 
 /**
  * MainController
+ * <p>
+ * The Controller sets up additional ui elements after the FXML loader has done its initialization. The FXML loader
+ * calls the Controller's initialize() method.<br/> 
+ * The Controller also receives all input and events from the user interface and the model and executes the appropriate 
+ * ui updates and model actions. The UI calls the actions methods directly. The model signals via the Observer Interface 
+ * and Property Bindings that the model has changed and the UI should update its views.
+ * 
+ * @see java.util.Observer#update(java.util.Observable, java.lang.Object) 
+ *
+ * <p>
  * 02.01.2018
  * @author Frank Kopp
  */
 public class MainController implements Initializable, Observer {
 
+	// handles to model and view
 	private BreakOutGame model;
 	private MainView view;
 
@@ -71,11 +82,10 @@ public class MainController implements Initializable, Observer {
 	private StrokeTransition hitPaddleStrokeTransition;
 	private ScaleTransition hitBallScaleTransition;
 	private StrokeTransition hitBallStrokeTransition;
-
 	private ParallelTransition paddleHitAnimation;
 	private ParallelTransition wallHitAnimation;
 	private ParallelTransition brickHitAnimation;
-	
+
 	/**
 	 * @param model
 	 */
@@ -84,21 +94,21 @@ public class MainController implements Initializable, Observer {
 	}
 
 	/**
+	 * Called by FXMLLoader
 	 * @see javafx.fxml.Initializable#initialize(java.net.URL, java.util.ResourceBundle)
 	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-
+		// empty
 	}
 
 	/**
 	 * @param view 
-	 * @param model
 	 */
 	public void bindModelToView(MainView view) {
 		this.view = view;
 
-		// add controller as listener of model for events
+		// add controller as listener of model for GameEvents
 		model.addObserver(this);
 
 		// add keyboard handlers
@@ -108,22 +118,22 @@ public class MainController implements Initializable, Observer {
 		// add mouse handlers
 		view.asParent().getScene().setOnMouseMoved(event -> mouseMovedAction(event));
 
-		// playfield
+		// playfield dimensions
 		playfieldPane.prefWidthProperty().bind(model.playfieldWidthProperty());
 		playfieldPane.prefHeightProperty().bind(model.playfieldHeightProperty());
 
-		// paddle
+		// paddle dimensions and location
 		paddle.widthProperty().bind(model.paddleWidthProperty());
 		paddle.heightProperty().bind(model.paddleHeightProperty());
 		paddle.xProperty().bind(model.paddleXProperty());
 		paddle.yProperty().bind(model.paddleYProperty());
 
-		// ball
+		// ball dimension and location
 		ball.radiusProperty().bind(model.ballRadiusProperty());
 		ball.centerXProperty().bind(model.ballCenterXProperty());
 		ball.centerYProperty().bind(model.ballCenterYProperty());
 
-		// startstopButton text
+		// startstopButton text updater
 		model.isPlayingProperty().addListener((v, o, n) -> {
 			if (n == true) {
 				startStopButton.setText("Stop");
@@ -132,7 +142,7 @@ public class MainController implements Initializable, Observer {
 			}
 		});
 
-		// pauseResumeButton text
+		// pauseResumeButton text updater
 		model.isPausedProperty().addListener((v, o, n) -> {
 			if (n == true) {
 				pauseResumeButton.setText("Resume");
@@ -151,11 +161,10 @@ public class MainController implements Initializable, Observer {
 		// game over splash text
 		gameOverSplash.visibleProperty().bind(model.gameOverProperty());
 
-		defineAnimations();
-
+		prepareAnimations();
 	}
 
-	private void defineAnimations() {
+	private void prepareAnimations() {
 		hitPaddleScaleTransition = new ScaleTransition(Duration.millis(50), paddle);
 		hitPaddleScaleTransition.setByX(0.1);
 		hitPaddleScaleTransition.setByY(0.1);
@@ -176,11 +185,12 @@ public class MainController implements Initializable, Observer {
 		hitBallStrokeTransition.setCycleCount(2);
 		hitBallStrokeTransition.setAutoReverse(true);
 
+		// combined animations
 		paddleHitAnimation = new ParallelTransition(hitPaddleScaleTransition, hitPaddleStrokeTransition, hitBallScaleTransition, hitBallStrokeTransition);
 		wallHitAnimation = new ParallelTransition(hitBallScaleTransition, hitBallStrokeTransition);
 		brickHitAnimation = new ParallelTransition(hitBallScaleTransition, hitBallStrokeTransition);
 
-		//		EXAMPLE:
+		//		EXAMPLE for animations over arbitrary properties:
 		//		Duration time = new Duration(10000);
 		//			KeyValue keyValue = new KeyValue(circle.translateXProperty(), 300);
 		//			KeyFrame keyFrame = new KeyFrame(time, keyValue);
@@ -192,7 +202,7 @@ public class MainController implements Initializable, Observer {
 
 	/**
 	 * We use the Observable notification for certain events to enable animations and sound.
-	 * Most other model changes are handled through Bindings. 
+	 * Most other model changes are handled through Property indings. 
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
 	@Override
@@ -200,10 +210,10 @@ public class MainController implements Initializable, Observer {
 		if (!(e instanceof GameEvent)) {
 			BreakOut.fatalError("Unknown event type. Event is not of type GameEvent");
 		}
-		
-		GameEvent gameEvent = (GameEvent) e;
-//		System.out.println(gameEvent);
 
+		GameEvent gameEvent = (GameEvent) e;
+
+		// define actions for different events
 		switch (gameEvent.getEventType()) {
 		case HIT_PADDLE: paddleHitAnimation.play(); sounds.playClip(Clips.PADDLE); break;
 		case HIT_WALL: wallHitAnimation.play(); sounds.playClip(Clips.WALL); break;
@@ -213,17 +223,22 @@ public class MainController implements Initializable, Observer {
 		case LEVEL_START: break;
 		default: 
 		}
-		
+
 		// update brickLayoutView
-		long start = System.nanoTime();
+		//		final long start = System.nanoTime();
 		if (gameEvent.getEventType().equals(GameEventType.GAME_START) 
 				|| gameEvent.getEventType().equals(GameEventType.HIT_BRICK)) {
 			Platform.runLater(() -> view.getBrickLayoutView().draw(model.getBrickLayout()));
 		}
-//		System.out.println(String.format("Drawing bricks took %,d ns", System.nanoTime()-start));
+		//		final long nanoTime = System.nanoTime()-start;
+		//		System.out.println(String.format("Drawing bricks took %,d ns", nanoTime));
 
 	}
 
+	/**
+	 * Handles key pressed events
+	 * @param event
+	 */
 	private void keyPressedAction(KeyEvent event) {
 		switch (event.getCode()) {
 		// game control
@@ -237,6 +252,10 @@ public class MainController implements Initializable, Observer {
 		}
 	}
 
+	/**
+	 * Handles key released events
+	 * @param event
+	 */
 	private void keyReleasedAction(KeyEvent event) {
 		switch (event.getCode()) {
 		// paddle control
@@ -246,22 +265,86 @@ public class MainController implements Initializable, Observer {
 		}
 	}
 
+	/**
+	 * Paddle action
+	 * @param b
+	 */
 	private void onPaddleLeftAction(boolean b) {
 		if (b) model.setPaddleLeft(true);
 		else model.setPaddleLeft(false);	
 	}
 
+	/**
+	 * Paddle action
+	 * @param b
+	 */
 	private void onPaddleRightAction(boolean b) {
 		if (b) model.setPaddleRight(true);
 		else model.setPaddleRight(false);
 	}
 
+	/**
+	 * Mouse action
+	 * @param b
+	 */
 	private void mouseMovedAction(MouseEvent event) {
 		model.setMouseXPosition(event.getX());
 	}
+	
+	/**
+	 * Toggles Start/Stop game 
+	 */
+	@FXML
+	void startStopButtonAction(ActionEvent event) {
+		if (model.isPlaying()) {
+			model.stopPlaying();
+		} else {
+			model.startPlaying();
+		}
+	}
+
+	/**
+	 * Toggles Pause/Resume game
+	 * @param event
+	 */
+	@FXML
+	void pauseResumeButtonAction(ActionEvent event) {
+		if (model.isPlaying()) {
+			if (model.isPaused()) {
+				model.resumePlaying();
+			} else {
+				model.pausePlaying();
+			}
+		}
+	}
+
+	/**
+	 * Toggles sound option
+	 * @param event
+	 */
+	@FXML
+	void soundButtonAction(ActionEvent event) {
+		if (sounds.isSoundOn()) {
+			soundButton.setText("Sound On");
+			sounds.soundOff();
+		} else {
+			soundButton.setText("Sound Off");
+			sounds.soundOn();
+		}
+	}
+	
+	@FXML
+	void paddleMouseClickAction(MouseEvent event) {
+		// not used
+	}
+
+	@FXML
+	void paddleMouseReleasedAction(MouseEvent event) {
+		// not used
+	}
 
 	/* ********************************************************
-	 * FXML 
+	 * FXML - injected by FXMLLoader
 	 * ********************************************************/
 
 	@FXML
@@ -302,48 +385,5 @@ public class MainController implements Initializable, Observer {
 
 	@FXML
 	private Text gameOverSplash;
-
-	@FXML
-	void paddleMouseClickAction(MouseEvent event) {
-		System.out.println("Mouse Click: "+event);
-	}
-
-	@FXML
-	void paddleMouseReleasedAction(MouseEvent event) {
-		System.out.println("Mouse Release: "+event);
-	}
-
-	@FXML
-	void startStopButtonAction(ActionEvent event) {
-		if (model.isPlaying()) {
-			model.stopPlaying();
-		} else {
-			model.startPlaying();
-		}
-	}
-
-	@FXML
-	void pauseResumeButtonAction(ActionEvent event) {
-		if (model.isPlaying()) {
-			if (model.isPaused()) {
-				model.resumePlaying();
-			} else {
-				model.pausePlaying();
-			}
-		}
-	}
-
-	@FXML
-	void soundButtonAction(ActionEvent event) {
-		if (sounds.isSoundOn()) {
-			soundButton.setText("Sound On");
-			sounds.soundOff();
-		} else {
-			soundButton.setText("Sound Off");
-			sounds.soundOn();
-		}
-	}
-
-
 
 }

@@ -39,9 +39,11 @@ import javax.sound.sampled.LineUnavailableException;
 import fko.breakout.BreakOut;
 
 /**
- * This is an example program that demonstrates how to play back an audio file
- * using the Clip in Java Sound API.
- * @author www.codejava.net
+ * Sounds
+ * <p>
+ * Loads all sounds and maps them to an enumeration for easy access.
+ * <p>
+ *  
  */
 public class Sounds {
 

@@ -25,11 +25,16 @@ package fko.breakout.view;
 
 import fko.breakout.model.Brick;
 import javafx.scene.effect.Effect;
+import javafx.scene.effect.InnerShadow;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 /**
  * BrickVew
+ * <p>
+ * Extends <code>Rectangle</code> to represent a Brick view.<br>
+ * Adds design and animations.<br>
+ * <p>
  * 05.01.2018
  * @author Frank Kopp
  */
@@ -47,14 +52,14 @@ public class BrickView extends Rectangle {
 		
 		this.setFill(brick.getColor());
 		
-		Effect r = new javafx.scene.effect.InnerShadow(
+		Effect effect = new InnerShadow(
 				5.0,
 				1.0,
 				1.0,
 				Color.WHITE
 				); // DropShadow(); // new Reflection();
 		
-		this.setEffect(r);
+		this.setEffect(effect);
 	
 	}
 

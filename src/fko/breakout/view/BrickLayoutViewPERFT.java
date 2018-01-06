@@ -41,6 +41,9 @@ import javafx.util.Duration;
 
 /**
  * BrickLayoutViewPERFT
+ * <p>
+ * Test class to test optimizations for rendering the Bricks 
+ * <p>
  * 05.01.2018
  * @author Frank Kopp
  */
@@ -91,9 +94,6 @@ public class BrickLayoutViewPERFT extends Application {
 		ticker.play();
 	}
 
-	/**
-	 * @return
-	 */
 	private void afterWarmUp() {
 		System.out.println("Start timing");
 		Timeline ticker = new Timeline();

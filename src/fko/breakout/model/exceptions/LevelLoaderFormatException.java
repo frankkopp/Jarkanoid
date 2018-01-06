@@ -25,14 +25,20 @@ package fko.breakout.model.exceptions;
 
 /**
  * LevelLoaderFormatException
+ * <p>
+ * Thrown when LevelLoader determines that a level file is badly formatted. 
+ * <p>
+ * See {@link java.lang.RuntimeException}
+ * <p>
  * 04.01.2018
  * @author Frank Kopp
  */
 public class LevelLoaderFormatException extends RuntimeException {
+	
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 
+	 * Create empty LevelLoaderFormatException.
 	 */
 	public LevelLoaderFormatException() {
 		super();

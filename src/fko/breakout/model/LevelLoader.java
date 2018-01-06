@@ -46,10 +46,23 @@ import fko.breakout.model.exceptions.LevelLoaderNoLevelFilesException;
 
 /**
  * LevelLoader
+ * <p>
+ * Loads levels from level text files.<br>
+ * <p>
+ * File format:<br>
+ * Lines beginning with '#' mark comments and are ignored
+ * There must be 18 rows.<br>
+ * Each row has 11 token.<br>
+ * Each token has 4 characters and a space in between.<br>
+ * A token with '----' represents an emtpy cell<br>
+ * A taken with 4 letters represent a brick. The first two letters are 
+ * from the <code>BrickType.sign</code> and the last two letters represent
+ * the fixed power type this brick has. (Usually powers are randomized but
+ * this allows for powers to be fixed to certain bricks). 
+ *  
+ * <p>
  * 04.01.2018
  * @author Frank Kopp
- * 
- * TODO: Code Documentation
  */
 public class LevelLoader {
 
@@ -72,14 +85,32 @@ public class LevelLoader {
 		return instance;
 	}
 
+	/**
+	 * For Unit Testing only.
+	 * 
+	 * @param folder
+	 * @param preFix
+	 * @param fileType
+	 * @return returns a new instance for the purpose of unit testing 
+	 */
 	protected static LevelLoader getNewInstanceForUnitTest(String folder, String preFix, String fileType) {
 		return new LevelLoader(folder, preFix, fileType);
 	}
 
+	/**
+	 * Private constructor to create the singleton instance.
+	 */
 	private LevelLoader() {
 		initialize(defaultFolder); // default folder
 	}
 
+	/**
+	 * For Unit Testing only.
+	 * Private constructor to create the singleton instance.
+	 * @param folder
+	 * @param preFix
+	 * @param fileType
+	 */
 	private LevelLoader(String folder, String preFix, String fileType) {
 		this.defaultFolder = folder;
 		this.preFix = preFix;
@@ -87,29 +118,45 @@ public class LevelLoader {
 		initialize(folder);
 	}
 
+	/**
+	 * @param i (> 0 and < maxAvailableLevel)
+	 * @return the level matrix or null of no such level
+	 */
+	public Brick[][] getLevel(int i) {
+		if (i < 1) return null;
+		return levels.get(""+i);
+	}
+
+	/**
+	 * @param folder
+	 * @throws LevelLoaderNoLevelFilesException
+	 */
 	protected void initialize(String folder) throws LevelLoaderNoLevelFilesException {
 		List<String> files = getLevelFiles(folder);
-		//System.out.println("Number of Level files: "+files.size());
 		if (files.isEmpty()) {
 			throw new LevelLoaderNoLevelFilesException("Level load could not find any level files.");
 		}
 		for (String file : files) {
-//			System.out.println(file);
 			final List<String> lines = getLinesFromLevelFile(folder, file);
-			//			System.out.println(file +" has "+ lines.size() + " lines.");
 			// read lines into data structure
 			processLinesFromLevel(file, lines);
 		}
-//		System.out.println("Levels Total: "+levels.size());
-//		System.out.println("Levels: "+levels.keySet().toString());
-
 	}
 
+	/**
+	 * getLevelFiles from folder.
+	 * <p>
+	 * Protected instead for private for unit testing.
+	 * 
+	 * @param folder
+	 * @return file names in folder matching the file pattern "Level-<number>.txt"
+	 * @throws LevelLoaderIOException
+	 */
 	protected List<String> getLevelFiles(String folder) throws LevelLoaderIOException {
 		List<String> files = null;
 
 		/*
-		 * This is really SUPER ugly but I have not found another way yet to get all 
+		 * This is really SUPER ugly but I haven' found another way yet to get all 
 		 * files from a resource directory when running from IDE AND running from JAR file.
 		 */
 		final File jarFile = 
@@ -124,8 +171,8 @@ public class LevelLoader {
 				String filterString = folder.substring(1) + preFix;
 
 				files = jar.stream()
-						.filter(f -> f.getName().lastIndexOf(filterString) >= 0 )
-						.filter(f -> f.getName().endsWith(fileType))
+						.filter(f -> f.getName().lastIndexOf(filterString) >= 0 ) // match "Level-"
+						.filter(f -> f.getName().endsWith(fileType)) // match ".txt"
 						.map(f -> f.getName().substring(f.getName().lastIndexOf(preFix)))
 						.collect(Collectors.toList());
 
@@ -145,14 +192,13 @@ public class LevelLoader {
 			String filterString = preFix;
 
 			try {
-//				System.out.println(folderURL);
-//				System.out.println(Files.list(FileSystems.getDefault().getPath(folderURL.getPath())).count());
+				
 				files = Files.list(FileSystems.getDefault().getPath(folderURL.getPath()))
 						.map(m -> m.toFile().getName())
-						.filter(f -> f.lastIndexOf(filterString) >= 0 )
-						.filter(f -> f.endsWith(fileType))
+						.filter(f -> f.lastIndexOf(filterString) >= 0 ) // match "Level-"
+						.filter(f -> f.endsWith(fileType)) // match "*.txt"
 						.collect(Collectors.toList());
-//				System.out.println(files.size());
+			
 			} catch (IOException e) {
 				throw new LevelLoaderIOException(e);
 			}
@@ -160,6 +206,15 @@ public class LevelLoader {
 		return files;
 	}
 
+	/**
+	 * getLinesFromLevelFile
+	 * <p>
+	 * Protected instead for private for unit testing.
+	 * 
+	 * @param folder
+	 * @param file
+	 * @return
+	 */
 	protected List<String> getLinesFromLevelFile(String folder, String file) {
 		final InputStream fileStream = BreakOut.class.getResourceAsStream(folder+file);
 		if (fileStream == null) {
@@ -184,18 +239,23 @@ public class LevelLoader {
 		return lines;
 	}
 
+	/**
+	 * processLinesFromLevel
+	 * <p>
+	 * Protected instead for private for unit testing.
+	 * 
+	 * @param file
+	 * @param lines
+	 * @throws LevelLoaderFormatException
+	 */
 	protected void processLinesFromLevel(String file, List<String> lines) throws LevelLoaderFormatException {
 
 		Brick[][] tmpMatrix = new Brick[18][11];
-
-		//		System.out.println("Lines: "+lines.size());
 
 		String matchString = "^(--|GY|OR|CY|GR|RE|BL|PU|YE|SI|GO)(--|NO|LA|EN|CA|SL|BR|DI|PL)$";
 
 		int validLineCounter = 0;
 		for (int row=0; row<lines.size(); row++) {
-
-			//			System.out.println(lines.get(row));
 
 			if (lines.get(row).trim().isEmpty() || // remove empty lines
 					lines.get(row).trim().startsWith("#")) { // remove comment lines
@@ -207,7 +267,6 @@ public class LevelLoader {
 				throw new LevelLoaderFormatException(
 						String.format("Bad row format in %s at line %d", file, row+1));
 			}
-			//			System.out.println(String.format("Row %d has %d bricks", row+1, rowItems.length));
 			for (int col=0; col<rowItems.length; col++) {
 				if (rowItems[col].length() != 4
 						|| !rowItems[col].trim().matches(matchString)) {
@@ -219,12 +278,8 @@ public class LevelLoader {
 							String.format("Bad format in %s. Expected 18 lines, found %d.", file, validLineCounter));
 				}
 				tmpMatrix[validLineCounter-1][col] = itemToBrick(rowItems[col].trim());
-
-				//				System.out.print(b+" ");
 			}
-			//			System.out.println();
 		}
-		//		System.out.println("Valid lines: "+validLineCounter);
 
 		if (validLineCounter < 18) { // check if less than 18 rows
 			throw new LevelLoaderFormatException(
@@ -236,12 +291,16 @@ public class LevelLoader {
 	}
 
 	/**
+	 * Converts a string with 4 letters to a Brick instance. 
+	 * "----" or any invalid string return null.<br>
+	 * Otherwise the first two letters represent the <code>BrickType</code> and the
+	 * last two letters the <code>BrickPowerType</code>.
 	 * @param string
-	 * @return
+	 * @return a Brick instance from the given string. Null if not a valid Brick token.
 	 */
 	public static Brick itemToBrick(String string) {
 		// ignore the empty string
-		if (string.equals("----")) return null;
+		if (string.length() != 4 || string.equals("----")) return null;
 
 		String bricktype = string.substring(0,2);
 		String powertype = string.substring(2,4);
@@ -276,15 +335,6 @@ public class LevelLoader {
 		}
 
 		return new Brick(bt, bpt);
-	}
-
-	/**
-	 * @param i (>0 <maxAvailableLevel
-	 * @return the level matrix or null of no such level
-	 */
-	public Brick[][] getLevel(int i) {
-		if (i < 1) return null;
-		return levels.get(""+i);
 	}
 
 }

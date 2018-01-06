@@ -25,17 +25,23 @@ package fko.breakout.model.exceptions;
 
 /**
  * LevelLoaderIOException
+ * <p>
+ * Thrown when LevelLoader determines that a level file ican't be read or even found. 
+ * <p>
+ * See {@link java.lang.RuntimeException}
+ * <p>
  * 04.01.2018
  * @author Frank Kopp
  */
 public class LevelLoaderIOException extends RuntimeException {
 
+	private static final long serialVersionUID = 1L;
+
 	/**
-	 * 
+	 * Creates empty LevelLoaderIOException
 	 */
 	public LevelLoaderIOException() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -47,7 +53,6 @@ public class LevelLoaderIOException extends RuntimeException {
 	public LevelLoaderIOException(String message, Throwable cause, boolean enableSuppression,
 			boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -56,7 +61,6 @@ public class LevelLoaderIOException extends RuntimeException {
 	 */
 	public LevelLoaderIOException(String message, Throwable cause) {
 		super(message, cause);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -64,7 +68,6 @@ public class LevelLoaderIOException extends RuntimeException {
 	 */
 	public LevelLoaderIOException(String message) {
 		super(message);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -72,7 +75,6 @@ public class LevelLoaderIOException extends RuntimeException {
 	 */
 	public LevelLoaderIOException(Throwable cause) {
 		super(cause);
-		// TODO Auto-generated constructor stub
 	}
 
 }

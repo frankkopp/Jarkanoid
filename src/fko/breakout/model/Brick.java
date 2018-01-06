@@ -47,6 +47,7 @@ public class Brick {
 	private boolean isKilled = false;
 
 	/**
+	 * Creates a Brick.
 	 * @param brickType
 	 */
 	public Brick(BrickType brickType, BrickPowerType powerType) {
@@ -65,7 +66,7 @@ public class Brick {
 	}
 
 	/**
-	 * @return  number of hits the brick has already received.
+	 * @return number of hits the brick has already received.
 	 */
 	public int getHitCount() {
 		return hitCount;
@@ -124,21 +125,6 @@ public class Brick {
 	
 	public String toShortString() {
 		return String.format("%2.2s%2.2s", brickType.sign,powerType.name());
-	}
-
-	/**
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((brickType == null) ? 0 : brickType.hashCode());
-		result = prime * result + hitCount;
-		result = prime * result + (isInvincible ? 1231 : 1237);
-		result = prime * result + (isKilled ? 1231 : 1237);
-		result = prime * result + ((powerType == null) ? 0 : powerType.hashCode());
-		return result;
 	}
 
 	/**

@@ -34,12 +34,19 @@ import javafx.scene.layout.Pane;
 
 /**
  * MainView
+ * <p>
+ * Loads the main view from the MainView.fxml resource file.<br>
+ * Also add additional view elements e.g. BrickLayoutView.<br> 
+ * <p>
  * 02.01.2018
  * @author Frank Kopp
  */
 public class MainView {
 
+	@SuppressWarnings("unused")
 	private BreakOutGame model;
+	
+	@SuppressWarnings("unused")
 	private MainController controller;
 	
 	private final AnchorPane root;
@@ -59,6 +66,7 @@ public class MainView {
 		fxmlLoader.setController(controller);
 		root = (AnchorPane) fxmlLoader.load();
 		
+		// get playFieldPane and add brickLayoutView
 		Pane playFieldPane = (Pane) fxmlLoader.getNamespace().get("playfieldPane");
 		playFieldPane.getChildren().add(brickLayoutView);
 	}

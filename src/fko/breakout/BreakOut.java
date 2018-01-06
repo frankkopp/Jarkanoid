@@ -27,7 +27,6 @@ import java.net.URL;
 
 import fko.breakout.controller.MainController;
 import fko.breakout.model.BreakOutGame;
-import fko.breakout.model.LevelLoader;
 import fko.breakout.view.MainView;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -36,15 +35,24 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 /**
- * BreakOut
+ * BreakOut / Arkanoid Clone in Java
+ * <p>
+ * 
+ * <p>
  * 02.01.2018
  * @author Frank Kopp
  */
 public class BreakOut extends Application {
 
 	// VERSION
-	public static final String VERSION = "0.1"; 
+	public static final String VERSION = "0.2"; 
 
+	/**
+	 * Main
+	 */
+	public static void main(String[] args) {
+		launch(args);
+	}
 
 	/**
 	 * @see javafx.application.Application#start(javafx.stage.Stage)
@@ -52,8 +60,6 @@ public class BreakOut extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		
-		LevelLoader ll = LevelLoader.getInstance();
-
 		BreakOutGame model = new BreakOutGame();
 		MainController controller = new MainController(model);
 		MainView view = new MainView(model, controller); 
@@ -66,7 +72,7 @@ public class BreakOut extends Application {
 		primaryStage.centerOnScreen();
 		primaryStage.setResizable(false);
 
-		// closeAction - close through close action
+		// closeAction
 		primaryStage.setOnCloseRequest(event -> {
 			Platform.exit();
 			System.exit(0);
@@ -74,7 +80,6 @@ public class BreakOut extends Application {
 		});
 
 		primaryStage.show();
-
 	}
 
 	/**
@@ -94,13 +99,6 @@ public class BreakOut extends Application {
 		}
 	}
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		launch(args);
-	}
-	
 	/**
 	 * Clean up and exit the application
 	 */
@@ -146,6 +144,4 @@ public class BreakOut extends Application {
 	public static void minorError(String message,  Object... args) {
 		System.err.println(String.format(message, args));
 	}
-
-
 }

@@ -28,13 +28,15 @@ import javafx.scene.Group;
 
 /**
  * BrickLayoutView
+ * <p>
+ * Extends <code>Group</code> to cluster all Bricks into one group which will be added
+ * to the main view.
+ * <p>
  * 05.01.2018
  * @author Frank Kopp
  */
 public class BrickLayoutView extends Group {
 	
-//	private BrickView[][] allBricks;
-
 	/**
 	 * Creates empty BrickLayout
 	 */
@@ -45,15 +47,6 @@ public class BrickLayoutView extends Group {
 	public void draw(BrickLayout brickLayout) {
 		// we might need to do this more selective to save time
 		this.getChildren().clear();
-//		if (brickLayout == null) {
-//			this.getChildren().clear();
-//			return;
-//		} 
-		 
-		// create cache for all BrickViews
-//		if (allBricks == null) {
-//			allBricks = new BrickView[BrickLayout.ROWS][BrickLayout.COLUMNS];
-//		}
 		
 		// readability
 		final double vGap = brickLayout.getBrickGap();
@@ -61,20 +54,17 @@ public class BrickLayoutView extends Group {
 		final double brickWidth = brickLayout.getBrickWidth();
 		final double brickHeight = brickLayout.getBrickHeight(); 
 
+		// add all bricks according to the model brickLayout
 		for (int row=0; row<BrickLayout.ROWS; row++) {
 			for (int col=0; col<BrickLayout.COLUMNS; col++) {
 				double y = vGap + (row*vGap) + row * brickHeight;
 				double x = hGap + (col*hGap) + col * brickWidth;
 				if (brickLayout.getBrick(row, col) != null) {
-//					allBricks[row][col] = new BrickView(x, y, 
-//							brickWidth, brickHeight,brickLayout.getBrick(row, col));
-//					this.getChildren().add(allBricks[row][col]);
-					this.getChildren().add(new BrickView(x, y, 
+					this.getChildren().add(
+							new BrickView(x, y, 
 							brickWidth, brickHeight,brickLayout.getBrick(row, col)));
 				}
-			}
-		}
-
+			} // end for col
+		} //end for row
 	}
-
 }

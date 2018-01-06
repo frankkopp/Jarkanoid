@@ -25,17 +25,23 @@ package fko.breakout.model.exceptions;
 
 /**
  * LevelLoaderNoLevelFilesException
+ * <p>
+ * Thrown when LevelLoader determines that no level files could be found in given folder.
+ * <p>
+ * See {@link java.lang.RuntimeException}
+ * <p>
  * 04.01.2018
  * @author Frank Kopp
  */
 public class LevelLoaderNoLevelFilesException extends RuntimeException {
 
+	private static final long serialVersionUID = 1L;
+
 	/**
-	 * 
+	 * Creates empty LevelLoaderNoLevelFilesException
 	 */
 	public LevelLoaderNoLevelFilesException() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -47,7 +53,6 @@ public class LevelLoaderNoLevelFilesException extends RuntimeException {
 	public LevelLoaderNoLevelFilesException(String message, Throwable cause, boolean enableSuppression,
 			boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -56,7 +61,6 @@ public class LevelLoaderNoLevelFilesException extends RuntimeException {
 	 */
 	public LevelLoaderNoLevelFilesException(String message, Throwable cause) {
 		super(message, cause);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -64,7 +68,6 @@ public class LevelLoaderNoLevelFilesException extends RuntimeException {
 	 */
 	public LevelLoaderNoLevelFilesException(String message) {
 		super(message);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -72,7 +75,6 @@ public class LevelLoaderNoLevelFilesException extends RuntimeException {
 	 */
 	public LevelLoaderNoLevelFilesException(Throwable cause) {
 		super(cause);
-		// TODO Auto-generated constructor stub
 	}
 
 }
