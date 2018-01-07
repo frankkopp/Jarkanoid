@@ -1,26 +1,19 @@
 # Level 3
----- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
----- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
----- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
----- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
----- ---- GYNO GYNO GYNO GYNO GYNO GYNO GYNO ---- ---- 
----- ---- RENO RENO RENO RENO RENO RENO RENO ---- ---- 
----- ---- YENO YENO YENO YENO YENO YENO YENO ---- ---- 
----- ---- BLNO BLNO BLNO BLNO BLNO BLNO BLNO ---- ---- 
----- ---- PUNO PUNO PUNO PUNO PUNO PUNO PUNO ---- ---- 
----- ---- GRNO GRNO GRNO GRNO GRNO GRNO GRNO ---- ---- 
----- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
----- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
----- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
----- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
----- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
----- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
----- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
----- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
-
-
-
-
-
-
-
+---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
+---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
+---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
+GRNO GRNO GRNO GRNO GRNO GRNO GRNO GRNO GRNO GRNO GRNO GRNO GRNO 
+---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
+GYNO GYNO GYNO GONO GONO GONO GONO GONO GONO GONO GONO GONO GONO 
+---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----  
+RENO RENO RENO RENO RENO RENO RENO RENO RENO RENO RENO RENO RENO   
+---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
+GONO GONO GONO GONO GONO GONO GONO GONO GONO GONO GYNO GYNO GYNO   
+---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
+PUNO PUNO PUNO PUNO PUNO PUNO PUNO PUNO PUNO PUNO PUNO PUNO PUNO  
+---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
+BLNO BLNO BLNO GONO GONO GONO GONO GONO GONO GONO GONO GONO GONO 
+---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
+CYNO CYNO CYNO CYNO CYNO CYNO CYNO CYNO CYNO CYNO CYNO CYNO CYNO 
+---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
+GONO GONO GONO GONO GONO GONO GONO GONO GONO GONO CYNO CYNO CYNO 

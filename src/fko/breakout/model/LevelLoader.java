@@ -54,7 +54,7 @@ import fko.breakout.model.exceptions.LevelLoaderNoLevelFilesException;
  * There must be 18 rows.<br>
  * Each row has 11 token.<br>
  * Each token has 4 characters and a space in between.<br>
- * A token with '----' represents an empty cell<br>
+ * A token with 'ORNO' represents an empty cell<br>
  * A taken with 4 letters represent a brick. The first two letters are 
  * from the <code>BrickType.sign</code> and the last two letters represent
  * the fixed power type this brick has. (Usually powers are randomized but
@@ -124,7 +124,16 @@ public class LevelLoader {
 	 */
 	public Brick[][] getLevel(int i) {
 		if (i < 1) return null;
-		return levels.get(""+i);
+		// get the matrix from the Map
+		final Brick[][] myMatrix = levels.get(""+i);
+		// return a deep copy
+		final Brick[][] myNewMatrix = new Brick[BrickLayout.ROWS][BrickLayout.COLUMNS];
+		for (int row=0; row<BrickLayout.ROWS; row++) {
+			for (int col=0; col<BrickLayout.COLUMNS;col++) {
+				myNewMatrix[row][col] = myMatrix[row][col] == null ? null : myMatrix[row][col].clone();
+			}
+		}
+		return myNewMatrix;
 	}
 
 	/**
@@ -200,7 +209,6 @@ public class LevelLoader {
 						.filter(f -> f.lastIndexOf(filterString) >= 0 ) // match "Level-"
 						.filter(f -> f.endsWith(fileType)) // match "*.txt"
 						.collect(Collectors.toList());
-			
 			} catch (IOException e) {
 				throw new LevelLoaderIOException(e);
 			}
@@ -232,7 +240,7 @@ public class LevelLoader {
 		try {
 			line = br.readLine();
 			while (line != null) {
-				lines.add(line);
+				lines.add(line.trim());
 				line = br.readLine();
 			}
 		} catch (IOException e) {
@@ -252,22 +260,23 @@ public class LevelLoader {
 	 */
 	protected void processLinesFromLevel(String file, List<String> lines) throws LevelLoaderFormatException {
 
-		Brick[][] tmpMatrix = new Brick[18][11];
+		Brick[][] tmpMatrix = new Brick[BrickLayout.ROWS][BrickLayout.COLUMNS];
 
 		String matchString = "^(--|GY|OR|CY|GR|RE|BL|PU|YE|SI|GO)(--|NO|LA|EN|CA|SL|BR|DI|PL)$";
 
 		int validLineCounter = 0;
 		for (int row=0; row<lines.size(); row++) {
 
-			if (lines.get(row).trim().isEmpty() || // remove empty lines
-					lines.get(row).trim().startsWith("#")) { // remove comment lines
+			if (lines.get(row).isEmpty() || // remove empty lines
+					lines.get(row).startsWith("#")) { // remove comment lines
 				continue;
 			}
 			validLineCounter++;
-			String[] rowItems = lines.get(row).trim().split(" ");
-			if (rowItems.length != 11) { // check if 11 columns
+			String[] rowItems = lines.get(row).split(" ");
+			if (rowItems.length != BrickLayout.COLUMNS) { // check if 13 columns
 				throw new LevelLoaderFormatException(
-						String.format("Bad row format in %s at line %d", file, row+1));
+						String.format("Bad row format in %s at line %d. Expected %d columns, found %d"
+								, file, row+1, BrickLayout.COLUMNS, rowItems.length));
 			}
 			for (int col=0; col<rowItems.length; col++) {
 				if (rowItems[col].length() != 4
@@ -283,7 +292,7 @@ public class LevelLoader {
 			}
 		}
 
-		if (validLineCounter < 18) { // check if less than 18 rows
+		if (validLineCounter < BrickLayout.ROWS) { // check if less than 18 rows
 			throw new LevelLoaderFormatException(
 					String.format("Bad format in %s. Expected 18 lines, found %d.", file, validLineCounter));
 		}
@@ -294,7 +303,7 @@ public class LevelLoader {
 
 	/**
 	 * Converts a string with 4 letters to a Brick instance. 
-	 * "----" or any invalid string return null.<br>
+	 * "ORNO" or any invalid string return null.<br>
 	 * Otherwise the first two letters represent the <code>BrickType</code> and the
 	 * last two letters the <code>BrickPowerType</code>.
 	 * @param string

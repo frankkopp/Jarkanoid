@@ -1,19 +1,19 @@
 # Level 2
----- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
----- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
----- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
----- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
----- GYNO GYNO GYNO GYNO GYNO GYNO GYNO GYNO GYNO ---- 
----- RENO RENO RENO RENO RENO RENO RENO RENO RENO ---- 
----- YENO YENO YENO YENO YENO YENO YENO YENO YENO ---- 
----- BLNO BLNO BLNO BLNO BLNO BLNO BLNO BLNO BLNO ---- 
----- PUNO PUNO PUNO PUNO PUNO PUNO PUNO PUNO PUNO ---- 
----- GRNO GRNO GRNO GRNO GRNO GRNO GRNO GRNO GRNO ---- 
----- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
----- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
----- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
----- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
----- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
----- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
----- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
----- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
+---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
+---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
+GYNO ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
+GYNO ORNO ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
+GYNO ORNO ORNO ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
+GYNO ORNO ORNO ORNO ---- ---- ---- ---- ---- ---- ---- ---- ---- 
+GYNO ORNO ORNO ORNO ORNO ---- ---- ---- ---- ---- ---- ---- ---- 
+GYNO ORNO ORNO ORNO ORNO ORNO ---- ---- ---- ---- ---- ---- ---- 
+GYNO ORNO ORNO ORNO ORNO ORNO ORNO ---- ---- ---- ---- ---- ---- 
+GYNO ORNO ORNO ORNO ORNO ORNO ORNO ORNO ---- ---- ---- ---- ---- 
+GYNO ORNO ORNO ORNO ORNO ORNO ORNO ORNO ORNO ---- ---- ---- ---- 
+GYNO ORNO ORNO ORNO ORNO ORNO ORNO ORNO ORNO ORNO ---- ---- ---- 
+GYNO ORNO ORNO ORNO ORNO ORNO ORNO ORNO ORNO ORNO ORNO ---- ---- 
+GYNO ORNO ORNO ORNO ORNO ORNO ORNO ORNO ORNO ORNO ORNO ORNO ---- 
+SINO SINO SINO SINO SINO SINO SINO SINO SINO SINO SINO SINO RENO
+---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
+---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
+---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
