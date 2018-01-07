@@ -128,29 +128,44 @@ public class Brick {
 	}
 
 	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (!(obj instanceof Brick))
-			return false;
-		Brick other = (Brick) obj;
-		if (brickType != other.brickType)
-			return false;
-		if (hitCount != other.hitCount)
-			return false;
-		if (isInvincible != other.isInvincible)
-			return false;
-		if (isKilled != other.isKilled)
-			return false;
-		if (powerType != other.powerType)
-			return false;
-		return true;
-	}
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((brickType == null) ? 0 : brickType.hashCode());
+    result = prime * result + hitCount;
+    result = prime * result + (isInvincible ? 1231 : 1237);
+    result = prime * result + (isKilled ? 1231 : 1237);
+    result = prime * result + ((powerType == null) ? 0 : powerType.hashCode());
+    return result;
+  }
+
+  /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (!(obj instanceof Brick))
+      return false;
+    Brick other = (Brick) obj;
+    if (brickType != other.brickType)
+      return false;
+    if (hitCount != other.hitCount)
+      return false;
+    if (isInvincible != other.isInvincible)
+      return false;
+    if (isKilled != other.isKilled)
+      return false;
+    if (powerType != other.powerType)
+      return false;
+    return true;
+  }
 
 	/**
 	 * @see java.lang.Object#clone()

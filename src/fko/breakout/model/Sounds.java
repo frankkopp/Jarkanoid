@@ -47,112 +47,117 @@ import fko.breakout.BreakOut;
  */
 public class Sounds {
 
-	private static Sounds instance;
-	
-	// folder to all sound files
-	public static final String SOUND_FOLDER = "/sounds/";
+  private static volatile Sounds instance = null;
 
-	/**
-	 * All available audio clips of this class
-	 */
-	public enum Clips {
-		// ENUM		Filename w/o .wav
-		WALL 		("WallHit"),
-		PADDLE 		("PaddleHit"),
-		BRICK_S 		("BrickHit_Special"),
-		BRICK		("BrickHit_Normal"),
-		BALL_LOST	("Ball_Lost");
+  // folder to all sound files
+  public static final String SOUND_FOLDER = "/sounds/";
 
-		private final String _name;
+  /**
+   * All available audio clips of this class
+   */
+  public enum Clips {
+    // ENUM		Filename w/o .wav
+    WALL 		("WallHit"),
+    PADDLE 		("PaddleHit"),
+    BRICK_S 		("BrickHit_Special"),
+    BRICK		("BrickHit_Normal"),
+    BALL_LOST	("Ball_Lost");
 
-		private Clips(String name) {
-			_name = name;
-		}
-	}
+    private final String _name;
 
-	// to play sounds parallel
-	ExecutorService _executor = Executors.newScheduledThreadPool(3);
+    private Clips(String name) {
+      _name = name;
+    }
+  }
 
-	// available sounds mapped by the enum
-	private Map<Clips, URL> _sounds;
-	
-	// sound on/off
-	private boolean soundOn = true;
+  // to play sounds parallel
+  ExecutorService _executor = Executors.newScheduledThreadPool(3);
 
-	/**
-	 * Get theSounds instance with all sounds available 
-	 */
-	public static Sounds getInstance() {
-		if (instance == null) {
-			instance = new Sounds();
-		}
-		return instance;
-	}
-	
-	/**
-	 * Create an object with all tetris sounds available 
-	 */
-	private Sounds() {
-		_sounds = new HashMap<>();
-		// for all defined values in ENUM Clips
-		// read in the Clip and store them in the Map
-		Arrays.stream(Clips.values())
-		.forEach(c -> {
-			final String filename = SOUND_FOLDER + c._name+".wav";
-			final URL url = BreakOut.class.getResource(filename);
-			// create AudioInputStream object
-			if (url != null) {
-				_sounds.put(c, url);
-			} else {
-				BreakOut.criticalError("Sound file: "+filename+" cannot be loaded!");
-			}
-		});
-	}
+  // available sounds mapped by the enum
+  private Map<Clips, URL> _sounds;
 
-	/**
-	 * Plays the give clip once.
-	 * @param c enum from Clips
-	 */
-	public void playClip(Clips c) {
-		
-		// sound was not available
-		if (_sounds.get(c) == null || !soundOn) return;
-		
-		// execute in a new thread to play sound
-		_executor.execute(() -> {
-			 AudioInputStream audioIn = null;
-             try {
-                 audioIn = AudioSystem.getAudioInputStream(_sounds.get(c));
-             } catch (Exception e) {
-            	 e.printStackTrace();
-             }
-             if (audioIn == null) {
-                 return;
-             }
-             final Clip clip;
-             try {
-                 clip = AudioSystem.getClip();
-             } catch (LineUnavailableException e) {
-            	 e.printStackTrace();
-                 return;
-             }
-             try {
-                 clip.open(audioIn);
-             } catch (Exception e) {
-            	 e.printStackTrace();
-                 return;
-             }
-             clip.addLineListener(event -> {
-                 if (event.getType() == LineEvent.Type.STOP) {
-                     clip.close();
-                 }
-             });
-             clip.start();
-		});			
-	}
-	
-	public void soundOff() { soundOn=false; }
-	public void soundOn() {	soundOn=true; }
-	public boolean isSoundOn() { return soundOn; }
+  // sound on/off
+  private boolean soundOn = true;
+
+  /**
+   * Get theSounds instance with all sounds available 
+   */
+  public static Sounds getInstance() {
+    if (instance == null) {
+      // singleton could be created multiple times from multiple threads without this
+      synchronized(Sounds.class) { 
+        if (instance == null) {
+          instance = new Sounds();
+        }
+      }
+    }
+    return instance;
+  }
+
+  /**
+   * Create an object with all tetris sounds available 
+   */
+  private Sounds() {
+    _sounds = new HashMap<>();
+    // for all defined values in ENUM Clips
+    // read in the Clip and store them in the Map
+    Arrays.stream(Clips.values())
+    .forEach(c -> {
+      final String filename = SOUND_FOLDER + c._name+".wav";
+      final URL url = BreakOut.class.getResource(filename);
+      // create AudioInputStream object
+      if (url != null) {
+        _sounds.put(c, url);
+      } else {
+        BreakOut.criticalError("Sound file: "+filename+" cannot be loaded!");
+      }
+    });
+  }
+
+  /**
+   * Plays the give clip once.
+   * @param c enum from Clips
+   */
+  public void playClip(Clips c) {
+
+    // sound was not available
+    if (_sounds.get(c) == null || !soundOn) return;
+
+    // execute in a new thread to play sound
+    _executor.execute(() -> {
+      AudioInputStream audioIn = null;
+      try {
+        audioIn = AudioSystem.getAudioInputStream(_sounds.get(c));
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+      if (audioIn == null) {
+        return;
+      }
+      final Clip clip;
+      try {
+        clip = AudioSystem.getClip();
+      } catch (LineUnavailableException e) {
+        e.printStackTrace();
+        return;
+      }
+      try {
+        clip.open(audioIn);
+      } catch (Exception e) {
+        e.printStackTrace();
+        return;
+      }
+      clip.addLineListener(event -> {
+        if (event.getType() == LineEvent.Type.STOP) {
+          clip.close();
+        }
+      });
+      clip.start();
+    });			
+  }
+
+  public void soundOff() { soundOn=false; }
+  public void soundOn() {	soundOn=true; }
+  public boolean isSoundOn() { return soundOn; }
 
 }
