@@ -27,10 +27,18 @@ import java.io.IOException;
 
 import fko.breakout.controller.MainController;
 import fko.breakout.model.BreakOutGame;
+import javafx.animation.ParallelTransition;
+import javafx.animation.ScaleTransition;
+import javafx.animation.StrokeTransition;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 /**
  * MainView
@@ -43,46 +51,139 @@ import javafx.scene.layout.Pane;
  */
 public class MainView {
 
-	@SuppressWarnings("unused")
-	private BreakOutGame model;
-	
-	@SuppressWarnings("unused")
-	private MainController controller;
-	
-	private final AnchorPane root;
-	private final BrickLayoutView brickLayoutView = new BrickLayoutView();
+  @SuppressWarnings("unused")
+  private BreakOutGame model;
 
-	/**
-	 * @param model
-	 * @param controller2
-	 * @throws IOException 
-	 */
-	public MainView(BreakOutGame model, MainController controller) throws IOException {
-		this.model = model;
-		this.controller = controller;
+  @SuppressWarnings("unused")
+  private MainController controller;
 
-		// read FXML file and setup UI
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/BreakOutMainView.fxml"));
-		fxmlLoader.setController(controller);
-		root = (AnchorPane) fxmlLoader.load();
-		
-		// get playFieldPane and add brickLayoutView
-		Pane playFieldPane = (Pane) fxmlLoader.getNamespace().get("playfieldPane");
-		playFieldPane.getChildren().add(brickLayoutView);
-	}
+  private final AnchorPane root;
+  private final BrickLayoutView brickLayoutView = new BrickLayoutView();
 
-	/**
-	 * @return root pane from loaded FXML
-	 */
-	public Parent asParent() {
-		return root;
-	}
+  // animations
+  private ScaleTransition    hitPaddleScaleTransition;
+  private StrokeTransition   hitPaddleStrokeTransition;
+  private ScaleTransition    hitBallScaleTransition;
+  private StrokeTransition   hitBallStrokeTransition;
+  private ParallelTransition paddleHitAnimation;
+  private ParallelTransition ballHitAnimation;
 
-	/**
-	 * @return the brickLayoutView
-	 */
-	public BrickLayoutView getBrickLayoutView() {
-		return brickLayoutView;
-	}
+  /**
+   * @param model
+   * @param controller2
+   * @throws IOException 
+   */
+  public MainView(BreakOutGame model, MainController controller) throws IOException {
+    this.model = model;
+    this.controller = controller;
+
+    // read FXML file and setup UI
+    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/BreakOutMainView.fxml"));
+    fxmlLoader.setController(controller);
+    root = (AnchorPane) fxmlLoader.load();
+
+    // get playFieldPane and add brickLayoutView
+    final Pane playFieldPane = (Pane) fxmlLoader.getNamespace().get("playfieldPane");
+    playFieldPane.getChildren().add(brickLayoutView);
+
+    // Game Over splash top front
+    final Text gameoverText = (Text) fxmlLoader.getNamespace().get("gameOverSplash");
+    gameoverText.toFront();
+
+    // Ball
+    final Circle ball = (Circle) fxmlLoader.getNamespace().get("ball");
+
+    // Paddle
+    final Rectangle paddle = (Rectangle) fxmlLoader.getNamespace().get("paddle");
+
+    prepareAnimations(ball, paddle);
+  }
+
+  /**
+   * create the animations for later playing
+   * @param paddle 
+   * @param ball 
+   */
+  private void prepareAnimations(Circle ball, Rectangle paddle) {
+    hitPaddleScaleTransition = new ScaleTransition(Duration.millis(50), paddle);
+    hitPaddleScaleTransition.setFromX(1.0);
+    hitPaddleScaleTransition.setFromY(1.0);
+    hitPaddleScaleTransition.setByX(0.1);
+    hitPaddleScaleTransition.setByY(0.1);
+    hitPaddleScaleTransition.setCycleCount(2);
+    hitPaddleScaleTransition.setAutoReverse(true);
+
+    hitPaddleStrokeTransition = new StrokeTransition(Duration.millis(50), paddle);
+    hitPaddleStrokeTransition.setFromValue((Color) paddle.getStroke());
+    hitPaddleStrokeTransition.setToValue(Color.BLACK);
+    hitPaddleStrokeTransition.setCycleCount(2);
+    hitPaddleStrokeTransition.setAutoReverse(true);
+
+    hitBallScaleTransition = new ScaleTransition(Duration.millis(50), ball);
+    hitBallScaleTransition.setFromX(1.0);
+    hitBallScaleTransition.setFromY(1.0);
+    hitBallScaleTransition.setByX(0.1);
+    hitBallScaleTransition.setByY(0.1);
+    hitBallScaleTransition.setCycleCount(2);
+    hitBallScaleTransition.setAutoReverse(true);
+
+    hitBallStrokeTransition = new StrokeTransition(Duration.millis(50), ball);
+    hitBallStrokeTransition.setFromValue((Color) ball.getStroke());
+    hitBallStrokeTransition.setToValue(Color.WHITE);
+    hitBallStrokeTransition.setCycleCount(2);
+    hitBallStrokeTransition.setAutoReverse(true);
+
+    // combined animations
+    paddleHitAnimation = new ParallelTransition(hitPaddleScaleTransition, hitPaddleStrokeTransition, hitBallScaleTransition, hitBallStrokeTransition);
+    ballHitAnimation = new ParallelTransition(hitBallScaleTransition, hitBallStrokeTransition);
+
+    //      EXAMPLE for animations over arbitrary properties:
+    //      final Timeline timeline = new Timeline();
+    //      timeline.setCycleCount(Timeline.INDEFINITE);
+    //      timeline.setAutoReverse(true);
+    //      final KeyValue kv = new KeyValue(rectBasicTimeline.xProperty(), 300);
+    //      final KeyFrame kf = new KeyFrame(Duration.millis(500), kv);
+    //      timeline.getKeyFrames().add(kf);
+    //      timeline.play();
+  }
+  
+  
+
+  /**
+   * @return root pane from loaded FXML
+   */
+  public Parent asParent() {
+    return root;
+  }
+
+  /**
+   * @return the brickLayoutView
+   */
+  public BrickLayoutView getBrickLayoutView() {
+    return brickLayoutView;
+  }
+
+  /**
+   * Plays hit animation
+   */
+  public void paddleHit() {
+    paddleHitAnimation.play();    
+  }
+
+  /**
+   * Plays hit animation
+   */
+  public void ballHit() {
+    ballHitAnimation.play();
+  }
+
+  /**
+   * Plays hit animation
+   * @param row
+   * @param col
+   */
+  public void brickHit(int row, int col) {
+    brickLayoutView.getBrickView(row, col).hit();
+  }
 
 }

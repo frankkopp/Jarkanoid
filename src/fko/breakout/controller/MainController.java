@@ -34,14 +34,7 @@ import fko.breakout.events.GameEvent.GameEventType;
 import fko.breakout.model.BreakOutGame;
 import fko.breakout.model.Sounds;
 import fko.breakout.model.Sounds.Clips;
-import fko.breakout.view.BrickView;
 import fko.breakout.view.MainView;
-import javafx.animation.FillTransition;
-import javafx.animation.Interpolator;
-import javafx.animation.ParallelTransition;
-import javafx.animation.ScaleTransition;
-import javafx.animation.StrokeTransition;
-import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -50,11 +43,9 @@ import javafx.scene.control.Button;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import javafx.util.Duration;
 
 /**
  * MainController
@@ -73,352 +64,297 @@ import javafx.util.Duration;
  */
 public class MainController implements Initializable, Observer {
 
-	// handles to model and view
-	private BreakOutGame model;
-	private MainView view;
+  // handles to model and view
+  private BreakOutGame model;
+  private MainView view;
 
-	// sounds
-	private Sounds sounds = Sounds.getInstance();
+  // sounds
+  private Sounds sounds = Sounds.getInstance();
 
-	// animations
-	private ScaleTransition hitPaddleScaleTransition;
-	private StrokeTransition hitPaddleStrokeTransition;
-	private ScaleTransition hitBallScaleTransition;
-	private StrokeTransition hitBallStrokeTransition;
-	private ParallelTransition paddleHitAnimation;
-	private ParallelTransition wallHitAnimation;
-	private ParallelTransition brickHitBallAnimation;
+  /**
+   * @param model
+   */
+  public MainController(BreakOutGame model) {
+    this.model = model;
+  }
 
-	private FillTransition solidBrickHitTimeline;
+  /**
+   * Called by FXMLLoader
+   * @see javafx.fxml.Initializable#initialize(java.net.URL, java.util.ResourceBundle)
+   */
+  @Override
+  public void initialize(URL location, ResourceBundle resources) {
+    // empty
+  }
 
-	/**
-	 * @param model
-	 */
-	public MainController(BreakOutGame model) {
-		this.model = model;
-	}
+  /**
+   * @param view 
+   */
+  public void bindModelToView(MainView view) {
+    this.view = view;
 
-	/**
-	 * Called by FXMLLoader
-	 * @see javafx.fxml.Initializable#initialize(java.net.URL, java.util.ResourceBundle)
-	 */
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		// empty
-	}
+    // add controller as listener of model for GameEvents
+    model.addObserver(this);
 
-	/**
-	 * @param view 
-	 */
-	public void bindModelToView(MainView view) {
-		this.view = view;
+    // add keyboard handlers
+    view.asParent().getScene().setOnKeyPressed(event -> keyPressedAction(event));
+    view.asParent().getScene().setOnKeyReleased(event -> keyReleasedAction(event));
 
-		// add controller as listener of model for GameEvents
-		model.addObserver(this);
+    // add mouse handlers
+    view.asParent().getScene().setOnMouseMoved(event -> mouseMovedAction(event));
 
-		// add keyboard handlers
-		view.asParent().getScene().setOnKeyPressed(event -> keyPressedAction(event));
-		view.asParent().getScene().setOnKeyReleased(event -> keyReleasedAction(event));
+    // playfield dimensions
+    playfieldPane.prefWidthProperty().bind(model.playfieldWidthProperty());
+    playfieldPane.prefHeightProperty().bind(model.playfieldHeightProperty());
 
-		// add mouse handlers
-		view.asParent().getScene().setOnMouseMoved(event -> mouseMovedAction(event));
+    // paddle dimensions and location
+    paddle.widthProperty().bind(model.paddleWidthProperty());
+    paddle.heightProperty().bind(model.paddleHeightProperty());
+    paddle.xProperty().bind(model.paddleXProperty());
+    paddle.yProperty().bind(model.paddleYProperty());
 
-		// playfield dimensions
-		playfieldPane.prefWidthProperty().bind(model.playfieldWidthProperty());
-		playfieldPane.prefHeightProperty().bind(model.playfieldHeightProperty());
+    // ball dimension and location
+    ball.radiusProperty().bind(model.ballRadiusProperty());
+    ball.centerXProperty().bind(model.ballCenterXProperty());
+    ball.centerYProperty().bind(model.ballCenterYProperty());
 
-		// paddle dimensions and location
-		paddle.widthProperty().bind(model.paddleWidthProperty());
-		paddle.heightProperty().bind(model.paddleHeightProperty());
-		paddle.xProperty().bind(model.paddleXProperty());
-		paddle.yProperty().bind(model.paddleYProperty());
+    // startstopButton text updater
+    model.isPlayingProperty().addListener((v, o, n) -> {
+      if (n == true) {
+        startStopButton.setText("Stop");
+      } else {
+        startStopButton.setText("Play");
+      }
+    });
 
-		// ball dimension and location
-		ball.radiusProperty().bind(model.ballRadiusProperty());
-		ball.centerXProperty().bind(model.ballCenterXProperty());
-		ball.centerYProperty().bind(model.ballCenterYProperty());
+    // pauseResumeButton text updater
+    model.isPausedProperty().addListener((v, o, n) -> {
+      if (n == true) {
+        pauseResumeButton.setText("Resume");
+      } else {
+        pauseResumeButton.setText("Pause");
+      }
+    });
 
-		// startstopButton text updater
-		model.isPlayingProperty().addListener((v, o, n) -> {
-			if (n == true) {
-				startStopButton.setText("Stop");
-			} else {
-				startStopButton.setText("Play");
-			}
-		});
+    // Level text
+    levelLabel.textProperty().bind(new SimpleStringProperty("Level ").concat(model.currentLevelProperty()));
+    // remaining lives text
+    livesLabel.textProperty().bind(model.currentRemainingLivesProperty().asString());
+    // score text
+    pointsLabel.textProperty().bind(model.currentScoreProperty().asString("%06d"));
 
-		// pauseResumeButton text updater
-		model.isPausedProperty().addListener((v, o, n) -> {
-			if (n == true) {
-				pauseResumeButton.setText("Resume");
-			} else {
-				pauseResumeButton.setText("Pause");
-			}
-		});
+    // game over splash text
+    // TODO: GAME_OVER vs. GAME_WIN
+    gameOverSplash.visibleProperty().bind(model.gameOverProperty());
 
-		// Level text
-		levelLabel.textProperty().bind(new SimpleStringProperty("Level ").concat(model.currentLevelProperty()));
-		// remaining lives text
-		livesLabel.textProperty().bind(model.currentRemainingLivesProperty().asString());
-		// score text
-		pointsLabel.textProperty().bind(model.currentScoreProperty().asString("%06d"));
+  }
 
-		// game over splash text
-		// TODO: GAME_OVER vs. GAME_WIN
-		gameOverSplash.visibleProperty().bind(model.gameOverProperty());
+  /**
+   * We use the Observable notification for certain events to enable animations and sound.
+   * Most other model changes are handled through Property Bindings. 
+   * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+   */
+  @SuppressWarnings("unused")
+  @Override
+  public void update(Observable o, Object e) {
+    if (!(e instanceof GameEvent)) {
+      BreakOut.fatalError("Unknown event type. Event is not of type GameEvent");
+    }
 
-		prepareAnimations();
-	}
+    GameEvent gameEvent = (GameEvent) e;
 
-	/**
-	 * create the animations for later playing
-	 */
-	private void prepareAnimations() {
-		hitPaddleScaleTransition = new ScaleTransition(Duration.millis(50), paddle);
-		hitPaddleScaleTransition.setByX(0.1);
-		hitPaddleScaleTransition.setByY(0.1);
-		hitPaddleScaleTransition.setCycleCount(2);
-		hitPaddleScaleTransition.setAutoReverse(true);
+    // define actions for different events
+    switch (gameEvent.getEventType()) {
+    case HIT_PADDLE:    view.paddleHit(); sounds.playClip(Clips.PADDLE); break;
+    case HIT_WALL:      view.ballHit();   sounds.playClip(Clips.WALL); break;
+    case HIT_BRICK:     handleHitBrickEvent(gameEvent); break;
+    case BALL_LOST:     sounds.playClip(Clips.BALL_LOST); break;
+    case LEVEL_COMPLETE: break;
+    case LEVEL_START:   break;
+    case GAME_START:    break;
+    case GAME_OVER:     break;
+    case GAME_WON:      break;
+    default: 
+    }
 
-		hitPaddleStrokeTransition = new StrokeTransition(Duration.millis(50), paddle);
-		hitPaddleStrokeTransition.setToValue(Color.BLACK);
-		hitPaddleStrokeTransition.setCycleCount(2);
-		hitPaddleStrokeTransition.setAutoReverse(true);
+    // update brickLayoutView
+    final long start = System.nanoTime();
+    if (gameEvent.getEventType().equals(GameEventType.LEVEL_START) 
+        || gameEvent.getEventType().equals(GameEventType.HIT_BRICK)) {
+      view.getBrickLayoutView().draw(model.getBrickLayout());
+    }
+    final long nanoTime = System.nanoTime()-start;
+    //		System.out.println(String.format("Drawing bricks took %,d ns", nanoTime));
 
-		hitBallScaleTransition = new ScaleTransition(Duration.millis(50), ball);
-		hitBallScaleTransition.setByX(0.1);
-		hitBallScaleTransition.setByY(0.1);
-		hitBallScaleTransition.setCycleCount(2);
-		hitBallScaleTransition.setAutoReverse(true);
+  }
 
-		hitBallStrokeTransition = new StrokeTransition(Duration.millis(50), ball);
-		hitBallStrokeTransition.setToValue(Color.WHITE);
-		hitBallStrokeTransition.setCycleCount(2);
-		hitBallStrokeTransition.setAutoReverse(true);
+  /**
+   * @param event 
+   */
+  private void handleHitBrickEvent(GameEvent event) {
+    if (event.getEventParameter() != null) {
+      Object[] param = (Object[]) event.getEventParameter();
+      int row = (int) param[0];
+      int col = (int) param[1];
+      if (model.getBrickLayout().getBrick(row, col) != null) {
+        view.brickHit(row, col);
+        sounds.playClip(Clips.BRICK_S);
+      } else {
+        sounds.playClip(Clips.BRICK);
+      }
+    }
+    view.ballHit(); 
+  }
 
-		solidBrickHitTimeline = new FillTransition(Duration.millis(75));
-		solidBrickHitTimeline.setToValue(Color.WHITE);
-		solidBrickHitTimeline.setInterpolator(Interpolator.EASE_BOTH);
-		solidBrickHitTimeline.setCycleCount(2);
-		solidBrickHitTimeline.setAutoReverse(true);
+  /**
+   * Handles key pressed events
+   * @param event
+   */
+  private void keyPressedAction(KeyEvent event) {
+    switch (event.getCode()) {
+    // game control
+    case SPACE: 	startStopButtonAction(new ActionEvent()); break;
+    case P: 		pauseResumeButtonAction(new ActionEvent()); break;
+    case S:			soundButtonAction(new ActionEvent()); break;
+    // paddle control
+    case LEFT:		onPaddleLeftAction(true); break;
+    case RIGHT:		onPaddleRightAction(true); break;
+    default:
+    }
+  }
 
-		// combined animations
-		paddleHitAnimation = new ParallelTransition(hitPaddleScaleTransition, hitPaddleStrokeTransition, hitBallScaleTransition, hitBallStrokeTransition);
-		wallHitAnimation = new ParallelTransition(hitBallScaleTransition, hitBallStrokeTransition);
-		brickHitBallAnimation = new ParallelTransition(hitBallScaleTransition, hitBallStrokeTransition);
+  /**
+   * Handles key released events
+   * @param event
+   */
+  private void keyReleasedAction(KeyEvent event) {
+    switch (event.getCode()) {
+    // paddle control
+    case LEFT: 		onPaddleLeftAction(false); break;
+    case RIGHT:		onPaddleRightAction(false); break;
+    default:
+    }
+  }
 
-		//		EXAMPLE for animations over arbitrary properties:
-		//		final Timeline timeline = new Timeline();
-		//		timeline.setCycleCount(Timeline.INDEFINITE);
-		//		timeline.setAutoReverse(true);
-		//		final KeyValue kv = new KeyValue(rectBasicTimeline.xProperty(), 300);
-		//		final KeyFrame kf = new KeyFrame(Duration.millis(500), kv);
-		//		timeline.getKeyFrames().add(kf);
-		//		timeline.play();
-	}
+  /**
+   * Paddle action
+   * @param b
+   */
+  private void onPaddleLeftAction(boolean b) {
+    if (b) model.setPaddleLeft(true);
+    else model.setPaddleLeft(false);	
+  }
 
-	/**
-	 * We use the Observable notification for certain events to enable animations and sound.
-	 * Most other model changes are handled through Property Bindings. 
-	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
-	 */
-	@Override
-	public void update(Observable o, Object e) {
-		if (!(e instanceof GameEvent)) {
-			BreakOut.fatalError("Unknown event type. Event is not of type GameEvent");
-		}
+  /**
+   * Paddle action
+   * @param b
+   */
+  private void onPaddleRightAction(boolean b) {
+    if (b) model.setPaddleRight(true);
+    else model.setPaddleRight(false);
+  }
 
-		GameEvent gameEvent = (GameEvent) e;
+  /**
+   * Mouse action
+   * @param b
+   */
+  private void mouseMovedAction(MouseEvent event) {
+    model.setMouseXPosition(event.getX());
+  }
 
-		// define actions for different events
-		switch (gameEvent.getEventType()) {
-		case HIT_PADDLE: paddleHitAnimation.play(); sounds.playClip(Clips.PADDLE); break;
-		case HIT_WALL: wallHitAnimation.play(); sounds.playClip(Clips.WALL); break;
-		case HIT_BRICK: handleHitBrickEvent(gameEvent); break;
-		case BALL_LOST: sounds.playClip(Clips.BALL_LOST); break;
-		case LEVEL_COMPLETE: break;
-		case LEVEL_START: break;
-		default: 
-		}
+  /**
+   * Toggles Start/Stop game 
+   */
+  @FXML
+  void startStopButtonAction(ActionEvent event) {
+    if (model.isPlaying()) {
+      model.stopPlaying();
+    } else {
+      model.startPlaying();
+    }
+  }
 
-		// update brickLayoutView
-		final long start = System.nanoTime();
-		if (gameEvent.getEventType().equals(GameEventType.GAME_START) 
-				|| gameEvent.getEventType().equals(GameEventType.HIT_BRICK)) {
-			Platform.runLater(() -> view.getBrickLayoutView().draw(model.getBrickLayout()));
-		}
-		final long nanoTime = System.nanoTime()-start;
-		System.out.println(String.format("Drawing bricks took %,d ns", nanoTime));
+  /**
+   * Toggles Pause/Resume game
+   * @param event
+   */
+  @FXML
+  void pauseResumeButtonAction(ActionEvent event) {
+    if (model.isPlaying()) {
+      if (model.isPaused()) {
+        model.resumePlaying();
+      } else {
+        model.pausePlaying();
+      }
+    }
+  }
 
-	}
+  /**
+   * Toggles sound option
+   * @param event
+   */
+  @FXML
+  void soundButtonAction(ActionEvent event) {
+    if (sounds.isSoundOn()) {
+      soundButton.setText("Sound On");
+      sounds.soundOff();
+    } else {
+      soundButton.setText("Sound Off");
+      sounds.soundOn();
+    }
+  }
 
-	/**
-	 * @param event 
-	 */
-	private void handleHitBrickEvent(GameEvent event) {
-		if (event.getEventParameter() != null) {
-			Object[] param = (Object[]) event.getEventParameter();
-			int row = (int) param[0];
-			int col = (int) param[1];
-			if (model.getBrickLayout().getBrick(row, col) != null) {
-				BrickView bv = view.getBrickLayoutView().getBrickView(row, col);
-				solidBrickHitTimeline.setShape(bv);
-				solidBrickHitTimeline.play();
-			}
-		}
-		brickHitBallAnimation.play(); 
-		sounds.playClip(Clips.BRICK);
-	}
+  @FXML
+  void paddleMouseClickAction(MouseEvent event) {
+    // not used
+  }
 
-	/**
-	 * Handles key pressed events
-	 * @param event
-	 */
-	private void keyPressedAction(KeyEvent event) {
-		switch (event.getCode()) {
-		// game control
-		case SPACE: 		startStopButtonAction(new ActionEvent()); break;
-		case P: 			pauseResumeButtonAction(new ActionEvent()); break;
-		case S:			soundButtonAction(new ActionEvent()); break;
-		// paddle control
-		case LEFT:		onPaddleLeftAction(true); break;
-		case RIGHT:		onPaddleRightAction(true); break;
-		default:
-		}
-	}
+  @FXML
+  void paddleMouseReleasedAction(MouseEvent event) {
+    // not used
+  }
 
-	/**
-	 * Handles key released events
-	 * @param event
-	 */
-	private void keyReleasedAction(KeyEvent event) {
-		switch (event.getCode()) {
-		// paddle control
-		case LEFT: 		onPaddleLeftAction(false); break;
-		case RIGHT:		onPaddleRightAction(false); break;
-		default:
-		}
-	}
+  /* ********************************************************
+   * FXML - injected by FXMLLoader
+   * ********************************************************/
 
-	/**
-	 * Paddle action
-	 * @param b
-	 */
-	private void onPaddleLeftAction(boolean b) {
-		if (b) model.setPaddleLeft(true);
-		else model.setPaddleLeft(false);	
-	}
+  @FXML
+  private Circle ball;
 
-	/**
-	 * Paddle action
-	 * @param b
-	 */
-	private void onPaddleRightAction(boolean b) {
-		if (b) model.setPaddleRight(true);
-		else model.setPaddleRight(false);
-	}
+  @FXML
+  private Button startStopButton;
 
-	/**
-	 * Mouse action
-	 * @param b
-	 */
-	private void mouseMovedAction(MouseEvent event) {
-		model.setMouseXPosition(event.getX());
-	}
+  @FXML
+  private Button pauseResumeButton;
 
-	/**
-	 * Toggles Start/Stop game 
-	 */
-	@FXML
-	void startStopButtonAction(ActionEvent event) {
-		if (model.isPlaying()) {
-			model.stopPlaying();
-		} else {
-			model.startPlaying();
-		}
-	}
+  @FXML
+  private Button soundButton;
 
-	/**
-	 * Toggles Pause/Resume game
-	 * @param event
-	 */
-	@FXML
-	void pauseResumeButtonAction(ActionEvent event) {
-		if (model.isPlaying()) {
-			if (model.isPaused()) {
-				model.resumePlaying();
-			} else {
-				model.pausePlaying();
-			}
-		}
-	}
+  @FXML
+  private Text levelLabel;
 
-	/**
-	 * Toggles sound option
-	 * @param event
-	 */
-	@FXML
-	void soundButtonAction(ActionEvent event) {
-		if (sounds.isSoundOn()) {
-			soundButton.setText("Sound On");
-			sounds.soundOff();
-		} else {
-			soundButton.setText("Sound Off");
-			sounds.soundOn();
-		}
-	}
+  @FXML
+  private Text livesLabel;
 
-	@FXML
-	void paddleMouseClickAction(MouseEvent event) {
-		// not used
-	}
+  @FXML
+  private Text pointsLabel;
 
-	@FXML
-	void paddleMouseReleasedAction(MouseEvent event) {
-		// not used
-	}
+  @FXML
+  private Pane playfieldPane;
 
-	/* ********************************************************
-	 * FXML - injected by FXMLLoader
-	 * ********************************************************/
+  @FXML
+  private Rectangle ceilingWall;
 
-	@FXML
-	private Circle ball;
+  @FXML
+  private Rectangle leftWall;
 
-	@FXML
-	private Button startStopButton;
+  @FXML
+  private Rectangle rightWall;
 
-	@FXML
-	private Button pauseResumeButton;
+  @FXML
+  private Rectangle paddle;
 
-	@FXML
-	private Button soundButton;
-
-	@FXML
-	private Text levelLabel;
-
-	@FXML
-	private Text livesLabel;
-
-	@FXML
-	private Text pointsLabel;
-
-	@FXML
-	private Pane playfieldPane;
-
-	@FXML
-	private Rectangle ceilingWall;
-
-	@FXML
-	private Rectangle leftWall;
-
-	@FXML
-	private Rectangle rightWall;
-
-	@FXML
-	private Rectangle paddle;
-
-	@FXML
-	private Text gameOverSplash;
+  @FXML
+  private Text gameOverSplash;
 
 }

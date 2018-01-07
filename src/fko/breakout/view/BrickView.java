@@ -24,10 +24,12 @@ SOFTWARE.
 package fko.breakout.view;
 
 import fko.breakout.model.Brick;
+import javafx.animation.FillTransition;
 import javafx.scene.effect.Effect;
 import javafx.scene.effect.InnerShadow;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 
 /**
  * BrickVew
@@ -40,27 +42,39 @@ import javafx.scene.shape.Rectangle;
  */
 public class BrickView extends Rectangle {
 
-	/**
-	 * @param x
-	 * @param y
-	 * @param width
-	 * @param height
-	 * @param brick 
-	 */
-	public BrickView(double x, double y, double width, double height, Brick brick) {
-		super(x, y, width, height);
-		
-		this.setFill(brick.getColor());
-		
-		Effect effect = new InnerShadow(
-				5.0,
-				1.0,
-				1.0,
-				Color.WHITE
-				); // DropShadow(); // new Reflection();
-		
-		this.setEffect(effect);
-	
-	}
+  private FillTransition solidBrickHitTimeline;
+
+  /**
+   * @param x
+   * @param y
+   * @param width
+   * @param height
+   * @param brick 
+   */
+  public BrickView(double x, double y, double width, double height, Brick brick) {
+    super(x, y, width, height);
+
+    this.setFill(brick.getColor());
+
+    Effect effect = new InnerShadow(
+        5.0,
+        1.0,
+        1.0,
+        Color.WHITE
+        ); // DropShadow(); // new Reflection();
+
+    this.setEffect(effect);
+
+    solidBrickHitTimeline = new FillTransition(Duration.millis(75));
+    solidBrickHitTimeline.setFromValue(brick.getColor());
+    solidBrickHitTimeline.setToValue(Color.WHITE);
+    solidBrickHitTimeline.setCycleCount(2);
+    solidBrickHitTimeline.setAutoReverse(true); 
+    solidBrickHitTimeline.setShape(this);
+  }
+  
+  public void hit() {
+    solidBrickHitTimeline.playFromStart();
+  }
 
 }

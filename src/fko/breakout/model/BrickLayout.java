@@ -29,7 +29,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 /**
  * BrickLayout
  * <p>
- * A <code>BrickLayout</code> holds a 18x11 matrix of <code>Brick</code>s. Bricks will be erased after 
+ * A <code>BrickLayout</code> holds a 18x13 matrix of <code>Brick</code>s. Bricks will be erased after 
  * they have been hit by the ball the necessary number of times.<br>
  * The matrix is top down - row 0 is the uppermost row.<br>
  * This class also calculates the measurements and positions of bricks based on the playfield size
@@ -38,11 +38,13 @@ import javafx.beans.property.SimpleDoubleProperty;
  * <p>
  * 04.01.2018
  * @author Frank Kopp
+ * 
+ * FIXME: ball gets bigger without apparent reason
  */
 public class BrickLayout {
 
 	public static final int ROWS = 18;
-	public static final int COLUMNS = 11;
+	public static final int COLUMNS = 13;
 
 	private double brickGap;
 	private DoubleProperty playfieldWidth;
@@ -72,7 +74,7 @@ public class BrickLayout {
 				.subtract((COLUMNS+1)*brickGap))
 				.divide(COLUMNS));
 		brickHeight.bind((playfieldHeight
-				.subtract(playfieldHeight.get()*0.3)
+				.subtract(playfieldHeight.get()*0.4)
 				.subtract((ROWS+1)*brickGap))
 				.divide(ROWS));
 	}
@@ -93,10 +95,16 @@ public class BrickLayout {
 		return 0;
 	}
 
+	/**
+	 * @return the 2D matrix of Bricks
+	 */
 	public Brick[][] getMatrix() {
 		return brickMatrix;
 	}
 
+	/**
+	 * @param newMatrix
+	 */
 	public void setMatrix(Brick[][] newMatrix) {
 		this.brickMatrix = newMatrix;
 		updateDataforMatrix();

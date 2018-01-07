@@ -52,6 +52,7 @@ public class BrickLayoutView extends Group {
 	 * @param brickLayout
 	 */
 	public void draw(BrickLayout brickLayout) {
+		
 		// we might need to do this more selective to save time
 		if (brickLayout == null) {
 			this.getChildren().clear();
