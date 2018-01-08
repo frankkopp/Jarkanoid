@@ -117,6 +117,9 @@ public class MainController implements Initializable, Observer {
     ball.radiusProperty().bind(model.ballRadiusProperty());
     ball.centerXProperty().bind(model.ballCenterXProperty());
     ball.centerYProperty().bind(model.ballCenterYProperty());
+    
+    // ball is only visible when we are playing
+    ball.visibleProperty().bind(model.isPlayingProperty());
 
     // startstopButton text updater
     model.isPlayingProperty().addListener((v, o, n) -> {
