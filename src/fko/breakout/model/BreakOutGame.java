@@ -43,13 +43,13 @@ import javafx.util.Duration;
 /**
  * BreakOutModel
  * <p>
- * Handles the BreakOut game status and calculations.<br>
+ * Handles the BreakOut game status, the main game loop and calculations.<br>
  * <p>
  * It has not yet its own Thread - could become necessary later if performance/rendering issue occur. 
  * <p>
  * 02.01.2018
  * @author Frank Kopp
- * TODO: add separate thread??
+ * TODO: add separate thread?? maybe not useful for a frame based game
  * TODO: hold ball on paddle at the start and shot of in a constant angle to the right
  * TODO: make ball and paddle objects
  * TODO: Refactor game status - can be handle through gameLoop.status
