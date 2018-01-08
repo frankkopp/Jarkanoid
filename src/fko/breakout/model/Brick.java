@@ -38,96 +38,96 @@ import javafx.scene.paint.Color;
  */
 public class Brick {
 
-	private final BrickType brickType;
-	private final BrickPowerType powerType;
+  private final BrickType brickType;
+  private final BrickPowerType powerType;
 
-	private int hitCount = 0;
+  private int hitCount = 0;
 
-	private boolean isInvincible = false;
-	private boolean isKilled = false;
+  private boolean isInvincible = false;
+  private boolean isKilled = false;
 
-	/**
-	 * Creates a Brick.
-	 * @param brickType
-	 */
-	public Brick(BrickType brickType, BrickPowerType powerType) {
-		this.brickType = brickType;
-		this.powerType = powerType;
-		if (brickType.equals(BrickType.GOLD)) isInvincible = true;
-	}
+  /**
+   * Creates a Brick.
+   * @param brickType
+   */
+  public Brick(BrickType brickType, BrickPowerType powerType) {
+    this.brickType = brickType;
+    this.powerType = powerType;
+    if (brickType.equals(BrickType.GOLD)) isInvincible = true;
+  }
 
-	/**
-	 * @return remaining number of hits until killed. If 0 the brick has been killed.
-	 */
-	public int increaseHitCount() {
-		hitCount++;
-		if (getRemainingHits() == 0 && !isInvincible) isKilled = true;
-		return getRemainingHits();
-	}
+  /**
+   * @return remaining number of hits until killed. If 0 the brick has been killed.
+   */
+  public int increaseHitCount() {
+    hitCount++;
+    if (getRemainingHits() == 0 && !isInvincible) isKilled = true;
+    return getRemainingHits();
+  }
 
-	/**
-	 * @return number of hits the brick has already received.
-	 */
-	public int getHitCount() {
-		return hitCount;
-	}
+  /**
+   * @return number of hits the brick has already received.
+   */
+  public int getHitCount() {
+    return hitCount;
+  }
 
-	/**
-	 * @return remaining number of hits until killed. If 0 the brick has been killed.
-	 */
-	public int getRemainingHits() {
-		return isInvincible ? brickType.hits : brickType.hits - hitCount;
-	}
+  /**
+   * @return remaining number of hits until killed. If 0 the brick has been killed.
+   */
+  public int getRemainingHits() {
+    return isInvincible ? brickType.hits : brickType.hits - hitCount;
+  }
 
-	/**
-	 * @return true if the brick has been killed.
-	 */
-	public boolean isKilled() {
-		return isInvincible ? false : isKilled;
-	}
+  /**
+   * @return true if the brick has been killed.
+   */
+  public boolean isKilled() {
+    return !isInvincible && isKilled;
+  }
 
-	/**
-	 * @return the type
-	 */
-	public BrickType getType() {
-		return brickType;
-	}
+  /**
+   * @return the type
+   */
+  public BrickType getType() {
+    return brickType;
+  }
 
-	/**
-	 * @return the powerType
-	 */
-	public BrickPowerType getPowerType() {
-		return powerType;
-	}
+  /**
+   * @return the powerType
+   */
+  public BrickPowerType getPowerType() {
+    return powerType;
+  }
 
-	/**
-	 * @return points for killing this brick
-	 */
-	public int getPoints() {
-		return brickType.points;
-	}
+  /**
+   * @return points for killing this brick
+   */
+  public int getPoints() {
+    return brickType.points;
+  }
 
-	/** 
-	 * @return Color of this brick
-	 */
-	public Color getColor() {
-		return brickType.color;
-	}
+  /** 
+   * @return Color of this brick
+   */
+  public Color getColor() {
+    return brickType.color;
+  }
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return String.format("Brick [brickType=%s, powerType=%s, hitCount=%s, isInvincible=%s, isKilled=%s]", brickType,
-				powerType, hitCount, isInvincible, isKilled);
-	}
-	
-	public String toShortString() {
-		return String.format("%2.2s%2.2s", brickType.sign,powerType.name());
-	}
+  /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString() {
+    return String.format("Brick [brickType=%s, powerType=%s, hitCount=%s, isInvincible=%s, isKilled=%s]", brickType,
+        powerType, hitCount, isInvincible, isKilled);
+  }
 
-	/**
+  public String toShortString() {
+    return String.format("%2.2s%2.2s", brickType.sign,powerType.name());
+  }
+
+  /**
    * @see java.lang.Object#hashCode()
    */
   @Override
@@ -167,16 +167,16 @@ public class Brick {
     return true;
   }
 
-	/**
-	 * @see java.lang.Object#clone()
-	 */
-	@Override
-	protected Brick clone() {
-		Brick copy = new Brick(this.brickType, this.powerType);
-		copy.hitCount = this.hitCount;
-		copy.isInvincible = this.isInvincible;
-		copy.isKilled = this.isKilled;
-		return copy;
-	}
-	
+  /**
+   * @see java.lang.Object#clone()
+   */
+  @Override
+  protected Brick clone() {
+    Brick copy = new Brick(this.brickType, this.powerType);
+    copy.hitCount = this.hitCount;
+    copy.isInvincible = this.isInvincible;
+    copy.isKilled = this.isKilled;
+    return copy;
+  }
+
 }

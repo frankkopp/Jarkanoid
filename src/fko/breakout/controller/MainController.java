@@ -32,8 +32,8 @@ import fko.breakout.BreakOut;
 import fko.breakout.events.GameEvent;
 import fko.breakout.events.GameEvent.GameEventType;
 import fko.breakout.model.BreakOutGame;
-import fko.breakout.model.Sounds;
-import fko.breakout.model.Sounds.Clips;
+import fko.breakout.model.SoundManager;
+import fko.breakout.model.SoundManager.Clips;
 import fko.breakout.view.MainView;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
@@ -65,11 +65,11 @@ import javafx.scene.text.Text;
 public class MainController implements Initializable, Observer {
 
   // handles to model and view
-  private BreakOutGame model;
+  private final BreakOutGame model;
   private MainView view;
 
   // sounds
-  private Sounds sounds = Sounds.getInstance();
+  private final SoundManager sounds = SoundManager.getInstance();
 
   /**
    * @param model
@@ -120,7 +120,7 @@ public class MainController implements Initializable, Observer {
 
     // startstopButton text updater
     model.isPlayingProperty().addListener((v, o, n) -> {
-      if (n == true) {
+      if (n) {
         startStopButton.setText("Stop");
       } else {
         startStopButton.setText("Play");
@@ -129,7 +129,7 @@ public class MainController implements Initializable, Observer {
 
     // pauseResumeButton text updater
     model.isPausedProperty().addListener((v, o, n) -> {
-      if (n == true) {
+      if (n) {
         pauseResumeButton.setText("Resume");
       } else {
         pauseResumeButton.setText("Pause");
@@ -193,14 +193,14 @@ public class MainController implements Initializable, Observer {
    */
   private void handleHitBrickEvent(GameEvent event) {
     if (event.getEventParameter() != null) {
-      Object[] param = (Object[]) event.getEventParameter();
-      int row = (int) param[0];
-      int col = (int) param[1];
-      if (model.getBrickLayout().getBrick(row, col) != null) {
+      final Object[] param = (Object[]) event.getEventParameter();
+      final int row = (int) param[0];
+      final int col = (int) param[1];
+      if (model.getBrickLayout().getBrick(row, col) == null) {
+        sounds.playClip(Clips.BRICK);
+      } else {
         view.brickHit(row, col);
         sounds.playClip(Clips.BRICK_S);
-      } else {
-        sounds.playClip(Clips.BRICK);
       }
     }
     view.ballHit(); 

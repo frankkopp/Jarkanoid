@@ -38,8 +38,6 @@ import javafx.beans.property.SimpleDoubleProperty;
  * <p>
  * 04.01.2018
  * @author Frank Kopp
- * 
- * FIXME: ball gets bigger without apparent reason
  */
 public class BrickLayout {
 
@@ -70,12 +68,12 @@ public class BrickLayout {
 		this.playfieldHeight = playfieldHeight;
 
 		// calculated bind of brick size to playfield size
-		brickWidth.bind((playfieldWidth
-				.subtract((COLUMNS+1)*brickGap))
+		brickWidth.bind(playfieldWidth
+				.subtract((COLUMNS+1)*brickGap)
 				.divide(COLUMNS));
-		brickHeight.bind((playfieldHeight
+		brickHeight.bind(playfieldHeight
 				.subtract(playfieldHeight.get()*0.4)
-				.subtract((ROWS+1)*brickGap))
+				.subtract((ROWS+1)*brickGap)
 				.divide(ROWS));
 	}
 

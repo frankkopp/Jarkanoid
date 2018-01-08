@@ -64,7 +64,7 @@ import fko.breakout.model.exceptions.LevelLoaderNoLevelFilesException;
  * 04.01.2018
  * @author Frank Kopp
  */
-public class LevelLoader {
+public final class LevelLoader {
 
 	private static LevelLoader instance; // Singleton
 
@@ -125,7 +125,7 @@ public class LevelLoader {
 	public Brick[][] getLevel(int i) {
 		if (i < 1) return null;
 		// get the matrix from the Map
-		final Brick[][] myMatrix = levels.get(""+i);
+		final Brick[][] myMatrix = levels.get(Integer.toString(i));
 		// return a deep copy
 		final Brick[][] myNewMatrix = new Brick[BrickLayout.ROWS][BrickLayout.COLUMNS];
 		for (int row=0; row<BrickLayout.ROWS; row++) {
