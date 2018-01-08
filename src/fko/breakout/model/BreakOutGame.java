@@ -150,13 +150,15 @@ public class BreakOutGame extends Observable {
   // ball speeds in each direction
   private double vXball = 1;
   private double vYball = BALL_INITIAL_SPEED;
+  
+  // used to delay starts of game
   private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
   // the brick layout holds all bricks and its positions of the games
   private final BrickLayout brickLayout;
 
   /**
-   * Constructor - prepares the brick layout and the movement Timelines.
+   * Constructor - prepares the brick layout and the game loops.
    */
   public BreakOutGame() {
 
