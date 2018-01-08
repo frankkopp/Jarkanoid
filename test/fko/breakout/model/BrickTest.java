@@ -128,14 +128,14 @@ class BrickTest {
 	}
 
 	/**
-	 * Test method for {@link fko.breakout.model.Brick#toShortString()}.
-	 */
-	@Test
-	void testToShortString() {
-		Brick brick = new Brick(BrickType.SILVER, BrickPowerType.NONE);
-		System.out.println(brick.toShortString());
-		assertEquals("SINO", brick.toShortString());
-	}
+  	 * Test method for {@link fko.breakout.model.Brick#toToken()}.
+  	 */
+  	@Test
+  	void testToToken() {
+  		Brick brick = new Brick(BrickType.SILVER, BrickPowerType.NONE);
+  		System.out.println(brick.toToken());
+  		assertEquals("SINO", brick.toToken());
+  	}
 
 	/**
 	 * Test method for {@link fko.breakout.model.Brick#clone()}.

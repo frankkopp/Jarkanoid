@@ -49,8 +49,10 @@ import javafx.util.Duration;
  * <p>
  * 02.01.2018
  * @author Frank Kopp
- * TODO: add separate thread
+ * TODO: add separate thread??
  * TODO: hold ball on paddle at the start and shot of in a constant angle to the right
+ * TODO: make ball and paddle objects
+ * TODO: Refactor game status - can be handle through gameLoop.status
  * FIXME: ball can get stuck in GOLD bricks 
  * FIXME: ball sometime bounces off bricks in the wrong direction
  */
@@ -132,10 +134,13 @@ public class BreakOutGame extends Observable {
   private ReadOnlyIntegerWrapper currentScore = new ReadOnlyIntegerWrapper(0);
   public ReadOnlyIntegerProperty currentScoreProperty() { return currentScore.getReadOnlyProperty(); };
 
-  // ball and paddle movement Timelines
-  private Timeline paddleMovementTimeline = new Timeline();
-  private Timeline ballMovementTimeline = new Timeline();
+  
+  // main Game Loop / moves ball(s) and handles collisions
+  private Timeline mainGameLoop = new Timeline();
 
+  // paddle movements have their own game loop so we can move it outside of a running game
+ private Timeline paddleMovementLoop = new Timeline();
+ 
   // called when key is pressed/released to indicate paddle movement to movement animation
   private boolean paddleLeft;
   private boolean paddleRight;
@@ -159,19 +164,17 @@ public class BreakOutGame extends Observable {
     brickLayout = new BrickLayout(BRICK_GAP, playfieldWidth, playfieldHeight);
 
     // start the paddle movements
-    paddleMovementTimeline.setCycleCount(Timeline.INDEFINITE);
+    paddleMovementLoop.setCycleCount(Timeline.INDEFINITE);
     KeyFrame movePaddle = 
-        new KeyFrame(Duration.seconds(1/PADDLE_INITIAL_FRAMERATE), e -> { movePaddles();	});
-    paddleMovementTimeline.getKeyFrames().add(movePaddle);
-    paddleMovementTimeline.play();
+        new KeyFrame(Duration.seconds(1/PADDLE_INITIAL_FRAMERATE), e -> { paddleMovementLoop();	});
+    paddleMovementLoop.getKeyFrames().add(movePaddle);
+    paddleMovementLoop.play();
 
     // prepare ball movements (will be start in startGame())
-    ballMovementTimeline.setCycleCount(Timeline.INDEFINITE);
+    mainGameLoop.setCycleCount(Timeline.INDEFINITE);
     KeyFrame moveBall = 
-        new KeyFrame(Duration.seconds(1/BALL_INITIAL_FRAMERATE), e -> {	moveBall();	});
-    ballMovementTimeline.getKeyFrames().add(moveBall);
-
-    bindBallToPaddle();
+        new KeyFrame(Duration.seconds(1/BALL_INITIAL_FRAMERATE), e -> {	gameLoop();	});
+    mainGameLoop.getKeyFrames().add(moveBall);
 
   }
 
@@ -181,7 +184,7 @@ public class BreakOutGame extends Observable {
    */
   private void loadLevel(int level) {
     // pause animation
-    ballMovementTimeline.pause();
+    mainGameLoop.pause();
 
     // load next level or game is won if non available
     final Brick[][] newLevel = LevelLoader.getInstance().getLevel(level);
@@ -192,13 +195,14 @@ public class BreakOutGame extends Observable {
       return;
     };
 
+    // set the received level into the brickLayout
     brickLayout.setMatrix(newLevel);
 
     // Level done
     setChanged();
     notifyObservers(new GameEvent(GameEventType.LEVEL_START));
-
   }
+ 
   /**
    * Starts a new round after loosing a ball or completing a level
    * @param pause
@@ -210,25 +214,27 @@ public class BreakOutGame extends Observable {
     bindBallToPaddle();
     // show the ball for a short time then start the animation
     executor.schedule(() -> {
-      if (!isPlaying()) return; // maybe the game has already been stopped
+      if (!isPlaying()) return; // check if the game has been stopped while we were waiting
       ballCenterX.unbind();  // unbind the ball from the paddle
       ballCenterY.unbind();  // unbind the ball from the paddle
-      ballMovementTimeline.play(); 
+      mainGameLoop.play(); // start the gameLoop
     }, pause, TimeUnit.MILLISECONDS);
   }
+  
   /**
    * Binds the ball to the paddle movement before start of the game
    */
   private void bindBallToPaddle() {
     // bind ball to paddle
-    ballCenterX.bind(paddleX.add(paddleWidth.divide(2)).add(20));
+    ballCenterX.bind(paddleX.add(paddleWidth.divide(2)).add(20)); // slightly to the right of the middle
     ballCenterY.bind(paddleY.subtract(ballRadius).subtract(1.0));
   }
 
   /**
    * Called by the <code>paddleMovementTimeline<code> animation event to move the paddles.
    */
-  private void movePaddles() {
+  private void paddleMovementLoop() {
+    if (isPaused()) return; // no paddle movement when game is pausend
     if (paddleLeft 
         && paddleX.get() > 0.0) {
       paddleX.setValue(paddleX.getValue() - PADDLE_MOVE_STEPS);
@@ -240,17 +246,20 @@ public class BreakOutGame extends Observable {
   }
 
   /**
-   * Called by the <code>ballMovementTimeline</code> animation event to move the ball.<br>
+   * Called by the <code>mainGameLoop</code> animation event to move the ball.<br>
    * Calls <code>checkCollision()</code>
    */
-  private void moveBall() {
+  private void gameLoop() {
+    // move the ball 
+    // TODO: extend to use multiple balls
     ballCenterX.set(ballCenterX.get() + vXball);
     ballCenterY.set(ballCenterY.get() + vYball);
+    // check collisions from the ball(s) with anything else
     checkCollision();
   }
 
   /**
-   * Checks if the ball has hit a wall, the paddle, a block or has left 
+   * Checks if the ball(s) have hit a wall, the paddle, a block or has left 
    * through the bottom. Calculates new speeds for each direction, tells brickLayout 
    * if the ball hits a brick and calls <code>ballLost()</code> when ball has left 
    * through bottom.
@@ -303,7 +312,7 @@ public class BreakOutGame extends Observable {
       notifyObservers(new GameEvent(GameEventType.BALL_LOST));
 
       // pause animation
-      ballMovementTimeline.pause();
+      mainGameLoop.pause();
 
       // start new round
       startRound(SLEEP_BETWEEN_LIVES);
@@ -488,6 +497,7 @@ private int decreaseRemainingLives() {
  * @param x
  */
 public void setMouseXPosition(double mouseX) {
+  if (isPaused()) return; 
   double x = mouseX;
   double halfPaddleWidth = paddleWidthProperty().get()/2;
   if (x - halfPaddleWidth < 0.0) {
@@ -527,8 +537,8 @@ public void stopPlaying() {
   isPlaying.set(false);
   isPaused.set(false);
   gameOver.set(false);
-  // stop ball movement
-  ballMovementTimeline.stop();
+  // stop game loop
+  mainGameLoop.stop();
 }
 
 /**
@@ -544,7 +554,7 @@ public boolean isPlaying() {
 public void pausePlaying() {
   if (!isPlaying()) return; // ignore if not playing
   isPaused.set(true);
-  ballMovementTimeline.pause();
+  mainGameLoop.pause();
 }
 
 /**
@@ -553,7 +563,7 @@ public void pausePlaying() {
 public void resumePlaying() {
   if (!isPlaying() && !isPaused()) return; // ignore if not playing
   isPaused.set(false);
-  ballMovementTimeline.play();
+  mainGameLoop.play();
 }
 
 /**

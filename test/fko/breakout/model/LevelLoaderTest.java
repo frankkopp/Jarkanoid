@@ -124,7 +124,7 @@ public class LevelLoaderTest {
 			Brick[][] bm = ll.getLevel(i);
 			for (int row=0; row<bm.length; row++) {
 				for (int col=0; col<bm[row].length; col++) {
-					System.out.print((bm[row][col] == null ? "----" : bm[row][col].toShortString())+" ");
+					System.out.print((bm[row][col] == null ? "----" : bm[row][col].toToken())+" ");
 				}
 				System.out.println();
 			}

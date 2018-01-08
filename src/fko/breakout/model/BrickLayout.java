@@ -222,7 +222,7 @@ public class BrickLayout {
 				if (brickMatrix[row][col] == null) {
 					builder.append("---- ");					
 				} else {
-					builder.append(brickMatrix[row][col].toShortString()).append(" ");
+					builder.append(brickMatrix[row][col].toToken()).append(" ");
 				}
 			}
 			builder.append(System.lineSeparator());

@@ -36,7 +36,7 @@ import javafx.scene.paint.Color;
  * 04.01.2018
  * @author Frank Kopp
  */
-public class Brick {
+public class Brick implements Cloneable {
 
   private final BrickType brickType;
   private final BrickPowerType powerType;
@@ -123,7 +123,10 @@ public class Brick {
         powerType, hitCount, isInvincible, isKilled);
   }
 
-  public String toShortString() {
+  /**
+   * @return A two letter representation of this Brick
+   */
+  public String toToken() {
     return String.format("%2.2s%2.2s", brickType.sign,powerType.name());
   }
 
