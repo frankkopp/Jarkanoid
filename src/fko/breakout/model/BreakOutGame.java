@@ -49,10 +49,11 @@ import javafx.util.Duration;
  * <p>
  * 02.01.2018
  * @author Frank Kopp
- * TODO: add separate thread?? maybe not useful for a frame based game
- * TODO: hold ball on paddle at the start and shot of in a constant angle to the right
  * TODO: make ball and paddle objects
- * TODO: Refactor game status - can be handle through gameLoop.status
+ * TODO: add option handle multiple balls
+ * TODO: add separate thread?? maybe not useful for a frame based game
+ * TODO: Refactor game status - can be handle through gameLoop.status 
+ *          / or not as loop.status is not boolean which impacts easy binding in view
  * FIXME: ball can get stuck in GOLD bricks 
  * FIXME: ball sometime bounces off bricks in the wrong direction
  */
@@ -133,7 +134,6 @@ public class BreakOutGame extends Observable {
   public ReadOnlyIntegerProperty currentRemainingLivesProperty() { return currentRemainingLives.getReadOnlyProperty(); };
   private ReadOnlyIntegerWrapper currentScore = new ReadOnlyIntegerWrapper(0);
   public ReadOnlyIntegerProperty currentScoreProperty() { return currentScore.getReadOnlyProperty(); };
-
   
   // main Game Loop / moves ball(s) and handles collisions
   private Timeline mainGameLoop = new Timeline();
@@ -297,30 +297,37 @@ public class BreakOutGame extends Observable {
   }
 
   /**
-   * @param ballUpperBound
+   * @param ballLeftBound
+   * @param ballRightBound
+   * @return true if ball touches one of the side wall
    */
-  private void checkBallLostThroughBottom(final double ballUpperBound) {
-    if (ballUpperBound >= playfieldHeight.get()) {
-
-      if (decreaseRemainingLives() < 0) {
-        currentRemainingLives.set(0);
-        gameOver();
-        setChanged();
-        notifyObservers(new GameEvent(GameEventType.GAME_OVER));
-        return;
-      };
-
+  private void checkSideWallCollision(final double ballLeftBound, final double ballRightBound) {
+    if (ballLeftBound <= 0) { // left
+      ballCenterX.set(0+ballRadius.get()); // in case it was <0
+      vXball *= -1;
       setChanged();
-      notifyObservers(new GameEvent(GameEventType.BALL_LOST));
-
-      // pause animation
-      mainGameLoop.pause();
-
-      // start new round
-      startRound(SLEEP_BETWEEN_LIVES);
+      notifyObservers(new GameEvent(GameEventType.HIT_WALL));
+    } else if (ballRightBound >= playfieldWidth.get()) { // right
+      ballCenterX.set(playfieldWidth.get()-ballRadius.get()); // in case it was >playFieldWidth
+      vXball *= -1;
+      setChanged();
+      notifyObservers(new GameEvent(GameEventType.HIT_WALL));
     }
   }
-
+  
+  /**
+   * @param ballUpperBound
+   * @return true if ball touches top wall
+   */
+  private void checkTopWallCollision(final double ballUpperBound) {
+    if (ballUpperBound <= 0) {
+      ballCenterY.set(ballRadius.get()); // in case it was <0
+      vYball *= -1;
+      setChanged();
+      notifyObservers(new GameEvent(GameEventType.HIT_WALL));
+    }
+  }
+  
   /**
    * @param ballUpperBound
    * @param ballLowerBound
@@ -420,37 +427,29 @@ public class BreakOutGame extends Observable {
 }
 
 /**
- * @param ballUpperBound
- * @return true if ball touches top wall
- */
-private void checkTopWallCollision(final double ballUpperBound) {
-  if (ballUpperBound <= 0) {
-    ballCenterY.set(ballRadius.get()); // in case it was <0
-    vYball *= -1;
-    setChanged();
-    notifyObservers(new GameEvent(GameEventType.HIT_WALL));
+   * @param ballUpperBound
+   */
+  private void checkBallLostThroughBottom(final double ballUpperBound) {
+    if (ballUpperBound >= playfieldHeight.get()) {
+  
+      if (decreaseRemainingLives() < 0) {
+        currentRemainingLives.set(0);
+        gameOver();
+        setChanged();
+        notifyObservers(new GameEvent(GameEventType.GAME_OVER));
+        return;
+      };
+  
+      setChanged();
+      notifyObservers(new GameEvent(GameEventType.BALL_LOST));
+  
+      // pause animation
+      mainGameLoop.pause();
+  
+      // start new round
+      startRound(SLEEP_BETWEEN_LIVES);
+    }
   }
-}
-
-/**
- * @param ballLeftBound
- * @param ballRightBound
- * @return true if ball touches one of the side wall
- */
-private void checkSideWallCollision(final double ballLeftBound, final double ballRightBound) {
-  if (ballLeftBound <= 0) { // left
-    ballCenterX.set(0+ballRadius.get()); // in case it was <0
-    vXball *= -1;
-    setChanged();
-    notifyObservers(new GameEvent(GameEventType.HIT_WALL));
-  } else if (ballRightBound >= playfieldWidth.get()) { // right
-    ballCenterX.set(playfieldWidth.get()-ballRadius.get()); // in case it was >playFieldWidth
-    vXball *= -1;
-    setChanged();
-    notifyObservers(new GameEvent(GameEventType.HIT_WALL));
-  }
-}
-
 /**
  * called when out of lives or after last level
  */
@@ -544,13 +543,6 @@ public void stopPlaying() {
 }
 
 /**
- * @return true of game is running
- */
-public boolean isPlaying() {
-  return isPlaying.get();
-}
-
-/**
  * pauses a running game 
  */
 public void pausePlaying() {
@@ -568,6 +560,12 @@ public void resumePlaying() {
   mainGameLoop.play();
 }
 
+/**
+ * @return true of game is running
+ */
+public boolean isPlaying() {
+  return isPlaying.get();
+}
 /**
  * @return true if game is paused
  */

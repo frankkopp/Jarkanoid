@@ -27,8 +27,6 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import fko.breakout.BreakOut;
 import javafx.scene.media.AudioClip;
@@ -48,12 +46,12 @@ public final class SoundManager {
     // ENUM		Filename w/o .wav
     WALL 		("WallHit"),
     PADDLE 		("PaddleHit"),
-    BRICK_S 	("BrickHit_Special"),
+    BRICK_S 		("BrickHit_Special"),
     BRICK		("BrickHit_Normal"),
     BALL_LOST	("Ball_Lost");
-  
+
     private final String _name;
-  
+
     private Clips(String name) {
       _name = name;
     }
@@ -64,9 +62,6 @@ public final class SoundManager {
 
   // folder to all sound files
   private static final String SOUND_FOLDER = "/sounds/";
-
-  // to play sounds parallel
-  private final ExecutorService _executor = Executors.newScheduledThreadPool(2);
 
   // available sounds mapped by the enum
   private final Map<Clips, AudioClip> _sounds;
@@ -107,17 +102,13 @@ public final class SoundManager {
   }
 
   /**
-   * Plays the give clip once.
+   * Plays the given clip once.
    * @param c enum from Clips
    */
   public void playClip(Clips c) {
-    // sound was not available
     if (_sounds.get(c) == null || !soundOn) return;
-    // execute in a new thread to play sound
-    _executor.execute(() -> {
-      AudioClip clip = _sounds.get(c);
-      clip.play(); // Start playing
-    });			
+    AudioClip clip = _sounds.get(c);
+    clip.play();
   }
 
   /**
@@ -139,13 +130,6 @@ public final class SoundManager {
    */
   public boolean isSoundOn() {
     return soundOn;
-  }
-
-  /**
-   * Stop all threads and media players.
-   */
-  public void shutdown() {
-    _executor.shutdown();
   }
 
 }

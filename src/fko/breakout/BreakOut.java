@@ -27,7 +27,6 @@ import java.net.URL;
 
 import fko.breakout.controller.MainController;
 import fko.breakout.model.BreakOutGame;
-import fko.breakout.model.SoundManager;
 import fko.breakout.view.MainView;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -79,7 +78,6 @@ public class BreakOut extends Application {
 
 		// closeAction
 		primaryStage.setOnCloseRequest(event -> {
-		    SoundManager.getInstance().shutdown();
 			Platform.exit();
 			System.exit(0);
 			event.consume();
