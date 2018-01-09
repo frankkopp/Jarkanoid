@@ -111,14 +111,6 @@ public class BreakOutGame extends Observable {
   public DoubleProperty paddleXProperty() { return paddleX; }
   public DoubleProperty paddleYProperty() { return paddleY; }
 
-  // Ball dimensions and position
-  private DoubleProperty ballRadius = new SimpleDoubleProperty(BALL_INITIAL_RADIUS); // see FXML
-  private DoubleProperty ballCenterX = new SimpleDoubleProperty(BALL_INITIAL_X); // see FXML
-  private DoubleProperty ballCenterY = new SimpleDoubleProperty(BALL_INITIAL_Y); // see FXML
-  public DoubleProperty ballRadiusProperty() { return ballRadius; }
-  public DoubleProperty ballCenterXProperty() { return ballCenterX; }
-  public DoubleProperty ballCenterYProperty() { return ballCenterY; }
-
   // game status
   private ReadOnlyBooleanWrapper isPlaying = new ReadOnlyBooleanWrapper(false);
   public ReadOnlyBooleanProperty isPlayingProperty() { return isPlaying.getReadOnlyProperty(); }
@@ -146,10 +138,6 @@ public class BreakOutGame extends Observable {
   private boolean paddleRight;
   public void setPaddleLeft(boolean b) { paddleLeft = b; }
   public void setPaddleRight(boolean b) { paddleRight = b; }
-
-  // ball speeds in each direction
-  private double vXball = 1;
-  private double vYball = BALL_INITIAL_SPEED;
   
   // used to delay starts of game
   private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
@@ -253,9 +241,7 @@ public class BreakOutGame extends Observable {
    */
   private void gameLoop() {
     // move the ball 
-    // TODO: extend to use multiple balls
-    ballCenterX.set(ballCenterX.get() + vXball);
-    ballCenterY.set(ballCenterY.get() + vYball);
+    // TODO move ball    
     // check collisions from the ball(s) with anything else
     checkCollision();
   }
