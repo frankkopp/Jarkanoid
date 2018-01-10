@@ -58,6 +58,10 @@
 	-fx-stroke: #000000;
 }
 
+.brick {
+    -fx-effect: innershadow(one-pass-box, white, 5, 0.3, 1, 1);
+}
+
 .button {
 	-fx-text-fill: #1e90ff;
 	-fx-background-color: #333333;

@@ -77,7 +77,7 @@ public class MainView {
 
   /**
    * @param model
-   * @param controller2
+   * @param controller
    * @throws IOException 
    */
   public MainView(BreakOutGame model, MainController controller) throws IOException {
@@ -89,6 +89,7 @@ public class MainView {
     fxmlLoader.setController(controller);
     root = (AnchorPane) fxmlLoader.load();
 
+    // add the play field to the root pane
     playFieldPane = (Pane) fxmlLoader.getNamespace().get("playfieldPane");
     playFieldPane.getChildren().add(brickLayoutView);
 

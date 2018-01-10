@@ -77,7 +77,6 @@ public final class LevelLoader {
 	/**
 	 * Returns Singleton instance of this class.
 	 * @return singleton instance of this class
-	 * @throws IOException
 	 * @throws LevelLoaderFormatException 
 	 */
 	public static LevelLoader getInstance() {
@@ -119,7 +118,7 @@ public final class LevelLoader {
 	}
 
 	/**
-	 * @param i (> 0 and < maxAvailableLevel)
+	 * @param i (&gt; 0 and &lt; maxAvailableLevel)
 	 * @return the level matrix or null of no such level
 	 */
 	public Brick[][] getLevel(int i) {
@@ -160,7 +159,7 @@ public final class LevelLoader {
 	 * Protected instead for private for unit testing.
 	 * 
 	 * @param folder
-	 * @return file names in folder matching the file pattern "Level-<number>.txt"
+	 * @return file names in folder matching the file pattern "Level-&lt;number&gt;.txt"
 	 * @throws LevelLoaderIOException
 	 */
 	protected List<String> getLevelFiles(String folder) throws LevelLoaderIOException {

@@ -115,7 +115,7 @@ class BrickTest {
 	@Test
 	void testGetScore() {
 		Brick brick = new Brick(BrickType.SILVER, BrickPowerType.NONE);
-		assertEquals(150, brick.getPoints());
+		assertEquals(50, brick.getPoints());
 	}
 
 	/**
@@ -124,7 +124,7 @@ class BrickTest {
 	@Test
 	void testGetColor() {
 		Brick brick = new Brick(BrickType.SILVER, BrickPowerType.NONE);
-		assertEquals(150, brick.getPoints());
+		assertEquals(50, brick.getPoints());
 	}
 
 	/**
@@ -149,7 +149,7 @@ class BrickTest {
 	}
 
 	/**
-	 * Test method for {@link fko.breakout.model.Brick#equals()}.
+	 * Test method.
 	 */
 	@Test
 	void testEquals() {

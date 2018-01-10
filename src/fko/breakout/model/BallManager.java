@@ -24,9 +24,6 @@ SOFTWARE.
 package fko.breakout.model;
 
 import java.util.ArrayList;
-import java.util.Collection;
-
-import fko.breakout.model.exceptions.NotSupportedException;
 
 /**
  * Manages 0 to n balls. When no balls left we loose a live. 
@@ -35,31 +32,20 @@ public class BallManager extends ArrayList<Ball> {
 
   private static final long serialVersionUID = 1L;
 
+  /**
+   * Creates an empty Ball Manager
+   */
   public BallManager() {
     super();
   }
 
   /**
-   * Make sure the list contains no element twice
+   * Overridden to makes sure the list contains no element twice
    * @see java.util.ArrayList#add(java.lang.Object)
    */
   @Override
   public boolean add(Ball ball) {
     return super.contains(ball) ? false : super.add(ball);
   }
-
-  /**
-   * @see java.util.ArrayList#addAll(java.util.Collection)
-   */
-  @Override
-  public boolean addAll(Collection<? extends Ball> c) {
-    throw new NotSupportedException(this.getClass().getName()+" does not support adding of Collection");
-  }
-
-  /**
-   * @see java.util.ArrayList#addAll(int, java.util.Collection)
-   */
-  @Override
-  public boolean addAll(int index, Collection<? extends Ball> c) {
-    throw new NotSupportedException(this.getClass().getName()+" does not support adding of Collection");  }
+  
 }

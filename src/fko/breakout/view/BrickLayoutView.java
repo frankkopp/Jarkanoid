@@ -48,7 +48,7 @@ public class BrickLayoutView extends Group {
   }
 
   /**
-   * draws the BrickView. Bricks are removed selectively by using a storage array.
+   * draws the BrickView. Bricks are removed/exchanged selectively by using a storage array.
    * @param brickLayout
    */
   public void draw(BrickLayout brickLayout) {

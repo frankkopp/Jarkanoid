@@ -46,14 +46,14 @@ public class BallTest {
   @Test
   public void testBall() throws Exception {
     Ball b;
-    b = new Ball(100, 100, 5, -1, 0);
+    b = new Ball(100, 100, 5, -1, 1);
 
     assertTrue(b!=null);
     assertEquals(b.getCenterX(), 100, 0.001);
     assertEquals(b.getCenterY(), 100, 0.001);
     assertEquals(b.getRadius(), 5, 0.001);
-    assertEquals(b.getXVelocity(), 1, 0.001);
-    assertEquals(b.getYVelocity(), -1, 0.001);
+    assertEquals(b.getXVelocity(), -1, 0.001);
+    assertEquals(b.getYVelocity(), 1, 0.001);
     assertEquals(b.getVelocity(), Math.sqrt(2), 0.001);
     assertEquals(b.getUpperBound(), 95, 0.001);
     assertEquals(b.getLowerBound(), 105, 0.001);

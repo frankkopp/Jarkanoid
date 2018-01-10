@@ -53,6 +53,7 @@ public class Ball implements Cloneable {
   private boolean isMarkedForRemomval = false; 
 
   /**
+   * Creates a new ball
    * @param ballCenterX
    * @param ballCenterY
    * @param ballRadius
@@ -60,12 +61,25 @@ public class Ball implements Cloneable {
    * @param vYball
    */
   public Ball(double ballCenterX, double ballCenterY, double ballRadius, double vXball, double vYball) {
+    super();
     this.ballCenterX = new SimpleDoubleProperty(ballCenterX);
     this.ballCenterY = new SimpleDoubleProperty(ballCenterY);
     this.ballRadius = new SimpleDoubleProperty(ballRadius);
     setXYVelocity(vXball, vYball);
   }
   
+  /**
+   * Copy constructor for creating a new ball as a deep copy of an existing one.s
+   */
+  public Ball(Ball toCopy) {
+    this(toCopy.centerXProperty().get(), toCopy.centerYProperty().get(), toCopy.radiusProperty().get(),
+        toCopy.vX, toCopy.vY);
+    this.isMarkedForRemomval = toCopy.isMarkedForRemomval;
+  }
+  
+  /**
+   * Moves the ball one step further. Expected to be called by the game loop once per frame.
+   */
   public void moveStep() {
     ballCenterX.set(ballCenterX.get() + vX);
     ballCenterY.set(ballCenterY.get() + vY);
@@ -81,7 +95,12 @@ public class Ball implements Cloneable {
     return newBall;    
   }
 
-  private void setXYVelocity(double vX, double vY) {
+  /**
+   * Sets the velocities for the ball in X and Y direction
+   * @param vX
+   * @param vY
+   */
+  public void setXYVelocity(double vX, double vY) {
     this.vX = vX;
     this.vY = vY;
     this.velocity = Math.sqrt(Math.pow(this.vX, 2.0) + Math.pow(this.vY,2.0));
@@ -97,6 +116,14 @@ public class Ball implements Cloneable {
     setXYVelocity(vXtmp, vYtmp);
   }
 
+  /**
+   * Tests if the balls rectangular bounds intersect with the given rectangular area
+   * @param x
+   * @param y
+   * @param width
+   * @param height
+   * @return true if ball intersects with rectangular area
+   */
   public boolean intersects(double x, double y, double width, double height) {
     return (x + width >= getLeftBound() &&
             y + height >= getUpperBound() &&
@@ -194,7 +221,7 @@ public class Ball implements Cloneable {
   }
 
   /**
-   * @param isMarkedForRemomval the isMarkedForRemomval to set
+   * Marks this ball for removal
    */
   public void markForRemoval() {
     this.isMarkedForRemomval = true;
@@ -205,12 +232,7 @@ public class Ball implements Cloneable {
    */
   @Override
   protected Ball clone() {
-    return new Ball(
-        this.centerXProperty().get(),
-        this.centerYProperty().get(),
-        this.radiusProperty().get(),
-        this.vX,
-        this.vY);
+    return new Ball(this);
   }
 
   /**
