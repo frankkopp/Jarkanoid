@@ -57,6 +57,10 @@ import javafx.util.Duration;
  */
 public class BreakOutGame extends Observable {
 
+  /*
+   * Constants for game dimensions and other relevant settings.
+   * Need to be aligned with FXML UI Design. 
+   */
   private static final int 	START_LEVEL = 1;
   private static final int 	START_LIVES = 3;
   private static final long SLEEP_BETWEEN_LIVES  = 2000; // in ms
@@ -77,14 +81,14 @@ public class BreakOutGame extends Observable {
   private static final double BALL_INITIAL_X = 390;
   private static final double BALL_INITIAL_Y = PADDLE_INITIAL_Y-BALL_INITIAL_RADIUS;
   private static final double BALL_INITIAL_FRAMERATE = 100.0;  // Framerate for ball movements
-  // Absolute speed of ball 
-  // when vertical equals px in y
-  // when horizontal equals px in x
+  // Absolute speed of ball, when vertical equals px in y, when horizontal equals px in x
   private static final double BALL_INITIAL_SPEED = 5.0; 
 
+  // Template of a starting ball to copy when a new level starts
   private static final Ball BALL_TEMPLATE = new Ball(BALL_INITIAL_X, BALL_INITIAL_Y, BALL_INITIAL_RADIUS, 0,
       BALL_INITIAL_SPEED);
 
+  // the gap between bricks in the brick layout
   private static final double BRICK_GAP = 2;
 
   /* 
@@ -181,18 +185,16 @@ public class BreakOutGame extends Observable {
 
   }
 
-
   /**
-   * @param i
+   * Loads a level and sets the brick matrix 
+   * @param level
    */
   private void loadLevel(int level) {
 
     // load next level or game is won if non available
     final Brick[][] newLevel = LevelLoader.getInstance().getLevel(level);
     if (newLevel == null) { 
-      gameOver();
-      setChanged();
-      notifyObservers(new GameEvent(GameEventType.GAME_WON));
+      gameWon();
       return;
     };
 
@@ -210,7 +212,7 @@ public class BreakOutGame extends Observable {
    * @param delay
    */
   private void startRound(long delay) {
-    // clear ball manager
+    // clear ball manager - delete all balls
     ballManager.clear();
 
     // create new ball
@@ -247,8 +249,6 @@ public class BreakOutGame extends Observable {
       if (remainingLives < 0) {
         currentRemainingLives.set(0);
         gameOver();
-        setChanged();
-        notifyObservers(new GameEvent(GameEventType.GAME_OVER));
         return;
       };
 
@@ -326,30 +326,18 @@ public class BreakOutGame extends Observable {
    * through bottom.
    */
   private void checkCollisions(Ball ball) {
-
     // hit wall left or right
     checkSideWallCollision(ball);
-
     // hit wall top
     checkTopWallCollision(ball);
-
     // hit brick
     checkBrickCollision(ball);
-
     // hit paddle
     checkPaddleCollision(ball);
-
     // lost through bottom
     checkBallLostThroughBottom(ball);
-
   }
 
-  /**
-   * @param ball 
-   * @param ballLeftBound
-   * @param ballRightBound
-   * @return true if ball touches one of the side wall
-   */
   private void checkSideWallCollision(Ball ball) {
     if (ball.getLeftBound() <= 0) { // left
       ball.setCenterX(ball.getRadius()); // in case it was <0
@@ -363,10 +351,6 @@ public class BreakOutGame extends Observable {
     notifyObservers(new GameEvent(GameEventType.HIT_WALL, ball));
   }
 
-  /**
-   * @param ballUpperBound
-   * @return true if ball touches top wall
-   */
   private void checkTopWallCollision(Ball ball) {
     if (ball.getUpperBound() <= 0) {
       ball.setCenterY(ball.getRadius()); // in case it was <0
@@ -376,12 +360,6 @@ public class BreakOutGame extends Observable {
     notifyObservers(new GameEvent(GameEventType.HIT_WALL, ball));
   }
 
-  /**
-   * @param ballUpperBound
-   * @param ballLowerBound
-   * @param ballLeftBound
-   * @param ballRightBound
-   */
   private void checkBrickCollision(Ball ball) {
 
     // calculate ball center's brick cell
@@ -406,16 +384,15 @@ public class BreakOutGame extends Observable {
     // hit below
     if (ball.getYVelocity() > 0 && brickLayout.getBrick(ballLowerRow, ballCenterCol) != null) {
       brickHit(ball, ballLowerRow, ballCenterCol);
-   // bounce ball
+      // bounce ball
       ball.inverseYdirection();
       setChanged();
       notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballLowerRow, ballCenterCol, ball));
     }
     // hit left
-    
     if (ball.getXVelocity() < 0 && brickLayout.getBrick(ballCenterRow, ballLeftCol) != null) {
       brickHit(ball, ballCenterRow, ballLeftCol);
-   // bounce ball
+      // bounce ball
       ball.inverseXdirection();
       setChanged();
       notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballCenterRow, ballLeftCol, ball));
@@ -423,13 +400,13 @@ public class BreakOutGame extends Observable {
     // hit right
     if (ball.getYVelocity() > 0 && brickLayout.getBrick(ballCenterRow, ballRightCol) != null) {
       brickHit(ball, ballCenterRow, ballRightCol);
-   // bounce ball
+      // bounce ball
       ball.inverseXdirection();
       setChanged();
       notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballCenterRow, ballRightCol, ball));
     }
   }
-  
+
   /**
    * @param ball
    * @param row
@@ -447,15 +424,9 @@ public class BreakOutGame extends Observable {
       destroyedBricksCounter++;
     }
   }
-  
+
   /**
-   * @param ballLowerBound
-   * @param ballLeftBound
-   * @param ballRightBound
-   * @param paddleUpperBound
-   * @param paddleLowerBound
-   * @param paddleLeftBound
-   * @param paddleRightBound
+   * Checks if bak touches paddle and if so reverses the ball
    * @return true if ball touches paddle
    */
   private void checkPaddleCollision(Ball ball) {
@@ -480,6 +451,7 @@ public class BreakOutGame extends Observable {
   }
 
   /**
+   * Checks if the ball went through the bottom. If so marks the ball for removal in the next game loop.
    * @param ballUpperBound
    */
   private void checkBallLostThroughBottom(Ball ball) {
@@ -489,14 +461,27 @@ public class BreakOutGame extends Observable {
   }
 
   /**
-   * called when out of lives or after last level
+   * Called when out of lives or after last level
    */
   private void gameOver() {
     stopPlaying();
     gameOver.set(true);
+    setChanged();
+    notifyObservers(new GameEvent(GameEventType.GAME_OVER));
+  }
+  
+  /**
+   * Called when game is won - last level is cleared
+   */
+  private void gameWon() {
+    stopPlaying();
+    gameOver.set(true);
+    setChanged();
+    notifyObservers(new GameEvent(GameEventType.GAME_WON));
   }
 
   /**
+   * Increases score and adds lives at certain score levels
    * @param hitBrickScore
    */
   private void increaseScore(final BrickType brickType,  int hitBrickScore) {
@@ -526,13 +511,6 @@ public class BreakOutGame extends Observable {
   }
 
   /**
-   * increasing the score after hitting a brick
-   * @param i
-   * @return
-   */
-
-
-  /**
    * decreases the remaining lives after loosing a ball
    * @return remaining lives
    */
@@ -549,6 +527,7 @@ public class BreakOutGame extends Observable {
     b.centerXProperty().bind(paddleX.add(paddleWidth.divide(2)).add(20)); // slightly to the right of the middle
     b.centerYProperty().bind(paddleY.subtract(b.getRadius()).subtract(1.0));
   }
+  
   /**
    * Releases the ball to the paddle movement before start of the game
    * @param newBall
@@ -557,6 +536,7 @@ public class BreakOutGame extends Observable {
     newBall.centerXProperty().unbind();  // unbind the ball from the paddle
     newBall.centerYProperty().unbind();  // unbind the ball from the paddle
   }
+  
   /**
    * Called by the <code>paddleMovementTimeline<code> animation event to move the paddles.
    */
@@ -571,6 +551,7 @@ public class BreakOutGame extends Observable {
       paddleX.setValue(paddleX.getValue() + PADDLE_MOVE_STEPS);
     }
   }
+  
   /**
    * Called from controller by mouse move events. Moves the paddle according to the mouse's x position
    * when mouse is in window. The paddle's center will be set to the current mouse position. 
@@ -646,6 +627,7 @@ public class BreakOutGame extends Observable {
   public boolean isPlaying() {
     return isPlaying.get();
   }
+  
   /**
    * @return true if game is paused
    */

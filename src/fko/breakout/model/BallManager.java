@@ -35,6 +35,9 @@ public class BallManager extends ArrayList<Ball> {
 
   private static final long serialVersionUID = 1L;
 
+  /**
+   * Creates an empty Ball Manager
+   */
   public BallManager() {
     super();
   }

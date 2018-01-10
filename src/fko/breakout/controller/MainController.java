@@ -74,6 +74,7 @@ public class MainController implements Initializable, Observer {
   private final SoundManager sounds = SoundManager.getInstance();
 
   /**
+   * Creates the MainController
    * @param model
    */
   public MainController(BreakOutGame model) {
@@ -90,6 +91,7 @@ public class MainController implements Initializable, Observer {
   }
 
   /**
+   * Bind views to model data mostly through property bindings but also through Observer pattern. 
    * @param view 
    */
   @SuppressWarnings("unchecked")
@@ -115,7 +117,7 @@ public class MainController implements Initializable, Observer {
     paddle.heightProperty().bind(model.paddleHeightProperty());
     paddle.xProperty().bind(model.paddleXProperty());
     paddle.yProperty().bind(model.paddleYProperty());
-    
+
     // update handler for ball manager
     model.getBallManager().addListener(
         (ListChangeListener.Change<?> change) -> view.updateBallList((Change<Ball>) change));
@@ -156,7 +158,6 @@ public class MainController implements Initializable, Observer {
    * Most other model changes are handled through Property Bindings. 
    * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
    */
-  @SuppressWarnings("unused")
   @Override
   public void update(Observable o, Object e) {
     if (!(e instanceof GameEvent)) {
@@ -164,7 +165,7 @@ public class MainController implements Initializable, Observer {
     }
 
     GameEvent gameEvent = (GameEvent) e;
-    
+
     final Object[] param = (Object[]) gameEvent.getEventParameter();
 
     // define actions for different events
@@ -193,14 +194,10 @@ public class MainController implements Initializable, Observer {
     }
 
     // update brickLayoutView
-    final long start = System.nanoTime();
     if (gameEvent.getEventType().equals(GameEventType.LEVEL_START) 
         || gameEvent.getEventType().equals(GameEventType.HIT_BRICK)) {
       view.getBrickLayoutView().draw(model.getBrickLayout());
     }
-    final long nanoTime = System.nanoTime()-start;
-    //		System.out.println(String.format("Drawing bricks took %,d ns", nanoTime));
-
   }
 
   /**
