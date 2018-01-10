@@ -40,7 +40,7 @@ public enum BrickType {
 	BLUE	(100, 1, "BL", Color.BLUE),
 	PURPLE	(110, 1, "PU", Color.PURPLE),
 	YELLOW	(120, 1, "YE", Color.YELLOW),
-	SILVER	(150, 3, "SI", Color.SILVER),
+	SILVER	(50 , 3, "SI", Color.SILVER),
 	GOLD	(0, Integer.MAX_VALUE, "GO", Color.GOLD);
 	
 	public final int points;

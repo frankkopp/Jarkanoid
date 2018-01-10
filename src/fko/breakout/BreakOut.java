@@ -94,11 +94,11 @@ public class BreakOut extends Application {
 		super.init();
 		final URL urlResource = BreakOut.class.getResource("/fonts/AstronomicMono.otf");
 		if (urlResource == null) {
-			System.err.println("Font could not be found!");
+			criticalError("Font could not be found!");
 		} else {
 			final String url = urlResource.toExternalForm();
 			if (Font.loadFont(url, 40) == null) {
-				System.err.println("Font could not be loaded!");
+				criticalError("Font could not be loaded!");
 			};
 		}
 	}

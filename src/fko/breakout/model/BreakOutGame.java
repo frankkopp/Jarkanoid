@@ -53,18 +53,12 @@ import javafx.util.Duration;
  * <p>
  * 02.01.2018
  * @author Frank Kopp
- * TODO: make ball and paddle objects
- * TODO: add option handle multiple balls
- * TODO: add separate thread?? maybe not useful for a frame based game
- * TODO: Refactor game status - can be handle through gameLoop.status 
- *          / or not as loop.status is not boolean which impacts easy binding in view
- * FIXME: ball can get stuck in GOLD bricks 
- * FIXME: ball sometime bounces off bricks in the wrong direction
+ * TODO: add acceleration
  */
 public class BreakOutGame extends Observable {
 
-  private static final int 	START_LEVEL = 1;
-  private static final int 	START_LIVES = 5;
+  private static final int 	START_LEVEL = 2;
+  private static final int 	START_LIVES = 3;
   private static final long SLEEP_BETWEEN_LIVES  = 2000; // in ms
   private static final long SLEEP_BETWEEN_LEVELS = 3000; // in ms
 
@@ -154,9 +148,12 @@ public class BreakOutGame extends Observable {
 
   // the brick layout holds all bricks and its positions of the games
   private final BrickLayout brickLayout;
-  
+
   // signals the game loop to split the ball into multiple balls
   private boolean splitBallFlag = false;
+
+  // count all destroyed bricks
+  private int destroyedBricksCounter = 0;
 
   /**
    * Constructor - prepares the brick layout and the game loops.
@@ -205,52 +202,34 @@ public class BreakOutGame extends Observable {
     // Level done
     setChanged();
     notifyObservers(new GameEvent(GameEventType.LEVEL_START));
+
   }
 
   /**
    * Starts a new round after loosing a ball or completing a level
-   * @param pause
+   * @param delay
    */
-  private void startRound(long pause) {
+  private void startRound(long delay) {
     // clear ball manager
     ballManager.clear();
+
     // create new ball
     Ball newBall = BALL_TEMPLATE.clone();
+
     // add it to ball manager
     ballManager.add(newBall);
+
     // move the ball with the paddle before start of game
     bindBallToPaddle(newBall);
+
     // show the ball for a short time then start the animation
     executor.schedule(() -> {
+
       if (!isPlaying()) return; // check if the game has been stopped while we were waiting
-      newBall.centerXProperty().unbind();  // unbind the ball from the paddle
-      newBall.centerYProperty().unbind();  // unbind the ball from the paddle
+      unbindBallFromPaddle(newBall);
       mainGameLoop.play(); // start the gameLoop
-    }, pause, TimeUnit.MILLISECONDS);
-  }
 
-  /**
-   * Binds the ball to the paddle movement before start of the game
-   */
-  private void bindBallToPaddle(Ball b) {
-    // bind ball to paddle
-    b.centerXProperty().bind(paddleX.add(paddleWidth.divide(2)).add(20)); // slightly to the right of the middle
-    b.centerYProperty().bind(paddleY.subtract(b.getRadius()).subtract(1.0));
-  }
-
-  /**
-   * Called by the <code>paddleMovementTimeline<code> animation event to move the paddles.
-   */
-  private void paddleMovementLoop() {
-    if (isPaused()) return; // no paddle movement when game is pausend
-    if (paddleLeft 
-        && paddleX.get() > 0.0) {
-      paddleX.setValue(paddleX.getValue() - PADDLE_MOVE_STEPS);
-    }
-    if (paddleRight 
-        && paddleX.get() + paddleWidth.get() < playfieldWidth.get()) {
-      paddleX.setValue(paddleX.getValue() + PADDLE_MOVE_STEPS);
-    }
+    }, delay, TimeUnit.MILLISECONDS);
   }
 
   /**
@@ -258,12 +237,12 @@ public class BreakOutGame extends Observable {
    * Calls <code>checkCollision()</code>
    */
   private void gameLoop() {
-    
+
     // if no more balls we lost a live    
     if (ballManager.isEmpty()) {
 
       final int remainingLives = decreaseRemainingLives();
-      
+
       // out of lives => game over
       if (remainingLives < 0) {
         currentRemainingLives.set(0);
@@ -280,58 +259,64 @@ public class BreakOutGame extends Observable {
       startRound(SLEEP_BETWEEN_LIVES);
 
     } else { // still at least one ball in play
-      
-//      if (splitBallFlag) {
-//        // TEST MULTIBALL
-//        if (Math.random() < 0.01) {
-//          ballManager.add(ballManager.get(0).split());
-//          ballManager.add(ballManager.get(0).split());
-//          splitBallFlag=false;
-//        }
-//      }
+
+      //      if (splitBallFlag) {
+      //        // TEST MULTIBALL
+      //        if (Math.random() < 0.01) {
+      //          ballManager.add(ballManager.get(0).split());
+      //          ballManager.add(ballManager.get(0).split());
+      //          splitBallFlag=false;
+      //        }
+      //      }
 
       // else loop over all balls
       ListIterator<Ball> listIterator = ballManager.listIterator();
       while (listIterator.hasNext()) { 
+
         Ball ball = listIterator.next();
+
         // move the ball 
         ball.moveStep();
+
         // check collisions from the ball(s) with anything else
         checkCollisions(ball);
+
+      }
+
+      // remove balls marked for removal
+      listIterator = ballManager.listIterator();
+      while (listIterator.hasNext()) {
+        Ball ball = listIterator.next();
+        if (ball.isMarkedForRemoval()) {
+          listIterator.remove();
+          if (ballManager.isEmpty()) { // lost last ball
+            setChanged();
+            notifyObservers(new GameEvent(GameEventType.LAST_BALL_LOST, ball));
+          } else {
+            setChanged();
+            notifyObservers(new GameEvent(GameEventType.BALL_LOST, ball));
+          }
+        };
+      }
+
+      // should we accelerate ball? 
+      // randomly between each 
+
+      // check if level is cleared
+      if (brickLayout.getNumberOfBricks() == 0) {
+        // empty ball list
+        ballManager.clear();
+        // pause game animation
+        mainGameLoop.pause();
+        // Level done
+        setChanged();
+        notifyObservers(new GameEvent(GameEventType.LEVEL_COMPLETE));
+        // load new level or game over WON
+        increaseLevel();
+        loadLevel(currentLevel.get());
+        startRound(SLEEP_BETWEEN_LEVELS);
       }
     }
-
-    // remove balls marked for removal
-    ListIterator<Ball> iterator = ballManager.listIterator();
-    while (iterator.hasNext()) {
-      Ball ball = iterator.next();
-      if (ball.isMarkedForRemoval()) {
-        iterator.remove();
-        if (ballManager.isEmpty()) { // lost last ball
-          setChanged();
-          notifyObservers(new GameEvent(GameEventType.LAST_BALL_LOST, ball));
-        } else {
-          setChanged();
-          notifyObservers(new GameEvent(GameEventType.BALL_LOST, ball));
-        }
-      };
-    }
-
-    // check if level is cleared
-    if (brickLayout.getNumberOfBricks() == 0) {
-      // empty ball list
-      ballManager.clear();
-      // pause game animation
-      mainGameLoop.pause();
-      // Level done
-      setChanged();
-      notifyObservers(new GameEvent(GameEventType.LEVEL_COMPLETE));
-      // load new level or game over WON
-      increaseLevel();
-      loadLevel(currentLevel.get());
-      startRound(SLEEP_BETWEEN_LEVELS);
-    }
-    
   }
 
   /**
@@ -412,47 +397,57 @@ public class BreakOutGame extends Observable {
 
     // hit above
     if (ball.getYVelocity() < 0 && brickLayout.getBrick(ballUpperRow, ballCenterCol) != null) {
-      currentScore.set(currentScore.get() + brickLayout.hitBrick(ballUpperRow, ballCenterCol));
+      brickHit(ball, ballUpperRow, ballCenterCol);
+      // bounce ball
       ball.inverseYdirection();
       setChanged();
       notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballUpperRow, ballCenterCol, ball));
-      
-      // TEST
-      splitBallFlag=true;
     }
     // hit below
     if (ball.getYVelocity() > 0 && brickLayout.getBrick(ballLowerRow, ballCenterCol) != null) {
-      currentScore.set(currentScore.get() + brickLayout.hitBrick(ballLowerRow, ballCenterCol));
+      brickHit(ball, ballLowerRow, ballCenterCol);
+   // bounce ball
       ball.inverseYdirection();
       setChanged();
       notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballLowerRow, ballCenterCol, ball));
-      
-      // TEST
-      splitBallFlag=true;
     }
     // hit left
+    
     if (ball.getXVelocity() < 0 && brickLayout.getBrick(ballCenterRow, ballLeftCol) != null) {
-      currentScore.set(currentScore.get() + brickLayout.hitBrick(ballCenterRow, ballLeftCol));
+      brickHit(ball, ballCenterRow, ballLeftCol);
+   // bounce ball
       ball.inverseXdirection();
       setChanged();
       notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballCenterRow, ballLeftCol, ball));
-
-      // TEST
-      splitBallFlag=true;
     }
     // hit right
     if (ball.getYVelocity() > 0 && brickLayout.getBrick(ballCenterRow, ballRightCol) != null) {
-      increaseScore(brickLayout.hitBrick(ballCenterRow, ballRightCol));
+      brickHit(ball, ballCenterRow, ballRightCol);
+   // bounce ball
       ball.inverseXdirection();
       setChanged();
       notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballCenterRow, ballRightCol, ball));
-      
-      // TEST
-      splitBallFlag=true;
     }
-
   }
-
+  
+  /**
+   * @param ball
+   * @param row
+   * @param col
+   */
+  private void brickHit(Ball ball, final int row, final int col) {
+    // which type
+    BrickType brickType = brickLayout.getBrick(row, col).getType();
+    // hit the brick / get points for every destroyed brick
+    final int hitBrickScore = brickLayout.hitBrick(row, col);
+    // increase score
+    increaseScore(brickType, hitBrickScore);
+    // count destroyed bricks
+    if (hitBrickScore > 0) {
+      destroyedBricksCounter++;
+    }
+  }
+  
   /**
    * @param ballLowerBound
    * @param ballLeftBound
@@ -502,20 +497,40 @@ public class BreakOutGame extends Observable {
   }
 
   /**
+   * @param hitBrickScore
+   */
+  private void increaseScore(final BrickType brickType,  int hitBrickScore) {
+    if (brickType.equals(BrickType.SILVER)) { // Silver brick is special case
+      hitBrickScore = currentLevel.get() * hitBrickScore;
+    }
+    final int previousScore = currentScore.get();
+    final int newScore = previousScore + hitBrickScore;
+    currentScore.set(newScore);
+    // add new lives after 20.000 and after every other 60.000 points
+    if (previousScore < 20000 && newScore > 20000) {
+      currentRemainingLives.set(currentRemainingLives.get() +1);
+    } else if (previousScore > 20000) {
+      int modBefore = previousScore / 60000;
+      int modAfter = newScore / 60000;
+      if (modAfter > modBefore) {
+        currentRemainingLives.set(currentRemainingLives.get() +1);
+      }
+    }
+  }
+
+  /**
    * Increases level by 1
    */
   private void increaseLevel() {
     currentLevel.set(currentLevel.get() + 1);
   }
+
   /**
    * increasing the score after hitting a brick
    * @param i
    * @return
    */
-  private int increaseScore(int i) { 
-    currentScore.set(currentScore.get()+i); 
-    return currentScore.get();
-  }
+
 
   /**
    * decreases the remaining lives after loosing a ball
@@ -526,6 +541,36 @@ public class BreakOutGame extends Observable {
     return currentRemainingLives.get();
   }
 
+  /**
+   * Binds the ball to the paddle movement before start of the game
+   */
+  private void bindBallToPaddle(Ball b) {
+    // bind ball to paddle
+    b.centerXProperty().bind(paddleX.add(paddleWidth.divide(2)).add(20)); // slightly to the right of the middle
+    b.centerYProperty().bind(paddleY.subtract(b.getRadius()).subtract(1.0));
+  }
+  /**
+   * Releases the ball to the paddle movement before start of the game
+   * @param newBall
+   */
+  private void unbindBallFromPaddle(Ball newBall) {
+    newBall.centerXProperty().unbind();  // unbind the ball from the paddle
+    newBall.centerYProperty().unbind();  // unbind the ball from the paddle
+  }
+  /**
+   * Called by the <code>paddleMovementTimeline<code> animation event to move the paddles.
+   */
+  private void paddleMovementLoop() {
+    if (isPaused()) return; // no paddle movement when game is paused
+    if (paddleLeft 
+        && paddleX.get() > 0.0) {
+      paddleX.setValue(paddleX.getValue() - PADDLE_MOVE_STEPS);
+    }
+    if (paddleRight 
+        && paddleX.get() + paddleWidth.get() < playfieldWidth.get()) {
+      paddleX.setValue(paddleX.getValue() + PADDLE_MOVE_STEPS);
+    }
+  }
   /**
    * Called from controller by mouse move events. Moves the paddle according to the mouse's x position
    * when mouse is in window. The paddle's center will be set to the current mouse position. 
@@ -557,6 +602,7 @@ public class BreakOutGame extends Observable {
     currentLevel.set(START_LEVEL);
     currentRemainingLives.set(START_LIVES);
     currentScore.set(0);
+    destroyedBricksCounter = 0;
 
     setChanged();
     notifyObservers(new GameEvent(GameEventType.GAME_START));
