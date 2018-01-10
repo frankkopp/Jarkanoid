@@ -35,7 +35,7 @@ import javafx.beans.property.SimpleDoubleProperty;
  * 
  * @author Frank Kopp
  */
-public class Ball {
+public class Ball implements Cloneable {
 
   // ball size and position properties
   private final DoubleProperty ballRadius;
@@ -46,9 +46,11 @@ public class Ball {
   private double vX;
   private double vY;
   
-  // current total ball speed / will be calculated whenever vX or vY change
+  // current total ball speed and angle - will be calculated whenever vX or vY change
   private double velocity;
-  private double angle;
+  
+  // should this ball be removed
+  private boolean isMarkedForRemomval = false; 
 
   /**
    * @param ballCenterX
@@ -64,49 +66,52 @@ public class Ball {
     setXYVelocity(vXball, vYball);
   }
   
+  public void moveStep() {
+    ballCenterX.set(ballCenterX.get() + vX);
+    ballCenterY.set(ballCenterY.get() + vY);
+  }
+
   private void setXYVelocity(double vX, double vY) {
     this.vX = vX;
     this.vY = vY;
     this.velocity = Math.sqrt(Math.pow(this.vX, 2.0) + Math.pow(this.vY,2.0));
-    this.angle = Math.toDegrees(Math.atan(vY/vX));  // alpha = atan(y/x)
-  }
-
-  /**
-   * Sets a new velocity without changing direction and therefore
-   * not changing the ratio of vX to vY.
-   * @param newV
-   */
-  public void setVelocity(double newV) {
-    final double vXtmp = newV * Math.cos(Math.toRadians(angle)); // cos(alpha) * c
-    final double vYtmp = newV * Math.sin(Math.toRadians(angle)); // sin(alpha) * c
-    setXYVelocity(vXtmp, vYtmp);
-  }
-
-  public void moveBall() {
-    ballCenterX.set(ballCenterX.get() + vX);
-    ballCenterY.set(ballCenterY.get() + vY);
-  }
-  
-  /**
-   * Gets the current angle in degrees.
-   * 0 being straight up. 180 being straight down.
-   * 90 being right. 270 being left.
-   * @param newAngle
-   */
-  public double getAngle() {
-    return angle;
   }
   
   /**
    * Sets a new angle in degrees at constant speed for the ball.
-   * 0 being straight up. 180 being straight down.
-   * 90 being right. 270 being left.
    * @param newAngle
    */
-  public void setNewAngle(double newAngle) {
+  public void bounceFromPaddle(double newAngle) {
     final double vXtmp = Math.sin(Math.toRadians(newAngle)) * velocity;
-    final double vYtmp = Math.cos(Math.toRadians(newAngle)) * velocity;
+    final double vYtmp = -Math.cos(Math.toRadians(newAngle)) * velocity;
     setXYVelocity(vXtmp, vYtmp);
+  }
+
+  public boolean intersects(double x, double y, double width, double height) {
+    return (x + width >= getLeftBound() &&
+            y + height >= getUpperBound() &&
+            x <= getRightBound() &&
+            y <= getLowerBound());
+  }
+  
+  public double getXVelocity() {
+    return vX;
+  }
+
+  public void setXVelocity(double newVX) {
+    setXYVelocity(newVX, vY);
+  }
+
+  public void setYVelocity(double newVY) {
+    setXYVelocity(vX, newVY);
+  }
+  
+  public double getYVelocity() {
+    return vY;
+  }
+  
+  public double getVelocity() {
+    return velocity;
   }
   
   public double inverseXdirection() {
@@ -135,40 +140,89 @@ public class Ball {
     return ballCenterX.get() + ballRadius.get();
   }
 
-  public DoubleProperty ballRadiusProperty() {
+  public DoubleProperty radiusProperty() {
     return ballRadius;
   }
 
-  public double getBallRadius() {
+  public double getRadius() {
     return ballRadius.get();
   }
 
-  public void setBallRadius(double value) {
+  public void setRadius(double value) {
     ballRadius.set(value);
   }
 
-  public DoubleProperty ballCenterXProperty() {
+  public DoubleProperty centerXProperty() {
     return ballCenterX;
   }
 
-  public double getBallCenterX() {
+  public double getCenterX() {
     return ballCenterX.get();
   }
 
-  public void setBallCenterX(double value) {
+  public void setCenterX(double value) {
     ballCenterX.set(value);
   }
 
-  public DoubleProperty ballCenterYProperty() {
+  public DoubleProperty centerYProperty() {
     return ballCenterY;
   }
 
-  public double getBallCenterY() {
-    return ballCenterX.get();
+  public double getCenterY() {
+    return ballCenterY.get();
   }
 
-  public void setBallCenterY(double value) {
-    ballCenterX.set(value);
+  public void setCenterY(double value) {
+    ballCenterY.set(value);
+  }
+
+  /**
+   * @return the isMarkedForRemomval
+   */
+  public boolean isMarkedForRemoval() {
+    return isMarkedForRemomval;
+  }
+
+  /**
+   * @param isMarkedForRemomval the isMarkedForRemomval to set
+   */
+  public void markForRemoval() {
+    this.isMarkedForRemomval = true;
+  }
+
+  /**
+   * @see java.lang.Object#clone()
+   */
+  @Override
+  protected Ball clone() {
+    return new Ball(
+        this.centerXProperty().get(),
+        this.centerYProperty().get(),
+        this.radiusProperty().get(),
+        this.vX,
+        this.vY);
+  }
+
+  /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("Ball [ballRadius=");
+    builder.append(ballRadius);
+    builder.append(", ballCenterX=");
+    builder.append(ballCenterX);
+    builder.append(", ballCenterY=");
+    builder.append(ballCenterY);
+    builder.append(", vX=");
+    builder.append(vX);
+    builder.append(", vY=");
+    builder.append(vY);
+    builder.append(", velocity=");
+    builder.append(velocity);
+    builder.append("]");
+    return builder.toString();
   }
 
 }

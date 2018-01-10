@@ -23,8 +23,11 @@ SOFTWARE.
  */
 package fko.breakout.model;
 
-import org.junit.Before;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
 
 /**
  * BallTest
@@ -36,21 +39,94 @@ public class BallTest {
   /**
    * @throws java.lang.Exception
    */
-  @Before
+  @BeforeAll
   public void setUp() throws Exception {
   }
 
-  /**
-   * Test method for {@link fko.breakout.model.Ball#Ball(javafx.beans.property.DoubleProperty, javafx.beans.property.DoubleProperty, javafx.beans.property.DoubleProperty, double, double)}.
-   */
   @Test
   public void testBall() throws Exception {
-    Ball b = new Ball(100, 100, 5, 1, 1);
-    
+    Ball b;
+    b = new Ball(100, 100, 5, -1, 0);
+
+    assertTrue(b!=null);
+    assertEquals(b.getCenterX(), 100, 0.001);
+    assertEquals(b.getCenterY(), 100, 0.001);
+    assertEquals(b.getRadius(), 5, 0.001);
+    assertEquals(b.getXVelocity(), 1, 0.001);
+    assertEquals(b.getYVelocity(), -1, 0.001);
+    assertEquals(b.getVelocity(), Math.sqrt(2), 0.001);
+    assertEquals(b.getUpperBound(), 95, 0.001);
+    assertEquals(b.getLowerBound(), 105, 0.001);
+    assertEquals(b.getLeftBound(), 95, 0.001);
+    assertEquals(b.getRightBound(), 105, 0.001);
   }
 
   @Test
   public void testSetVelocity() throws Exception {
+//    Ball b = new Ball(100, 100, 5, 1, 1);
+//    b.setVelocity(Math.sqrt(8));
+//    assertEquals(2.0, b.getXVelocity(), 0.001);
+//    assertEquals(2.0, b.getYVelocity(), 0.001);
+//    b.setVelocity(Math.sqrt(32));
+//    assertEquals(4.0, b.getXVelocity(), 0.001);
+//    assertEquals(4.0, b.getYVelocity(), 0.001);
+//    b.inverseYdirection();
+//    b.inverseXdirection();
+//    assertEquals(-4.0, b.getXVelocity(), 0.001);
+//    assertEquals(-4.0, b.getYVelocity(), 0.001);
+//    assertEquals(Math.sqrt(32), b.getVelocity());
   }
+
+  @Test
+    public void testBounceFromPaddle() throws Exception {
+  //    Ball b;
+  //    b = new Ball(100, 100, 5, -1, 0);
+  //    System.out.println(b.getAngle());
+  //    assertEquals(-90, b.getAngle(), 0.001);
+  //    b = new Ball(100, 100, 5, -1, -1);
+  //    System.out.println(b.getAngle());
+  //    assertEquals( -45, b.getAngle(), 0.001);
+  //    b = new Ball(100, 100, 5, 0, -1);
+  //    System.out.println(b.getAngle());
+  //    assertEquals(0, b.getAngle(), 0.001);
+  //    b = new Ball(100, 100, 5, 1, -1);
+  //    System.out.println(b.getAngle());
+  //    assertEquals(45, b.getAngle(), 0.001);
+  //    b = new Ball(100, 100, 5, 1, 0);
+  //    System.out.println(b.getAngle());
+  //    assertEquals(90, b.getAngle(), 0.001);
+  //
+  //    b = new Ball(100, 100, 5, -1, 0);
+  //    System.out.println(b.getAngle());
+  //    assertEquals(-90, b.getAngle(), 0.001);
+  //    b = new Ball(100, 100, 5, -1, 1);
+  //    System.out.println(b.getAngle());
+  //    assertEquals( -45, b.getAngle(), 0.001);
+  //    b = new Ball(100, 100, 5, 0, 1);
+  //    System.out.println(b.getAngle());
+  //    assertEquals(0, b.getAngle(), 0.001);
+  //    b = new Ball(100, 100, 5, 1, 1);
+  //    System.out.println(b.getAngle());
+  //    assertEquals(45, b.getAngle(), 0.001);
+  //    b = new Ball(100, 100, 5, 1, 0);
+  //    System.out.println(b.getAngle());
+  //    assertEquals(90, b.getAngle(), 0.001);
+  //
+  //    b = new Ball(100, 100, 5, -1, -1);
+  //    
+  //    b.setAngle(-90);
+  //    assertEquals(0, b.getYVelocity(), 0.001);
+  //    assertEquals(-Math.sqrt(2), b.getXVelocity(), 0.001);
+  //    b.setAngle(-45);
+  //    assertEquals(Math.sqrt(2), b.getYVelocity(), 0.001);
+  //    assertEquals(Math.sqrt(2), b.getXVelocity(), 0.001);
+  //    b.setAngle(45);
+  //    assertEquals(Math.sqrt(2), b.getYVelocity(), 0.001);
+  //    assertEquals(0, b.getXVelocity(), 0.001);
+  //    b.setAngle(90);
+  //    assertEquals(0, b.getYVelocity(), 0.001);
+  //    assertEquals(Math.sqrt(2), b.getXVelocity(), 0.001);
+  
+    }
 
 }

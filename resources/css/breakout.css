@@ -55,6 +55,7 @@
 
 .ball {
 	-fx-fill: #1e90ff;
+	-fx-stroke: #000000;
 }
 
 .button {

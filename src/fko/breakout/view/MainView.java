@@ -24,18 +24,20 @@ SOFTWARE.
 package fko.breakout.view;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import fko.breakout.controller.MainController;
+import fko.breakout.model.Ball;
 import fko.breakout.model.BreakOutGame;
 import javafx.animation.ParallelTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.StrokeTransition;
+import javafx.collections.SetChangeListener.Change;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
@@ -60,13 +62,18 @@ public class MainView {
   private final AnchorPane root;
   private final BrickLayoutView brickLayoutView = new BrickLayoutView();
 
+  // the playfield
+  private Pane playFieldPane;
+  
+  //Balls
+  private final HashMap<Ball, BallView> ballViewMap = new HashMap<Ball, BallView>();
+  
   // animations
   private ScaleTransition    hitPaddleScaleTransition;
   private StrokeTransition   hitPaddleStrokeTransition;
-  private ScaleTransition    hitBallScaleTransition;
-  private StrokeTransition   hitBallStrokeTransition;
   private ParallelTransition paddleHitAnimation;
-  private ParallelTransition ballHitAnimation;
+
+
 
   /**
    * @param model
@@ -82,21 +89,17 @@ public class MainView {
     fxmlLoader.setController(controller);
     root = (AnchorPane) fxmlLoader.load();
 
-    // get playFieldPane and add brickLayoutView
-    final Pane playFieldPane = (Pane) fxmlLoader.getNamespace().get("playfieldPane");
+    playFieldPane = (Pane) fxmlLoader.getNamespace().get("playfieldPane");
     playFieldPane.getChildren().add(brickLayoutView);
 
     // Game Over splash top front
     final Text gameoverText = (Text) fxmlLoader.getNamespace().get("gameOverSplash");
     gameoverText.toFront();
 
-    // Ball
-    final Circle ball = (Circle) fxmlLoader.getNamespace().get("ball");
-
     // Paddle
     final Rectangle paddle = (Rectangle) fxmlLoader.getNamespace().get("paddle");
 
-    prepareAnimations(ball, paddle);
+    prepareAnimations(paddle);
   }
 
   /**
@@ -104,7 +107,7 @@ public class MainView {
    * @param paddle 
    * @param ball 
    */
-  private void prepareAnimations(Circle ball, Rectangle paddle) {
+  private void prepareAnimations(Rectangle paddle) {
     hitPaddleScaleTransition = new ScaleTransition(Duration.millis(50), paddle);
     hitPaddleScaleTransition.setFromX(1.0);
     hitPaddleScaleTransition.setFromY(1.0);
@@ -119,23 +122,8 @@ public class MainView {
     hitPaddleStrokeTransition.setCycleCount(2);
     hitPaddleStrokeTransition.setAutoReverse(true);
 
-    hitBallScaleTransition = new ScaleTransition(Duration.millis(50), ball);
-    hitBallScaleTransition.setFromX(1.0);
-    hitBallScaleTransition.setFromY(1.0);
-    hitBallScaleTransition.setByX(0.1);
-    hitBallScaleTransition.setByY(0.1);
-    hitBallScaleTransition.setCycleCount(2);
-    hitBallScaleTransition.setAutoReverse(true);
-
-    hitBallStrokeTransition = new StrokeTransition(Duration.millis(50), ball);
-    hitBallStrokeTransition.setFromValue((Color) ball.getStroke());
-    hitBallStrokeTransition.setToValue(Color.WHITE);
-    hitBallStrokeTransition.setCycleCount(2);
-    hitBallStrokeTransition.setAutoReverse(true);
-
     // combined animations
-    paddleHitAnimation = new ParallelTransition(hitPaddleScaleTransition, hitPaddleStrokeTransition, hitBallScaleTransition, hitBallStrokeTransition);
-    ballHitAnimation = new ParallelTransition(hitBallScaleTransition, hitBallStrokeTransition);
+    paddleHitAnimation = new ParallelTransition(hitPaddleScaleTransition, hitPaddleStrokeTransition);
 
     //      EXAMPLE for animations over arbitrary properties:
     //      final Timeline timeline = new Timeline();
@@ -147,7 +135,30 @@ public class MainView {
     //      timeline.play();
   }
   
-  
+  /**
+   * Called from Controller when model updates the Set of balls
+   * @param change
+   */
+  public void updateBallSet(Change<?> change) {
+    if (change.wasAdded()) {
+      
+//      System.out.println("Ball added: "+change.getElementAdded());
+      final Ball addedBall = (Ball) change.getElementAdded();
+      final BallView bv = new BallView(model, addedBall);
+      bv.visibleProperty().bind(model.isPlayingProperty());
+      ballViewMap.put(addedBall, bv);
+      playFieldPane.getChildren().add(bv);
+      
+    } else if (change.wasRemoved()) {
+      
+//      System.out.println("Ball removed: "+change.getElementRemoved());
+      final Ball removedBall = (Ball) change.getElementRemoved();
+      final BallView bv = ballViewMap.get(removedBall);
+      bv.visibleProperty().unbind();
+      playFieldPane.getChildren().remove(bv);
+      ballViewMap.remove(removedBall);
+    }
+  }
 
   /**
    * @return root pane from loaded FXML
@@ -166,15 +177,16 @@ public class MainView {
   /**
    * Plays hit animation
    */
-  public void paddleHit() {
-    paddleHitAnimation.play();    
+  public void paddleHit(Ball ball) {
+    paddleHitAnimation.play(); 
+    ballViewMap.get(ball).hit();
   }
 
   /**
    * Plays hit animation
    */
-  public void ballHit() {
-    ballHitAnimation.play();
+  public void ballHit(Ball ball) {
+    ballViewMap.get(ball).hit();
   }
 
   /**

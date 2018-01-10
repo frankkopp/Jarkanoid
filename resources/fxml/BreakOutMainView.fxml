@@ -11,7 +11,6 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Text?>
 
@@ -130,7 +129,6 @@
                                           <Reflection />
                                        </effect>
                                     </Rectangle>
-                                    <Circle fx:id="ball" centerX="390.0" centerY="450.0" fill="DODGERBLUE" radius="8.0" stroke="BLACK" strokeType="INSIDE" styleClass="ball" />
                                     <Text fx:id="gameOverSplash" fill="#ffd400" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="gameover" text="Game Over" textAlignment="CENTER" />
                                  </children>
                               </Pane>

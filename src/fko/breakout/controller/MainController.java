@@ -31,11 +31,13 @@ import java.util.ResourceBundle;
 import fko.breakout.BreakOut;
 import fko.breakout.events.GameEvent;
 import fko.breakout.events.GameEvent.GameEventType;
+import fko.breakout.model.Ball;
 import fko.breakout.model.BreakOutGame;
 import fko.breakout.model.SoundManager;
 import fko.breakout.model.SoundManager.Clips;
 import fko.breakout.view.MainView;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.SetChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -43,7 +45,6 @@ import javafx.scene.control.Button;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
@@ -112,14 +113,10 @@ public class MainController implements Initializable, Observer {
     paddle.heightProperty().bind(model.paddleHeightProperty());
     paddle.xProperty().bind(model.paddleXProperty());
     paddle.yProperty().bind(model.paddleYProperty());
-
-    // ball dimension and location
-    ball.radiusProperty().bind(model.ballRadiusProperty());
-    ball.centerXProperty().bind(model.ballCenterXProperty());
-    ball.centerYProperty().bind(model.ballCenterYProperty());
     
-    // ball is only visible when we are playing
-    ball.visibleProperty().bind(model.isPlayingProperty());
+    // update handler for ball manager
+    model.getBallManager().addListener(
+        (SetChangeListener.Change<?> change) -> view.updateBallSet(change));
 
     // startstopButton text updater
     model.isPlayingProperty().addListener((v, o, n) -> {
@@ -165,13 +162,25 @@ public class MainController implements Initializable, Observer {
     }
 
     GameEvent gameEvent = (GameEvent) e;
+    
+    final Object[] param = (Object[]) gameEvent.getEventParameter();
 
     // define actions for different events
     switch (gameEvent.getEventType()) {
-    case HIT_PADDLE:    view.paddleHit(); sounds.playClip(Clips.PADDLE); break;
-    case HIT_WALL:      view.ballHit();   sounds.playClip(Clips.WALL); break;
-    case HIT_BRICK:     handleHitBrickEvent(gameEvent); break;
-    case BALL_LOST:     sounds.playClip(Clips.BALL_LOST); break;
+    case HIT_PADDLE:    
+      view.paddleHit((Ball) param[0]); 
+      sounds.playClip(Clips.PADDLE); 
+      break;
+    case HIT_WALL:      
+      view.ballHit((Ball) param[0]); 
+      sounds.playClip(Clips.WALL); 
+      break;
+    case HIT_BRICK:     
+      handleHitBrickEvent(gameEvent); 
+      break;
+    case BALL_LOST:     
+      sounds.playClip(Clips.BALL_LOST); 
+      break;
     case LEVEL_COMPLETE: break;
     case LEVEL_START:   break;
     case GAME_START:    break;
@@ -199,14 +208,15 @@ public class MainController implements Initializable, Observer {
       final Object[] param = (Object[]) event.getEventParameter();
       final int row = (int) param[0];
       final int col = (int) param[1];
+      final Ball ball = (Ball) param[2];
       if (model.getBrickLayout().getBrick(row, col) == null) {
         sounds.playClip(Clips.BRICK);
       } else {
         view.brickHit(row, col);
         sounds.playClip(Clips.BRICK_S);
       }
+      view.ballHit(ball); 
     }
-    view.ballHit(); 
   }
 
   /**
@@ -320,9 +330,6 @@ public class MainController implements Initializable, Observer {
   /* ********************************************************
    * FXML - injected by FXMLLoader
    * ********************************************************/
-
-  @FXML
-  private Circle ball;
 
   @FXML
   private Button startStopButton;
