@@ -57,7 +57,7 @@ import javafx.util.Duration;
  */
 public class BreakOutGame extends Observable {
 
-  private static final int 	START_LEVEL = 2;
+  private static final int 	START_LEVEL = 1;
   private static final int 	START_LIVES = 3;
   private static final long SLEEP_BETWEEN_LIVES  = 2000; // in ms
   private static final long SLEEP_BETWEEN_LEVELS = 3000; // in ms
