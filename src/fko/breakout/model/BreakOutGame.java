@@ -23,26 +23,19 @@ SOFTWARE.
  */
 package fko.breakout.model;
 
+import fko.breakout.events.GameEvent;
+import fko.breakout.events.GameEvent.GameEventType;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.util.Duration;
+
 import java.util.ListIterator;
 import java.util.Observable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
-import fko.breakout.events.GameEvent;
-import fko.breakout.events.GameEvent.GameEventType;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.ReadOnlyBooleanProperty;
-import javafx.beans.property.ReadOnlyBooleanWrapper;
-import javafx.beans.property.ReadOnlyIntegerProperty;
-import javafx.beans.property.ReadOnlyIntegerWrapper;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleListProperty;
-import javafx.collections.FXCollections;
-import javafx.util.Duration;
 
 /**
  * BreakOutModel
@@ -375,7 +368,7 @@ public class BreakOutGame extends Observable {
 
     // hit above
     if (ball.getYVelocity() < 0 && brickLayout.getBrick(ballUpperRow, ballCenterCol) != null) {
-      brickHit(ball, ballUpperRow, ballCenterCol);
+      brickHit(ballUpperRow, ballCenterCol);
       // bounce ball
       ball.inverseYdirection();
       setChanged();
@@ -383,7 +376,7 @@ public class BreakOutGame extends Observable {
     }
     // hit below
     if (ball.getYVelocity() > 0 && brickLayout.getBrick(ballLowerRow, ballCenterCol) != null) {
-      brickHit(ball, ballLowerRow, ballCenterCol);
+      brickHit(ballLowerRow, ballCenterCol);
       // bounce ball
       ball.inverseYdirection();
       setChanged();
@@ -391,7 +384,7 @@ public class BreakOutGame extends Observable {
     }
     // hit left
     if (ball.getXVelocity() < 0 && brickLayout.getBrick(ballCenterRow, ballLeftCol) != null) {
-      brickHit(ball, ballCenterRow, ballLeftCol);
+      brickHit(ballCenterRow, ballLeftCol);
       // bounce ball
       ball.inverseXdirection();
       setChanged();
@@ -399,7 +392,7 @@ public class BreakOutGame extends Observable {
     }
     // hit right
     if (ball.getYVelocity() > 0 && brickLayout.getBrick(ballCenterRow, ballRightCol) != null) {
-      brickHit(ball, ballCenterRow, ballRightCol);
+      brickHit(ballCenterRow, ballRightCol);
       // bounce ball
       ball.inverseXdirection();
       setChanged();
@@ -408,11 +401,10 @@ public class BreakOutGame extends Observable {
   }
 
   /**
-   * @param ball
    * @param row
    * @param col
    */
-  private void brickHit(Ball ball, final int row, final int col) {
+  private void brickHit(final int row, final int col) {
     // which type
     BrickType brickType = brickLayout.getBrick(row, col).getType();
     // hit the brick / get points for every destroyed brick
@@ -452,7 +444,7 @@ public class BreakOutGame extends Observable {
 
   /**
    * Checks if the ball went through the bottom. If so marks the ball for removal in the next game loop.
-   * @param ballUpperBound
+   * @param ball
    */
   private void checkBallLostThroughBottom(Ball ball) {
     if (ball.getUpperBound() >= playfieldHeight.get()) {

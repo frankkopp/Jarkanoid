@@ -1,18 +1,15 @@
 package fko.breakout.model;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.util.List;
-
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 
 import fko.breakout.model.exceptions.LevelLoaderFormatException;
 import fko.breakout.model.exceptions.LevelLoaderIOException;
 import fko.breakout.model.exceptions.LevelLoaderNoLevelFilesException;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class LevelLoaderTest {
 
@@ -29,10 +26,8 @@ public class LevelLoaderTest {
 
 	@Test
 	public void testLevelLoader() {
-
 		LevelLoader ll =  LevelLoader.getNewInstanceForUnitTest(folderProd, preFix, fileType);
 		assertNotNull(ll);
-
 	}
 
 	@Test
