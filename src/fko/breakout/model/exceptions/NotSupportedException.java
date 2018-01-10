@@ -21,45 +21,20 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package fko.breakout.model;
-
-import java.util.ArrayList;
-import java.util.Collection;
-
-import fko.breakout.model.exceptions.NotSupportedException;
+package fko.breakout.model.exceptions;
 
 /**
- * Manages 0 to n balls. When no balls left we loose a live. 
+ * 
  */
-public class BallManager extends ArrayList<Ball> {
+public class NotSupportedException extends RuntimeException {
+
+  /**
+   * @param string
+   */
+  public NotSupportedException(String string) {
+    super(string);
+  }
 
   private static final long serialVersionUID = 1L;
 
-  public BallManager() {
-    super();
-  }
-
-  /**
-   * Make sure the list contains no element twice
-   * @see java.util.ArrayList#add(java.lang.Object)
-   */
-  @Override
-  public boolean add(Ball ball) {
-    return super.contains(ball) ? false : super.add(ball);
-  }
-
-  /**
-   * @see java.util.ArrayList#addAll(java.util.Collection)
-   */
-  @Override
-  public boolean addAll(Collection<? extends Ball> c) {
-    throw new NotSupportedException(this.getClass().getName()+" does not support adding of Collection");
-  }
-
-  /**
-   * @see java.util.ArrayList#addAll(int, java.util.Collection)
-   */
-  @Override
-  public boolean addAll(int index, Collection<? extends Ball> c) {
-    throw new NotSupportedException(this.getClass().getName()+" does not support adding of Collection");  }
 }

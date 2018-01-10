@@ -42,7 +42,9 @@ import javafx.util.Duration;
  */
 public class BrickView extends Rectangle {
 
-  private FillTransition solidBrickHitTimeline;
+  private final FillTransition solidBrickHitTimeline;
+  
+  private final Brick brick;
 
   /**
    * @param x
@@ -54,6 +56,8 @@ public class BrickView extends Rectangle {
   public BrickView(double x, double y, double width, double height, Brick brick) {
     super(x, y, width, height);
 
+    this.brick = brick;
+    
     this.setFill(brick.getColor());
 
     Effect effect = new InnerShadow(
@@ -75,6 +79,13 @@ public class BrickView extends Rectangle {
   
   public void hit() {
     solidBrickHitTimeline.playFromStart();
+  }
+
+  /**
+   * @return the brick
+   */
+  public Brick getBrick() {
+    return brick;
   }
 
 }

@@ -23,7 +23,7 @@ SOFTWARE.
  */
 package fko.breakout.model;
 
-import java.util.Iterator;
+import java.util.ListIterator;
 import java.util.Observable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -34,13 +34,13 @@ import fko.breakout.events.GameEvent.GameEventType;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ListProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
-import javafx.beans.property.SetProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleSetProperty;
+import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.util.Duration;
 
@@ -134,8 +134,8 @@ public class BreakOutGame extends Observable {
   public ReadOnlyIntegerProperty currentScoreProperty() { return currentScore.getReadOnlyProperty(); };
 
   // ball manager
-  private final SetProperty<Ball> ballManager = new SimpleSetProperty<>();
-  public SetProperty<Ball> getBallManager() { return ballManager; }
+  private final ListProperty<Ball> ballManager = new SimpleListProperty<>();
+  public ListProperty<Ball> getBallManager() { return ballManager; }
 
   // main Game Loop / moves ball(s) and handles collisions
   private final Timeline mainGameLoop = new Timeline();
@@ -154,6 +154,9 @@ public class BreakOutGame extends Observable {
 
   // the brick layout holds all bricks and its positions of the games
   private final BrickLayout brickLayout;
+  
+  // signals the game loop to split the ball into multiple balls
+  private boolean splitBallFlag = false;
 
   /**
    * Constructor - prepares the brick layout and the game loops.
@@ -162,9 +165,9 @@ public class BreakOutGame extends Observable {
 
     // setup BrickLayout
     brickLayout = new BrickLayout(BRICK_GAP, playfieldWidth, playfieldHeight);
-    
+
     // configure ballManager
-    ballManager.set(FXCollections.observableSet(new BallManager()));
+    ballManager.set(FXCollections.observableList(new BallManager()));
 
     // start the paddle movements
     paddleMovementLoop.setCycleCount(Timeline.INDEFINITE);
@@ -239,7 +242,7 @@ public class BreakOutGame extends Observable {
    * Called by the <code>paddleMovementTimeline<code> animation event to move the paddles.
    */
   private void paddleMovementLoop() {
-    if (isPaused()) return; // no paddle movement when game is pausend
+    if (isPaused()) return; // no paddle movement when game is paused
     if (paddleLeft 
         && paddleX.get() > 0.0) {
       paddleX.setValue(paddleX.getValue() - PADDLE_MOVE_STEPS);
@@ -254,22 +257,27 @@ public class BreakOutGame extends Observable {
    * Called by the <code>mainGameLoop</code> animation event to move the ball.<br>
    * Calls <code>checkCollision()</code>
    */
-  private void gameLoop() {
-    
+  private synchronized void gameLoop() {
+
     // remove balls marked for removal
-    Iterator<Ball> iterator = ballManager.iterator();
+    ListIterator<Ball> iterator = ballManager.listIterator();
     while (iterator.hasNext()) {
       Ball ball = iterator.next();
       if (ball.isMarkedForRemoval()) {
         iterator.remove();
-        setChanged();
-        notifyObservers(new GameEvent(GameEventType.BALL_LOST, ball));
+        if (ballManager.isEmpty()) { // lost last ball
+          setChanged();
+          notifyObservers(new GameEvent(GameEventType.LAST_BALL_LOST, ball));
+        } else {
+          setChanged();
+          notifyObservers(new GameEvent(GameEventType.BALL_LOST, ball));
+        }
       };
     }
-    
+
     // if new more balls we lost a live    
     if (ballManager.isEmpty()) {
-      
+
       final int remainingLives = decreaseRemainingLives();
       if (remainingLives < 0) {
         currentRemainingLives.set(0);
@@ -284,11 +292,23 @@ public class BreakOutGame extends Observable {
 
       // start new round
       startRound(SLEEP_BETWEEN_LIVES);
-    
+
     } else { // still at least one ball in play
+      
+      if (splitBallFlag) {
+        // TEST MULTIBALL
+        if (Math.random() < 0.01) {
+          ballManager.add(ballManager.get(0).split());
+          ballManager.add(ballManager.get(0).split());
+          splitBallFlag=false;
+        }
+        
+      }
 
       // else loop over all balls
-      for (Ball ball : ballManager) { 
+      ListIterator<Ball> listIterator = ballManager.listIterator();
+      while (listIterator.hasNext()) { 
+        Ball ball = listIterator.next();
         // move the ball 
         ball.moveStep();
         // check collisions from the ball(s) with anything else
@@ -319,7 +339,7 @@ public class BreakOutGame extends Observable {
 
     // lost through bottom
     checkBallLostThroughBottom(ball);
-    
+
   }
 
   /**
@@ -362,53 +382,64 @@ public class BreakOutGame extends Observable {
    */
   private void checkBrickCollision(Ball ball) {
 
-    // calculate ball edge's brick cell
+    // calculate ball center's brick cell
     final int ballCenterRow = (int) (ball.getCenterY()   / (brickLayout.getBrickHeight()+brickLayout.getBrickGap()));
     final int ballCenterCol = (int) (ball.getCenterX()   / (brickLayout.getBrickWidth() +brickLayout.getBrickGap()));
-
-    final int ballUpperRow = (int) (ball.getUpperBound() / (brickLayout.getBrickHeight()+brickLayout.getBrickGap()));
-    final int ballLowerRow = (int) ((ball.getLowerBound() - brickLayout.getBrickGap()) / (brickLayout.getBrickHeight()+brickLayout.getBrickGap()));
-    final int ballLeftCol = (int) (ball.getLeftBound()   / (brickLayout.getBrickWidth() + brickLayout.getBrickGap()));	
-    final int ballRightCol = (int) ((ball.getRightBound() - brickLayout.getBrickGap()) / (brickLayout.getBrickWidth() + brickLayout.getBrickGap()));	
+    // calculate ball edge's brick cell
+    final int ballUpperRow = (int) (ball.getUpperBound() / (brickLayout.getBrickHeight() + brickLayout.getBrickGap()));
+    final int ballLowerRow = (int) ((ball.getLowerBound() - brickLayout.getBrickGap())
+        / (brickLayout.getBrickHeight() + brickLayout.getBrickGap()));
+    final int ballLeftCol = (int) (ball.getLeftBound() / (brickLayout.getBrickWidth() + brickLayout.getBrickGap()));
+    final int ballRightCol = (int) ((ball.getRightBound() - brickLayout.getBrickGap())
+        / (brickLayout.getBrickWidth() + brickLayout.getBrickGap()));
 
     // hit above
-    if (brickLayout.getBrick(ballUpperRow, ballCenterCol) != null) {
+    if (ball.getYVelocity() < 0 && brickLayout.getBrick(ballUpperRow, ballCenterCol) != null) {
       currentScore.set(currentScore.get() + brickLayout.hitBrick(ballUpperRow, ballCenterCol));
       ball.inverseYdirection();
       setChanged();
       notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballUpperRow, ballCenterCol, ball));
+      
+      // TEST
+      splitBallFlag=true;
     }
     // hit below
-    if (brickLayout.getBrick(ballLowerRow, ballCenterCol) != null) {
+    if (ball.getYVelocity() > 0 && brickLayout.getBrick(ballLowerRow, ballCenterCol) != null) {
       currentScore.set(currentScore.get() + brickLayout.hitBrick(ballLowerRow, ballCenterCol));
       ball.inverseYdirection();
       setChanged();
       notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballLowerRow, ballCenterCol, ball));
+      
+      // TEST
+      splitBallFlag=true;
     }
     // hit left
-    if (brickLayout.getBrick(ballCenterRow, ballLeftCol) != null) {
+    if (ball.getXVelocity() < 0 && brickLayout.getBrick(ballCenterRow, ballLeftCol) != null) {
       currentScore.set(currentScore.get() + brickLayout.hitBrick(ballCenterRow, ballLeftCol));
       ball.inverseXdirection();
       setChanged();
       notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballCenterRow, ballLeftCol, ball));
+
+      // TEST
+      splitBallFlag=true;
     }
     // hit right
-    if (brickLayout.getBrick(ballCenterRow, ballRightCol) != null) {
+    if (ball.getYVelocity() > 0 && brickLayout.getBrick(ballCenterRow, ballRightCol) != null) {
       increaseScore(brickLayout.hitBrick(ballCenterRow, ballRightCol));
       ball.inverseXdirection();
       setChanged();
       notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballCenterRow, ballRightCol, ball));
+      
+      // TEST
+      splitBallFlag=true;
     }
 
     if (brickLayout.getNumberOfBricks() == 0) {
-
       // pause game animation
       mainGameLoop.pause();
-
       // Level done
       setChanged();
       notifyObservers(new GameEvent(GameEventType.LEVEL_COMPLETE));
-
       // load new level or game over WON
       increaseLevel();
       loadLevel(currentLevel.get());
@@ -427,10 +458,10 @@ public class BreakOutGame extends Observable {
    * @return true if ball touches paddle
    */
   private void checkPaddleCollision(Ball ball) {
-    
+
     if (ball.intersects(paddleX.get(), paddleY.get(), paddleWidth.get(), paddleHeight.get())) {
-//    if ((ball.getLowerBound() >= paddleUpperBound && ball.getLowerBound() <= paddleLowerBound) // ball on correct height
-//        && (ball.getRightBound() > paddleLeftBound && ball.getLeftBound() < paddleRightBound)) { // ball touches the paddle
+      //    if ((ball.getLowerBound() >= paddleUpperBound && ball.getLowerBound() <= paddleLowerBound) // ball on correct height
+      //        && (ball.getRightBound() > paddleLeftBound && ball.getLeftBound() < paddleRightBound)) { // ball touches the paddle
 
       // determine where the ball hit the paddle
       final double hitPointAbsolute = ball.getCenterX() - paddleX.get();

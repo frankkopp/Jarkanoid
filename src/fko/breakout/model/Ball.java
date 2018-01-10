@@ -70,6 +70,16 @@ public class Ball implements Cloneable {
     ballCenterX.set(ballCenterX.get() + vX);
     ballCenterY.set(ballCenterY.get() + vY);
   }
+  
+  /**
+   * Creates a clone of the ball and randomly changes direction slightly
+   */
+  public Ball split() {
+    final Ball newBall = this.clone();
+    newBall.setYVelocity(newBall.getYVelocity() + (Math.random()-0.5) * newBall.getYVelocity() / 10); 
+    newBall.setXVelocity(newBall.getXVelocity() + (Math.random()-0.5) * newBall.getXVelocity() / 10);
+    return newBall;    
+  }
 
   private void setXYVelocity(double vX, double vY) {
     this.vX = vX;

@@ -36,75 +36,88 @@ import javafx.scene.Group;
  * @author Frank Kopp
  */
 public class BrickLayoutView extends Group {
-	
-	// store of created BrickViews to be able to selectively delete them
-	private BrickView[][] allBricks;
-	
-	/**
-	 * Creates empty BrickLayout
-	 */
-	public BrickLayoutView() {
-		super();
-	}
 
-	/**
-	 * draws the BrickView. Bricks are removed selectively by using a storage array.
-	 * @param brickLayout
-	 */
-	public void draw(BrickLayout brickLayout) {
-		
-		// we might need to do this more selective to save time
-		if (brickLayout == null) {
-			this.getChildren().clear();
-			return;
-		} 
-		 
-		// create a store for all BrickViews
-		if (allBricks == null) {
-			allBricks = new BrickView[BrickLayout.ROWS][BrickLayout.COLUMNS];
-		}
-		
-		// readability
-		final double vGap = brickLayout.getBrickGap();
-		final double hGap = brickLayout.getBrickGap();
-		final double brickWidth = brickLayout.getBrickWidth();
-		final double brickHeight = brickLayout.getBrickHeight(); 
+  // store of created BrickViews to be able to selectively delete them
+  private BrickView[][] allBricks;
 
-		// add all bricks according to the model brickLayout
-		for (int row=0; row<BrickLayout.ROWS; row++) {
-			for (int col=0; col<BrickLayout.COLUMNS; col++) {
-				double y = vGap + (row*vGap) + row * brickHeight;
-				double x = hGap + (col*hGap) + col * brickWidth;
-				
-				// brick exists in model but not in view
-				if (brickLayout.getBrick(row, col) != null
-						&& allBricks[row][col] == null) {
-					
-					allBricks[row][col] = new BrickView(x, y, 
-							brickWidth, brickHeight,brickLayout.getBrick(row, col));
-					this.getChildren().add(allBricks[row][col]);
+  /**
+   * Creates empty BrickLayout
+   */
+  public BrickLayoutView() {
+    super();
+  }
 
-				// brick exists in view but not in model - erase BrickView
-				} else if (brickLayout.getBrick(row, col) == null
-						&& allBricks[row][col] != null) {
-					
-					this.getChildren().remove(allBricks[row][col]);
-					allBricks[row][col] = null;
+  /**
+   * draws the BrickView. Bricks are removed selectively by using a storage array.
+   * @param brickLayout
+   */
+  public void draw(BrickLayout brickLayout) {
 
-				} 
-			} // end for col
-		} //end for row
-	}
+    // we might need to do this more selective to save time
+    if (brickLayout == null) {
+      this.getChildren().clear();
+      return;
+    } 
 
-	/**
-	 * @param row
-	 * @param col
-	 * @return
-	 */
-	public BrickView getBrickView(int row, int col) {
-		if (row<0 || col<0 || row>=allBricks.length || col>=allBricks[row].length) {
-			return null;
-		}
-		return allBricks[row][col];
-	}
+    // create a store for all BrickViews
+    if (allBricks == null) {
+      allBricks = new BrickView[BrickLayout.ROWS][BrickLayout.COLUMNS];
+    }
+
+    // readability
+    final double vGap = brickLayout.getBrickGap();
+    final double hGap = brickLayout.getBrickGap();
+    final double brickWidth = brickLayout.getBrickWidth();
+    final double brickHeight = brickLayout.getBrickHeight(); 
+
+    // add all bricks according to the model brickLayout
+    for (int row=0; row<BrickLayout.ROWS; row++) {
+      for (int col=0; col<BrickLayout.COLUMNS; col++) {
+        double y = vGap + (row*vGap) + row * brickHeight;
+        double x = hGap + (col*hGap) + col * brickWidth;
+
+        // brick exists in model but not in view
+        if (brickLayout.getBrick(row, col) != null
+            && allBricks[row][col] == null) {
+
+          allBricks[row][col] = new BrickView(x, y, 
+              brickWidth, brickHeight, brickLayout.getBrick(row, col));
+
+          this.getChildren().add(allBricks[row][col]);
+
+          // brick exists in view but not in model - erase BrickView
+        } else if (brickLayout.getBrick(row, col) == null
+            && allBricks[row][col] != null) {
+
+          this.getChildren().remove(allBricks[row][col]);
+          allBricks[row][col] = null;
+
+        // brick exists in view and model but are not of same type
+        } else if (brickLayout.getBrick(row, col) != null && allBricks[row][col] != null
+            && brickLayout.getBrick(row, col).getType() != allBricks[row][col].getBrick().getType()) {
+          
+          // remove old brick
+          this.getChildren().remove(allBricks[row][col]);
+          // create new
+          allBricks[row][col] = new BrickView(x, y, 
+              brickWidth, brickHeight, brickLayout.getBrick(row, col));
+          // add to view
+          this.getChildren().add(allBricks[row][col]);
+        }
+      } // end for col
+    } //end for row
+  }
+
+  /**
+   * @param row
+   * @param col
+   * @return
+   */
+  public BrickView getBrickView(int row, int col) {
+    if (row<0 || col<0 || row>=allBricks.length || col>=allBricks[row].length) {
+      return null;
+    }
+    return allBricks[row][col];
+  }
+
 }

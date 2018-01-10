@@ -126,7 +126,9 @@ public final class LevelLoader {
 		if (i < 1) return null;
 		// get the matrix from the Map
 		final Brick[][] myMatrix = levels.get(Integer.toString(i));
-		// return a deep copy
+		// no more levels?
+		if (myMatrix == null) return null;
+		// when more levels return a deep copy
 		final Brick[][] myNewMatrix = new Brick[BrickLayout.ROWS][BrickLayout.COLUMNS];
 		for (int row=0; row<BrickLayout.ROWS; row++) {
 			for (int col=0; col<BrickLayout.COLUMNS;col++) {

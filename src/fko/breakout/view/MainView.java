@@ -32,7 +32,7 @@ import fko.breakout.model.BreakOutGame;
 import javafx.animation.ParallelTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.StrokeTransition;
-import javafx.collections.SetChangeListener.Change;
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.layout.AnchorPane;
@@ -64,10 +64,10 @@ public class MainView {
 
   // the playfield
   private Pane playFieldPane;
-  
+
   //Balls
   private final HashMap<Ball, BallView> ballViewMap = new HashMap<Ball, BallView>();
-  
+
   // animations
   private ScaleTransition    hitPaddleScaleTransition;
   private StrokeTransition   hitPaddleStrokeTransition;
@@ -134,29 +134,29 @@ public class MainView {
     //      timeline.getKeyFrames().add(kf);
     //      timeline.play();
   }
-  
+
   /**
    * Called from Controller when model updates the Set of balls
    * @param change
    */
-  public void updateBallSet(Change<?> change) {
-    if (change.wasAdded()) {
-      
-//      System.out.println("Ball added: "+change.getElementAdded());
-      final Ball addedBall = (Ball) change.getElementAdded();
-      final BallView bv = new BallView(model, addedBall);
-      bv.visibleProperty().bind(model.isPlayingProperty());
-      ballViewMap.put(addedBall, bv);
-      playFieldPane.getChildren().add(bv);
-      
-    } else if (change.wasRemoved()) {
-      
-//      System.out.println("Ball removed: "+change.getElementRemoved());
-      final Ball removedBall = (Ball) change.getElementRemoved();
-      final BallView bv = ballViewMap.get(removedBall);
-      bv.visibleProperty().unbind();
-      playFieldPane.getChildren().remove(bv);
-      ballViewMap.remove(removedBall);
+  public void updateBallList(ListChangeListener.Change<Ball> change) {
+    if (change.next()) {
+      if (change.wasAdded()) {
+        for (Ball addedBall : change.getAddedSubList()) {        
+          final BallView bv = new BallView(model, addedBall);
+          bv.visibleProperty().bind(model.isPlayingProperty());
+          ballViewMap.put(addedBall, bv);
+          playFieldPane.getChildren().add(bv);
+        }
+
+      } else if (change.wasRemoved()) {
+        for (Ball removedBall : change.getAddedSubList()) {    
+          final BallView bv = ballViewMap.get(removedBall);
+          bv.visibleProperty().unbind();
+          playFieldPane.getChildren().remove(bv);
+          ballViewMap.remove(removedBall);
+        }
+      }
     }
   }
 

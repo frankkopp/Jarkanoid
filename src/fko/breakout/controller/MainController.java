@@ -37,7 +37,8 @@ import fko.breakout.model.SoundManager;
 import fko.breakout.model.SoundManager.Clips;
 import fko.breakout.view.MainView;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.SetChangeListener;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ListChangeListener.Change;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -91,6 +92,7 @@ public class MainController implements Initializable, Observer {
   /**
    * @param view 
    */
+  @SuppressWarnings("unchecked")
   public void bindModelToView(MainView view) {
     this.view = view;
 
@@ -116,7 +118,7 @@ public class MainController implements Initializable, Observer {
     
     // update handler for ball manager
     model.getBallManager().addListener(
-        (SetChangeListener.Change<?> change) -> view.updateBallSet(change));
+        (ListChangeListener.Change<?> change) -> view.updateBallList((Change<Ball>) change));
 
     // startstopButton text updater
     model.isPlayingProperty().addListener((v, o, n) -> {
@@ -178,9 +180,10 @@ public class MainController implements Initializable, Observer {
     case HIT_BRICK:     
       handleHitBrickEvent(gameEvent); 
       break;
-    case BALL_LOST:     
+    case LAST_BALL_LOST:     
       sounds.playClip(Clips.BALL_LOST); 
       break;
+    case BALL_LOST: break;
     case LEVEL_COMPLETE: break;
     case LEVEL_START:   break;
     case GAME_START:    break;

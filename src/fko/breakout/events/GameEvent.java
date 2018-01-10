@@ -82,11 +82,13 @@ public class GameEvent {
 		HIT_WALL,
 		HIT_BRICK,
 		BALL_LOST,
+		LAST_BALL_LOST,
 		GAME_START,
 		GAME_OVER,
 		NEW_BALL, 
 		LEVEL_COMPLETE,
 		LEVEL_START, 
 		GAME_WON;
+		
 	}
 }
