@@ -55,7 +55,7 @@ class BrickLayoutTest {
 	}
 	
 	/**
-	 * Test method for {@link fko.breakout.model.BrickLayout#BrickLayout(double, double, double)}.
+	 * Test method.
 	 */
 	@Test
 	void testBrickLayout() {

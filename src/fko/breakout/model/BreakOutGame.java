@@ -555,7 +555,7 @@ public class BreakOutGame extends Observable {
   /**
    * Called from controller by mouse move events. Moves the paddle according to the mouse's x position
    * when mouse is in window. The paddle's center will be set to the current mouse position. 
-   * @param x
+   * @param mouseX
    */
   public void setMouseXPosition(double mouseX) {
     if (isPaused()) return; 

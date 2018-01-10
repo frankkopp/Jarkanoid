@@ -77,7 +77,7 @@ public class MainView {
 
   /**
    * @param model
-   * @param controller2
+   * @param controller
    * @throws IOException 
    */
   public MainView(BreakOutGame model, MainController controller) throws IOException {

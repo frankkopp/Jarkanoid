@@ -53,7 +53,7 @@ import javafx.scene.text.Text;
  * MainController
  * <p>
  * The Controller sets up additional ui elements after the FXML loader has done its initialization. The FXML loader
- * calls the Controller's initialize() method.<br/> 
+ * calls the Controller's initialize() method.<br> 
  * The Controller also receives all input and events from the user interface and the model and executes the appropriate 
  * ui updates and model actions. The UI calls the actions methods directly. The model signals via the Observer Interface 
  * and Property Bindings that the model has changed and the UI should update its views.

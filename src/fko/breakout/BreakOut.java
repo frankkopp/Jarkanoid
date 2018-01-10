@@ -119,8 +119,8 @@ public class BreakOut extends Application {
 	}
 
 	/**
-	 * Called when there is an unexpected unrecoverable error.<br/>
-	 * Prints a stack trace together with a provided message.<br/>
+	 * Called when there is an unexpected unrecoverable error.<br>
+	 * Prints a stack trace together with a provided message.<br>
 	 * Terminates with <tt>exit(1)</tt>.
 	 * @param message to be displayed with the exception message
 	 */
@@ -131,8 +131,8 @@ public class BreakOut extends Application {
 	}
 
 	/**
-	 * Called when there is an unexpected but recoverable error.<br/>
-	 * Prints a stack trace together with a provided message.<br/>
+	 * Called when there is an unexpected but recoverable error.<br>
+	 * Prints a stack trace together with a provided message.<br>
 	 * @param message to be displayed with the exception message
 	 */
 	public static void criticalError(String message, Object... args) {
@@ -141,8 +141,8 @@ public class BreakOut extends Application {
 	}
 
 	/**
-	 * Called when there is an unexpected minor error.<br/>
-	 * Prints a provided message.<br/>
+	 * Called when there is an unexpected minor error.<br>
+	 * Prints a provided message.<br>
 	 * @param message to be displayed
 	 */
 	public static void minorError(String message,  Object... args) {
