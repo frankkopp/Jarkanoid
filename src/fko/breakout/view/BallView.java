@@ -32,9 +32,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 
-/**
- * 
- */
 public class BallView extends Circle {
   
   @SuppressWarnings("unused")
@@ -65,6 +62,10 @@ public class BallView extends Circle {
     ballHitAnimation.play();
   }
 
+  public void removed() {
+    ballHitAnimation.stop();    
+  }
+
   private void prepareAnimations() {
     hitBallScaleTransition = new ScaleTransition(Duration.millis(50), this);
     hitBallScaleTransition.setFromX(1.0);
@@ -75,13 +76,15 @@ public class BallView extends Circle {
     hitBallScaleTransition.setAutoReverse(true);
 
     hitBallStrokeTransition = new StrokeTransition(Duration.millis(50), this);
-    hitBallStrokeTransition.setFromValue((Color) this.getStroke());
+    final Color fromColor = (Color) this.getStroke();
+    hitBallStrokeTransition.setFromValue(fromColor);
     hitBallStrokeTransition.setToValue(Color.WHITE);
     hitBallStrokeTransition.setCycleCount(2);
     hitBallStrokeTransition.setAutoReverse(true);
     
     ballHitAnimation = new ParallelTransition(hitBallScaleTransition, hitBallStrokeTransition);
   }
+
 
 }
 // radius="8.0" stroke="BLACK" strokeType="INSIDE" styleClass="ball" />

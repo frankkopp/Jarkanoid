@@ -242,7 +242,7 @@ public class BreakOutGame extends Observable {
    * Called by the <code>paddleMovementTimeline<code> animation event to move the paddles.
    */
   private void paddleMovementLoop() {
-    if (isPaused()) return; // no paddle movement when game is paused
+    if (isPaused()) return; // no paddle movement when game is pausend
     if (paddleLeft 
         && paddleX.get() > 0.0) {
       paddleX.setValue(paddleX.getValue() - PADDLE_MOVE_STEPS);
@@ -257,7 +257,49 @@ public class BreakOutGame extends Observable {
    * Called by the <code>mainGameLoop</code> animation event to move the ball.<br>
    * Calls <code>checkCollision()</code>
    */
-  private synchronized void gameLoop() {
+  private void gameLoop() {
+    
+    // if no more balls we lost a live    
+    if (ballManager.isEmpty()) {
+
+      final int remainingLives = decreaseRemainingLives();
+      
+      // out of lives => game over
+      if (remainingLives < 0) {
+        currentRemainingLives.set(0);
+        gameOver();
+        setChanged();
+        notifyObservers(new GameEvent(GameEventType.GAME_OVER));
+        return;
+      };
+
+      // pause animation
+      mainGameLoop.pause();
+
+      // start new round
+      startRound(SLEEP_BETWEEN_LIVES);
+
+    } else { // still at least one ball in play
+      
+//      if (splitBallFlag) {
+//        // TEST MULTIBALL
+//        if (Math.random() < 0.01) {
+//          ballManager.add(ballManager.get(0).split());
+//          ballManager.add(ballManager.get(0).split());
+//          splitBallFlag=false;
+//        }
+//      }
+
+      // else loop over all balls
+      ListIterator<Ball> listIterator = ballManager.listIterator();
+      while (listIterator.hasNext()) { 
+        Ball ball = listIterator.next();
+        // move the ball 
+        ball.moveStep();
+        // check collisions from the ball(s) with anything else
+        checkCollisions(ball);
+      }
+    }
 
     // remove balls marked for removal
     ListIterator<Ball> iterator = ballManager.listIterator();
@@ -275,46 +317,21 @@ public class BreakOutGame extends Observable {
       };
     }
 
-    // if new more balls we lost a live    
-    if (ballManager.isEmpty()) {
-
-      final int remainingLives = decreaseRemainingLives();
-      if (remainingLives < 0) {
-        currentRemainingLives.set(0);
-        gameOver();
-        setChanged();
-        notifyObservers(new GameEvent(GameEventType.GAME_OVER));
-        return;
-      };
-
-      // pause animation
+    // check if level is cleared
+    if (brickLayout.getNumberOfBricks() == 0) {
+      // empty ball list
+      ballManager.clear();
+      // pause game animation
       mainGameLoop.pause();
-
-      // start new round
-      startRound(SLEEP_BETWEEN_LIVES);
-
-    } else { // still at least one ball in play
-      
-      if (splitBallFlag) {
-        // TEST MULTIBALL
-        if (Math.random() < 0.01) {
-          ballManager.add(ballManager.get(0).split());
-          ballManager.add(ballManager.get(0).split());
-          splitBallFlag=false;
-        }
-        
-      }
-
-      // else loop over all balls
-      ListIterator<Ball> listIterator = ballManager.listIterator();
-      while (listIterator.hasNext()) { 
-        Ball ball = listIterator.next();
-        // move the ball 
-        ball.moveStep();
-        // check collisions from the ball(s) with anything else
-        checkCollisions(ball);
-      }
+      // Level done
+      setChanged();
+      notifyObservers(new GameEvent(GameEventType.LEVEL_COMPLETE));
+      // load new level or game over WON
+      increaseLevel();
+      loadLevel(currentLevel.get());
+      startRound(SLEEP_BETWEEN_LEVELS);
     }
+    
   }
 
   /**
@@ -434,17 +451,6 @@ public class BreakOutGame extends Observable {
       splitBallFlag=true;
     }
 
-    if (brickLayout.getNumberOfBricks() == 0) {
-      // pause game animation
-      mainGameLoop.pause();
-      // Level done
-      setChanged();
-      notifyObservers(new GameEvent(GameEventType.LEVEL_COMPLETE));
-      // load new level or game over WON
-      increaseLevel();
-      loadLevel(currentLevel.get());
-      startRound(SLEEP_BETWEEN_LEVELS);
-    }
   }
 
   /**

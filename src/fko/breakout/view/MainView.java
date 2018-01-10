@@ -140,7 +140,7 @@ public class MainView {
    * @param change
    */
   public void updateBallList(ListChangeListener.Change<Ball> change) {
-    if (change.next()) {
+    while (change.next()) {
       if (change.wasAdded()) {
         for (Ball addedBall : change.getAddedSubList()) {        
           final BallView bv = new BallView(model, addedBall);
@@ -150,11 +150,12 @@ public class MainView {
         }
 
       } else if (change.wasRemoved()) {
-        for (Ball removedBall : change.getAddedSubList()) {    
+        for (Ball removedBall : change.getRemoved()) {    
           final BallView bv = ballViewMap.get(removedBall);
           bv.visibleProperty().unbind();
           playFieldPane.getChildren().remove(bv);
           ballViewMap.remove(removedBall);
+          bv.removed();
         }
       }
     }
