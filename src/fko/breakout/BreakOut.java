@@ -47,7 +47,9 @@ import javafx.stage.Stage;
 public class BreakOut extends Application {
 
 	// VERSION
-	public static final String VERSION = "0.3"; 
+	public static final String VERSION = "0.3";
+
+	private static Stage pStage;
 
 	/**
 	 * Main
@@ -61,6 +63,8 @@ public class BreakOut extends Application {
 	 */
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+
+		pStage = primaryStage;
 		
 		BreakOutGame model = new BreakOutGame();
 		MainController controller = new MainController(model);
@@ -68,13 +72,13 @@ public class BreakOut extends Application {
 
 		Scene scene = new Scene(view.asParent());
 
+		primaryStage.setTitle("BreakOut Clone by Frank Kopp");
+
 		controller.bindModelToView(view);
 
 		primaryStage.setScene(scene);
 		primaryStage.centerOnScreen();
 		primaryStage.setResizable(false);
-		
-		primaryStage.setTitle("BreakOut Clone by Frank Kopp");
 
 		// closeAction
 		primaryStage.setOnCloseRequest(event -> {
@@ -148,4 +152,10 @@ public class BreakOut extends Application {
 	public static void minorError(String message,  Object... args) {
 		System.err.println(String.format(message, args));
 	}
+
+	public static Stage getPrimaryStage() {
+		return pStage;
+	}
+
+
 }

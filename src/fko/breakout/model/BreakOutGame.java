@@ -63,7 +63,7 @@ public class BreakOutGame extends Observable {
   private static final double PLAYFIELD_INITIAL_HEIGHT = 710;
   private static final double PLAYFIELD_INITIAL_WIDTH = 780;
 
-  private static final double PADDLE_INITIAL_FRAMERATE = 100.0; // Framerate for paddle movements
+  private static final double PADDLE_INITIAL_FRAMERATE = 100; // Framerate for paddle movements
   private static final double PADDLE_MOVE_STEPS = 5.0; // steps per animation cycle
   private static final double PADDLE_INITIAL_Y = 670;
   private static final double PADDLE_INITIAL_X = 315;
@@ -71,7 +71,7 @@ public class BreakOutGame extends Observable {
   private static final double PADDLE_INITIAL_HEIGHT = 20;
 
   private static final double BALL_INITIAL_RADIUS = 8;
-  private static final double BALL_MAX_3ANGLE = 60;
+  private static final double BALL_MAX_ANGLE = 60;
   private static final double BALL_INITIAL_X = 390;
   private static final double BALL_INITIAL_Y = PADDLE_INITIAL_Y-BALL_INITIAL_RADIUS;
   private static final double BALL_INITIAL_FRAMERATE = 60;  // Framerate for ball movements
@@ -82,10 +82,7 @@ public class BreakOutGame extends Observable {
   private static final Ball BALL_TEMPLATE = new Ball(BALL_INITIAL_X, BALL_INITIAL_Y, BALL_INITIAL_RADIUS, 0,
       BALL_INITIAL_SPEED);
 
-  // the gap between bricks in the brick layout
-  private static final double BRICK_GAP = 0;
-
-  /* 
+  /*
    * These values determine the size and dimension of elements in Breakout.
    * In normal MVC the View would use them to build the View elements. As we
    * us JavaFX and FXML with Scene Builder these values are already set by the FXML.
@@ -96,6 +93,7 @@ public class BreakOutGame extends Observable {
   // Playfield dimensions
   private final DoubleProperty playfieldWidth = new SimpleDoubleProperty(PLAYFIELD_INITIAL_WIDTH); // see FXML 800 - 2 * 10 Walls
   private final DoubleProperty playfieldHeight = new SimpleDoubleProperty(PLAYFIELD_INITIAL_HEIGHT); // see FXML 520 - 1 * 10 Wall
+
   public DoubleProperty playfieldWidthProperty() {	return playfieldWidth; }
   public DoubleProperty playfieldHeightProperty() { return playfieldHeight; }
 
@@ -153,13 +151,19 @@ public class BreakOutGame extends Observable {
   // count all destroyed bricks
   private int destroyedBricksCounter = 0;
 
+  // count each time hte game loop is called
+  private long frameLoopCounter = 0;
+  private long frameLoopCounterTimeStamp = System.nanoTime();
+  private final DoubleProperty fps = new SimpleDoubleProperty(BALL_INITIAL_FRAMERATE);
+  public DoubleProperty fpsProperty() { return fps; }
+
   /**
    * Constructor - prepares the brick layout and the game loops.
    */
   public BreakOutGame() {
 
     // setup BrickLayout
-    brickLayout = new BrickLayout(BRICK_GAP, playfieldWidth, playfieldHeight);
+    brickLayout = new BrickLayout(playfieldWidth, playfieldHeight);
 
     // configure ballManager
     ballManager.set(FXCollections.observableList(new BallManager()));
@@ -167,14 +171,14 @@ public class BreakOutGame extends Observable {
     // start the paddle movements
     paddleMovementLoop.setCycleCount(Timeline.INDEFINITE);
     KeyFrame movePaddle = 
-        new KeyFrame(Duration.seconds(1/PADDLE_INITIAL_FRAMERATE), e -> { paddleMovementLoop();	});
+        new KeyFrame(Duration.seconds(1.0/PADDLE_INITIAL_FRAMERATE), e -> { paddleMovementLoop();	});
     paddleMovementLoop.getKeyFrames().add(movePaddle);
     paddleMovementLoop.play();
 
     // prepare ball movements (will be start in startGame())
     mainGameLoop.setCycleCount(Timeline.INDEFINITE);
     KeyFrame moveBall = 
-        new KeyFrame(Duration.seconds(1/BALL_INITIAL_FRAMERATE), e -> {	gameLoop();	});
+        new KeyFrame(Duration.seconds(1.0/BALL_INITIAL_FRAMERATE), e -> {	gameLoop();	});
     mainGameLoop.getKeyFrames().add(moveBall);
 
   }
@@ -234,6 +238,19 @@ public class BreakOutGame extends Observable {
    */
   private void gameLoop() {
 
+    // frame loop counter
+    if (++frameLoopCounter % 100 == 0) {
+      double timeSinceLastFPS = (System.nanoTime() - frameLoopCounterTimeStamp);
+
+      fps.set(1000000000 * (frameLoopCounter / timeSinceLastFPS));
+
+      System.out.printf("FPS: %f %n", fps.get());
+
+      frameLoopCounter = 0;
+      frameLoopCounterTimeStamp = System.nanoTime();
+
+    }
+
     // if no more balls we lost a live    
     if (ballManager.isEmpty()) {
 
@@ -254,14 +271,14 @@ public class BreakOutGame extends Observable {
 
     } else { // still at least one ball in play
 
-      //      if (splitBallFlag) {
-      //        // TEST MULTIBALL
-      //        if (Math.random() < 0.01) {
-      //          ballManager.add(ballManager.get(0).split());
-      //          ballManager.add(ballManager.get(0).split());
-      //          splitBallFlag=false;
-      //        }
-      //      }
+//      if (splitBallFlag) {
+        // TEST MULTIBALL
+        if (Math.random() < 0.01) {
+          ballManager.add(ballManager.get(0).split());
+          ballManager.add(ballManager.get(0).split());
+          splitBallFlag=false;
+        }
+//      }
 
       // else loop over all balls
       ListIterator<Ball> listIterator = ballManager.listIterator();
@@ -357,15 +374,13 @@ public class BreakOutGame extends Observable {
   private void checkBrickCollision(Ball ball) {
 
     // calculate ball center's brick cell
-    final int ballCenterRow = (int) (ball.getCenterY()   / (brickLayout.getBrickHeight()+brickLayout.getBrickGap()));
-    final int ballCenterCol = (int) (ball.getCenterX()   / (brickLayout.getBrickWidth() +brickLayout.getBrickGap()));
+    final int ballCenterRow = (int) (ball.getCenterY()   / (brickLayout.getBrickHeight()));
+    final int ballCenterCol = (int) (ball.getCenterX()   / (brickLayout.getBrickWidth()));
     // calculate ball edge's brick cell
-    final int ballUpperRow = (int) (ball.getUpperBound() / (brickLayout.getBrickHeight() + brickLayout.getBrickGap()));
-    final int ballLowerRow = (int) ((ball.getLowerBound() - brickLayout.getBrickGap())
-        / (brickLayout.getBrickHeight() + brickLayout.getBrickGap()));
-    final int ballLeftCol = (int) (ball.getLeftBound() / (brickLayout.getBrickWidth() + brickLayout.getBrickGap()));
-    final int ballRightCol = (int) ((ball.getRightBound() - brickLayout.getBrickGap())
-        / (brickLayout.getBrickWidth() + brickLayout.getBrickGap()));
+    final int ballUpperRow = (int) (ball.getUpperBound() / brickLayout.getBrickHeight());
+    final int ballLowerRow = (int) (ball.getLowerBound() / brickLayout.getBrickHeight());
+    final int ballLeftCol  = (int) (ball.getLeftBound()  / brickLayout.getBrickWidth());
+    final int ballRightCol = (int) (ball.getRightBound() / brickLayout.getBrickWidth());
 
     /*
      * We allow only one hit detection per frame. After each hit the ball will be placed out side the cell
@@ -447,7 +462,7 @@ public class BreakOutGame extends Observable {
       // normalize value to -1 (left), 0 (center), +1 (right)
       final double hitPointRelative = 2 * ((hitPointAbsolute / paddleWidth.get()) - 0.5);
       // determine new angle
-      final double newAngle = hitPointRelative * BALL_MAX_3ANGLE;
+      final double newAngle = hitPointRelative * BALL_MAX_ANGLE;
 
       // give the ball the new angle always upwards
       ball.bounceFromPaddle(newAngle);
@@ -649,4 +664,10 @@ public class BreakOutGame extends Observable {
     return brickLayout;
   }
 
+  /**
+   * @return the current fps
+   */
+  public double getFps() {
+    return fps.get();
+  }
 }

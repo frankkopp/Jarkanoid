@@ -101,6 +101,13 @@ public class MainController implements Initializable, Observer {
     // add controller as listener of model for GameEvents
     model.addObserver(this);
 
+    // scene title
+    String tmpTitle = BreakOut.getPrimaryStage().getTitle();
+    BreakOut.getPrimaryStage().titleProperty().bind(
+            new SimpleStringProperty(tmpTitle + " (fps:")
+                    .concat(model.fpsProperty().asString("%.2f"))
+                            .concat(")"));
+
     // add keyboard handlers
     view.asParent().getScene().setOnKeyPressed(this::keyPressedAction);
     view.asParent().getScene().setOnKeyReleased(this::keyReleasedAction);
