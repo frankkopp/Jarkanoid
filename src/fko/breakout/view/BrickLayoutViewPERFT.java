@@ -65,8 +65,7 @@ public class BrickLayoutViewPERFT extends Application {
 		Brick[][] bricks = ll.getLevel(1);
 
 		brickLayout = new BrickLayout(
-				2, 
-				new SimpleDoubleProperty(780), 
+				new SimpleDoubleProperty(780),
 				new SimpleDoubleProperty(710));
 
 		brickLayout.setMatrix(bricks);

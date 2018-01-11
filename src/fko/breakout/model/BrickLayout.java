@@ -46,7 +46,6 @@ public class BrickLayout {
   public static final int ROWS = 18;
   public static final int COLUMNS = 13;
 
-  private double brickGap;
   private DoubleProperty playfieldWidth;
   private DoubleProperty playfieldHeight;
 
@@ -60,22 +59,18 @@ public class BrickLayout {
   /**
    * Creates an empty BrickLayout.
    *
-   * @param brickGap
    * @param playfieldWidth
    * @param playfieldHeight
    */
-  public BrickLayout(double brickGap, DoubleProperty playfieldWidth, DoubleProperty playfieldHeight) {
-    this.brickGap = brickGap;
+  public BrickLayout(DoubleProperty playfieldWidth, DoubleProperty playfieldHeight) {
     this.playfieldWidth = playfieldWidth;
     this.playfieldHeight = playfieldHeight;
 
     // calculated bind of brick size to playfield size
     brickWidth.bind(playfieldWidth
-            .subtract((COLUMNS+1)*brickGap)
             .divide(COLUMNS));
     brickHeight.bind(playfieldHeight
             .subtract(playfieldHeight.get()*0.4)
-            .subtract((ROWS+1)*brickGap)
             .divide(ROWS));
   }
 
@@ -150,7 +145,7 @@ public class BrickLayout {
    * @return the upper bound of the given cell
    */
   public double getUpperBound(int row, int col) {
-    return brickGap + row * brickHeight.get();
+    return row * brickHeight.get();
   }
 
   /**
@@ -159,7 +154,7 @@ public class BrickLayout {
    * @return the lower bound of the given cell
    */
   public double getLowerBound(int row, int col) {
-    return (row +1 ) * (brickGap + brickHeight.get());
+    return (row + 1 ) * brickHeight.get();
   }
 
   /**
@@ -168,7 +163,7 @@ public class BrickLayout {
    * @return the lower bound of the given cell
    */
   public double getLeftBound(int row, int col) {
-    return brickGap + col * brickWidth.get();
+    return  col * brickWidth.get();
   }
 
   /**
@@ -177,7 +172,7 @@ public class BrickLayout {
    * @return the lower bound of the given cell
    */
   public double getRightBound(int row, int col) {
-    return (col + 1) * (brickGap + brickWidth.get());
+    return (col + 1) * brickWidth.get();
   }
 
 
@@ -190,19 +185,6 @@ public class BrickLayout {
     brickMatrix[row][col] = brick;
   }
 
-  /**
-   * @return the brickGap
-   */
-  public double getBrickGap() {
-    return brickGap;
-  }
-
-  /**
-   * @param brickGap the brickGap to set
-   */
-  public void setBrickGap(double brickGap) {
-    this.brickGap = brickGap;
-  }
 
   /**
    * @return the brickWidth
@@ -246,7 +228,6 @@ public class BrickLayout {
   public String toString() {
     StringBuilder builder = new StringBuilder();
     builder.append("BrickLayout [brickGap=");
-    builder.append(brickGap);
     builder.append(", playfieldWidth=");
     builder.append(playfieldWidth);
     builder.append(", playfieldHeight=");

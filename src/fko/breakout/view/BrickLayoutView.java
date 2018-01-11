@@ -65,16 +65,14 @@ public class BrickLayoutView extends Group {
     }
 
     // readability
-    final double vGap = brickLayout.getBrickGap();
-    final double hGap = brickLayout.getBrickGap();
     final double brickWidth = brickLayout.getBrickWidth();
     final double brickHeight = brickLayout.getBrickHeight(); 
 
     // add all bricks according to the model brickLayout
     for (int row=0; row<BrickLayout.ROWS; row++) {
       for (int col=0; col<BrickLayout.COLUMNS; col++) {
-        double y = vGap + (row*vGap) + row * brickHeight;
-        double x = hGap + (col*hGap) + col * brickWidth;
+        double y = row * brickHeight;
+        double x = col * brickWidth;
 
         // brick exists in model but not in view
         if (brickLayout.getBrick(row, col) != null
