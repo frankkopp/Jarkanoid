@@ -73,8 +73,6 @@ public class MainView {
   private StrokeTransition   hitPaddleStrokeTransition;
   private ParallelTransition paddleHitAnimation;
 
-
-
   /**
    * @param model
    * @param controller
