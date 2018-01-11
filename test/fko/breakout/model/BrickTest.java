@@ -140,7 +140,7 @@ class BrickTest {
 	@Test
 	void testClone() {
 		Brick brick = new Brick(BrickType.SILVER, BrickPowerType.NONE);
-		Brick cloneBrick = brick.clone();
+		Brick cloneBrick = new Brick(brick);
 		assertTrue(brick.equals(cloneBrick));
 		assertFalse(brick == cloneBrick);
 	}

@@ -36,7 +36,7 @@ import javafx.scene.paint.Color;
  * 04.01.2018
  * @author Frank Kopp
  */
-public class Brick implements Cloneable {
+public class Brick {
 
   private final BrickType brickType;
   private final BrickPowerType powerType;
@@ -54,6 +54,13 @@ public class Brick implements Cloneable {
     this.brickType = brickType;
     this.powerType = powerType;
     if (brickType.equals(BrickType.GOLD)) isInvincible = true;
+  }
+
+  public Brick(Brick brick) {
+    this(brick.brickType, brick.powerType);
+    this.hitCount = brick.hitCount;
+    this.isInvincible = brick.isInvincible;
+    this.isKilled = brick.isKilled;
   }
 
   /**
@@ -165,21 +172,8 @@ public class Brick implements Cloneable {
       return false;
     if (isKilled != other.isKilled)
       return false;
-    if (powerType != other.powerType)
-      return false;
-    return true;
+    return powerType == other.powerType;
   }
 
-  /**
-   * @see java.lang.Object#clone()
-   */
-  @Override
-  protected Brick clone() {
-    Brick copy = new Brick(this.brickType, this.powerType);
-    copy.hitCount = this.hitCount;
-    copy.isInvincible = this.isInvincible;
-    copy.isKilled = this.isKilled;
-    return copy;
-  }
 
 }

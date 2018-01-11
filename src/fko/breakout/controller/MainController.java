@@ -102,11 +102,11 @@ public class MainController implements Initializable, Observer {
     model.addObserver(this);
 
     // add keyboard handlers
-    view.asParent().getScene().setOnKeyPressed(event -> keyPressedAction(event));
-    view.asParent().getScene().setOnKeyReleased(event -> keyReleasedAction(event));
+    view.asParent().getScene().setOnKeyPressed(this::keyPressedAction);
+    view.asParent().getScene().setOnKeyReleased(this::keyReleasedAction);
 
     // add mouse handlers
-    view.asParent().getScene().setOnMouseMoved(event -> mouseMovedAction(event));
+    view.asParent().getScene().setOnMouseMoved(this::mouseMovedAction);
 
     // playfield dimensions
     playfieldPane.prefWidthProperty().bind(model.playfieldWidthProperty());
@@ -269,7 +269,6 @@ public class MainController implements Initializable, Observer {
 
   /**
    * Mouse action
-   * @param b
    */
   private void mouseMovedAction(MouseEvent event) {
     model.setMouseXPosition(event.getX());

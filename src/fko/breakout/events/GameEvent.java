@@ -88,7 +88,7 @@ public class GameEvent {
 		NEW_BALL, 
 		LEVEL_COMPLETE,
 		LEVEL_START, 
-		GAME_WON;
-		
-	}
+		GAME_WON
+
+    }
 }

@@ -85,10 +85,8 @@ public enum BrickPowerType {
 	public final Color color;
 	
 	/**
-	 * @param name
-	 * @param ordinal
-	 */
-	private BrickPowerType(Color color) {
+     */
+	BrickPowerType(Color color) {
 		this.color = color;
 	}
 	

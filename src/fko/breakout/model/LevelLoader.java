@@ -72,7 +72,7 @@ public final class LevelLoader {
 	private String preFix = "Level-";
 	private String fileType = ".txt";
 
-	private final Map<String,Brick[][]> levels = new HashMap<String, Brick[][]>();
+	private final Map<String,Brick[][]> levels = new HashMap<>();
 
 	/**
 	 * Returns Singleton instance of this class.
@@ -131,7 +131,7 @@ public final class LevelLoader {
 		final Brick[][] myNewMatrix = new Brick[BrickLayout.ROWS][BrickLayout.COLUMNS];
 		for (int row=0; row<BrickLayout.ROWS; row++) {
 			for (int col=0; col<BrickLayout.COLUMNS;col++) {
-				myNewMatrix[row][col] = myMatrix[row][col] == null ? null : myMatrix[row][col].clone();
+				myNewMatrix[row][col] = myMatrix[row][col] == null ? null : new Brick(myMatrix[row][col]);
 			}
 		}
 		return myNewMatrix;
@@ -163,7 +163,7 @@ public final class LevelLoader {
 	 * @throws LevelLoaderIOException
 	 */
 	protected List<String> getLevelFiles(String folder) throws LevelLoaderIOException {
-		List<String> files = null;
+		List<String> files;
 
 		/*
 		 * This is really SUPER ugly but I haven' found another way yet to get all 

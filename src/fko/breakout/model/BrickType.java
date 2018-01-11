@@ -48,7 +48,7 @@ public enum BrickType {
 	public final String sign;
 	public final Color color;
 
-	private BrickType(int points, int hits, String sign, Color color) {
+	BrickType(int points, int hits, String sign, Color color) {
 		this.points = points;
 		this.hits = hits;
 		this.sign = sign;

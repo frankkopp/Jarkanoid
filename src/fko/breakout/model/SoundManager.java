@@ -52,7 +52,7 @@ public final class SoundManager {
 
     private final String _name;
 
-    private Clips(String name) {
+    Clips(String name) {
       _name = name;
     }
   }
@@ -92,8 +92,7 @@ public final class SoundManager {
       final URL url = BreakOut.class.getResource(filename);
       // create AudioInputStream object
       if (url != null) {
-        AudioClip clip = null;
-        clip = new AudioClip(url.toExternalForm());
+        AudioClip clip = new AudioClip(url.toExternalForm());
         _sounds.put(c, clip);
       } else {
         BreakOut.criticalError("Sound file: "+filename+" cannot be loaded!");

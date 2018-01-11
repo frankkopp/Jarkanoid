@@ -99,7 +99,7 @@ public class BreakOut extends Application {
 			final String url = urlResource.toExternalForm();
 			if (Font.loadFont(url, 40) == null) {
 				criticalError("Font could not be loaded!");
-			};
+			}
 		}
 	}
 

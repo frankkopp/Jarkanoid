@@ -89,7 +89,7 @@ public class Ball implements Cloneable {
    * Creates a clone of the ball and randomly changes direction slightly
    */
   public Ball split() {
-    final Ball newBall = this.clone();
+    final Ball newBall = new Ball(this);
     newBall.setYVelocity(newBall.getYVelocity() + (Math.random()-0.5) * newBall.getYVelocity() / 10); 
     newBall.setXVelocity(newBall.getXVelocity() + (Math.random()-0.5) * newBall.getXVelocity() / 10);
     return newBall;    
@@ -231,7 +231,7 @@ public class Ball implements Cloneable {
    * @see java.lang.Object#clone()
    */
   @Override
-  protected Ball clone() {
+  protected Ball clone() throws CloneNotSupportedException {
     return new Ball(this);
   }
 
@@ -240,21 +240,19 @@ public class Ball implements Cloneable {
    */
   @Override
   public String toString() {
-    StringBuilder builder = new StringBuilder();
-    builder.append("Ball [ballRadius=");
-    builder.append(ballRadius);
-    builder.append(", ballCenterX=");
-    builder.append(ballCenterX);
-    builder.append(", ballCenterY=");
-    builder.append(ballCenterY);
-    builder.append(", vX=");
-    builder.append(vX);
-    builder.append(", vY=");
-    builder.append(vY);
-    builder.append(", velocity=");
-    builder.append(velocity);
-    builder.append("]");
-    return builder.toString();
+    return "Ball [ballRadius=" +
+            ballRadius +
+            ", ballCenterX=" +
+            ballCenterX +
+            ", ballCenterY=" +
+            ballCenterY +
+            ", vX=" +
+            vX +
+            ", vY=" +
+            vY +
+            ", velocity=" +
+            velocity +
+            "]";
   }
 
 }

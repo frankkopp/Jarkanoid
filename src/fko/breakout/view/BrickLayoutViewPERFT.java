@@ -88,7 +88,7 @@ public class BrickLayoutViewPERFT extends Application {
 		System.out.println("Warm Up");
 		Timeline ticker = new Timeline();
 		ticker.setCycleCount(500);
-		KeyFrame warmup = new KeyFrame(Duration.millis(1000/120), e -> { blv.draw(brickLayout); } );
+		KeyFrame warmup = new KeyFrame(Duration.millis(1000/120), e -> blv.draw(brickLayout));
 		ticker.getKeyFrames().add(warmup);
 		ticker.setOnFinished((e) -> afterWarmUp());
 		ticker.play();
@@ -98,7 +98,7 @@ public class BrickLayoutViewPERFT extends Application {
 		System.out.println("Start timing");
 		Timeline ticker = new Timeline();
 		ticker.setCycleCount(1200);
-		KeyFrame test = 	new KeyFrame(Duration.millis(1000/120), e -> { testDraw(); } );
+		KeyFrame test = 	new KeyFrame(Duration.millis(1000/120), e -> testDraw());
 		ticker.getKeyFrames().add(test);
 		ticker.setOnFinished((e) -> finished());
 		ticker.play();

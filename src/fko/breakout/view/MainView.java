@@ -87,7 +87,7 @@ public class MainView {
     // read FXML file and setup UI
     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/BreakOutMainView.fxml"));
     fxmlLoader.setController(controller);
-    root = (AnchorPane) fxmlLoader.load();
+    root = fxmlLoader.load();
 
     // add the play field to the root pane
     playFieldPane = (Pane) fxmlLoader.getNamespace().get("playfieldPane");
@@ -105,8 +105,7 @@ public class MainView {
 
   /**
    * create the animations for later playing
-   * @param paddle 
-   * @param ball 
+   * @param paddle
    */
   private void prepareAnimations(Rectangle paddle) {
     hitPaddleScaleTransition = new ScaleTransition(Duration.millis(50), paddle);

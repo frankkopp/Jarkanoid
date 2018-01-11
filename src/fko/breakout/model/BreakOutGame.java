@@ -47,6 +47,7 @@ import java.util.concurrent.TimeUnit;
  * 02.01.2018
  * @author Frank Kopp
  * TODO: add acceleration
+ * TODO: fix brick hit - large stepping goes into the breaks
  */
 public class BreakOutGame extends Observable {
 
@@ -73,9 +74,9 @@ public class BreakOutGame extends Observable {
   private static final double BALL_MAX_3ANGLE = 60;
   private static final double BALL_INITIAL_X = 390;
   private static final double BALL_INITIAL_Y = PADDLE_INITIAL_Y-BALL_INITIAL_RADIUS;
-  private static final double BALL_INITIAL_FRAMERATE = 100.0;  // Framerate for ball movements
+  private static final double BALL_INITIAL_FRAMERATE = 60;  // Framerate for ball movements
   // Absolute speed of ball, when vertical equals px in y, when horizontal equals px in x
-  private static final double BALL_INITIAL_SPEED = 5.0; 
+  private static final double BALL_INITIAL_SPEED = 10.0;
 
   // Template of a starting ball to copy when a new level starts
   private static final Ball BALL_TEMPLATE = new Ball(BALL_INITIAL_X, BALL_INITIAL_Y, BALL_INITIAL_RADIUS, 0,
@@ -209,7 +210,7 @@ public class BreakOutGame extends Observable {
     ballManager.clear();
 
     // create new ball
-    Ball newBall = BALL_TEMPLATE.clone();
+    Ball newBall = new Ball(BALL_TEMPLATE);
 
     // add it to ball manager
     ballManager.add(newBall);
