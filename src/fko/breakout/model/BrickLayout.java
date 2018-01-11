@@ -185,7 +185,6 @@ public class BrickLayout {
     brickMatrix[row][col] = brick;
   }
 
-
   /**
    * @return the brickWidth
    */
