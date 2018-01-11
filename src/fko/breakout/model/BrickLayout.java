@@ -234,12 +234,12 @@ public class BrickLayout {
     builder.append(playfieldHeight);
     builder.append(", brickMatrix=");
     builder.append(System.lineSeparator());
-    for (int row=0; row<brickMatrix.length; row++) {
-      for (int col=0; col<brickMatrix[row].length; col++) {
-        if (brickMatrix[row][col] == null) {
+    for (Brick[] aBrickRow: brickMatrix) {
+      for (Brick aBrick : aBrickRow) {
+        if (aBrick == null) {
           builder.append("---- ");
         } else {
-          builder.append(brickMatrix[row][col].toToken()).append(" ");
+          builder.append(aBrick.toToken()).append(" ");
         }
       }
       builder.append(System.lineSeparator());
