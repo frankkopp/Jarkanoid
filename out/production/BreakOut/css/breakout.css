@@ -65,6 +65,10 @@
    -fx-effect: innershadow(three-pass-box, white, 2, 0.0, 1, 1);
 }
 
+.powerpill {
+
+}
+
 .button {
 	-fx-text-fill: #1e90ff;
 	-fx-background-color: #333333;
