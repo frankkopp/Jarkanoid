@@ -47,7 +47,7 @@ import java.util.concurrent.TimeUnit;
  * 02.01.2018
  * @author Frank Kopp
  * TODO: add acceleration
- * TODO: fix brick hit - large stepping goes into the breaks
+ * FIXME: ball caught in endless loop
  */
 public class BreakOutGame extends Observable {
 
@@ -83,7 +83,7 @@ public class BreakOutGame extends Observable {
       BALL_INITIAL_SPEED);
 
   // the gap between bricks in the brick layout
-  private static final double BRICK_GAP = 2;
+  private static final double BRICK_GAP = 0;
 
   /* 
    * These values determine the size and dimension of elements in Breakout.
@@ -367,8 +367,16 @@ public class BreakOutGame extends Observable {
     final int ballRightCol = (int) ((ball.getRightBound() - brickLayout.getBrickGap())
         / (brickLayout.getBrickWidth() + brickLayout.getBrickGap()));
 
+    /*
+     * We allow only one hit detection per frame. After each hit the ball will be placed out side the cell
+     * against the direction it was coming from. This prevents the ball to end up inside the cell as we do increase
+     * our movement steps with more than 1 usually.
+     */
+
     // hit above
     if (ball.getYVelocity() < 0 && brickLayout.getBrick(ballUpperRow, ballCenterCol) != null) {
+      // make sure ball is outside the brick cell
+      ball.setCenterY(1 + ball.getRadius() + brickLayout.getLowerBound(ballUpperRow, ballCenterCol));
       brickHit(ballUpperRow, ballCenterCol);
       // bounce ball
       ball.inverseYdirection();
@@ -376,7 +384,9 @@ public class BreakOutGame extends Observable {
       notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballUpperRow, ballCenterCol, ball));
     }
     // hit below
-    if (ball.getYVelocity() > 0 && brickLayout.getBrick(ballLowerRow, ballCenterCol) != null) {
+    else if (ball.getYVelocity() > 0 && brickLayout.getBrick(ballLowerRow, ballCenterCol) != null) {
+      // make sure ball is outside the brick cell
+      ball.setCenterY(-1 - ball.getRadius() + brickLayout.getUpperBound(ballLowerRow, ballCenterCol));
       brickHit(ballLowerRow, ballCenterCol);
       // bounce ball
       ball.inverseYdirection();
@@ -384,7 +394,9 @@ public class BreakOutGame extends Observable {
       notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballLowerRow, ballCenterCol, ball));
     }
     // hit left
-    if (ball.getXVelocity() < 0 && brickLayout.getBrick(ballCenterRow, ballLeftCol) != null) {
+    else if (ball.getXVelocity() < 0 && brickLayout.getBrick(ballCenterRow, ballLeftCol) != null) {
+      // make sure ball is outside the brick cell
+      ball.setCenterX(1 + ball.getRadius() + brickLayout.getRightBound(ballCenterRow, ballLeftCol));
       brickHit(ballCenterRow, ballLeftCol);
       // bounce ball
       ball.inverseXdirection();
@@ -392,7 +404,9 @@ public class BreakOutGame extends Observable {
       notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballCenterRow, ballLeftCol, ball));
     }
     // hit right
-    if (ball.getYVelocity() > 0 && brickLayout.getBrick(ballCenterRow, ballRightCol) != null) {
+    else if (ball.getYVelocity() > 0 && brickLayout.getBrick(ballCenterRow, ballRightCol) != null) {
+      // make sure ball is outside the brick cell
+      ball.setCenterX(-1 - ball.getRadius() + brickLayout.getLeftBound(ballCenterRow, ballRightCol));
       brickHit(ballCenterRow, ballRightCol);
       // bounce ball
       ball.inverseXdirection();
