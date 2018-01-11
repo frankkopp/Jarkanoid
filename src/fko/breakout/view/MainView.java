@@ -25,10 +25,12 @@ package fko.breakout.view;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 
 import fko.breakout.controller.MainController;
 import fko.breakout.model.Ball;
 import fko.breakout.model.BreakOutGame;
+import fko.breakout.model.PowerPill;
 import javafx.animation.ParallelTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.StrokeTransition;
@@ -65,8 +67,11 @@ public class MainView {
   // the playfield
   private Pane playFieldPane;
 
-  //Balls
-  private final HashMap<Ball, BallView> ballViewMap = new HashMap<Ball, BallView>();
+  // Balls
+  private final HashMap<Ball, BallView> ballViewMap = new HashMap<>();
+
+  // falling PowerPills
+  private final HashMap<PowerPill, PowerPillView> powerPillViewMap = new HashMap<>();
 
   // animations
   private ScaleTransition    hitPaddleScaleTransition;
@@ -134,7 +139,7 @@ public class MainView {
   }
 
   /**
-   * Called from Controller when model updates the Set of balls
+   * Called when model updates the Set of balls
    * @param change
    */
   public void updateBallList(ListChangeListener.Change<Ball> change) {
@@ -154,6 +159,28 @@ public class MainView {
           playFieldPane.getChildren().remove(bv);
           ballViewMap.remove(removedBall);
           bv.removed();
+        }
+      }
+    }
+  }
+
+  /**
+   * Called when fallingBall list in model is changed
+   * @param change
+   */
+  public void updateFallingPillList(ListChangeListener.Change<PowerPill> change) {
+    while (change.next()) {
+      if (change.wasAdded()) {
+        for (PowerPill added : change.getAddedSubList()) {
+          PowerPillView ppv = new PowerPillView(added);
+          powerPillViewMap.put(added, ppv);
+          playFieldPane.getChildren().add(ppv);
+        }
+      } else if (change.wasRemoved()) {
+        for (PowerPill removed : change.getRemoved()) {
+          PowerPillView ppv = powerPillViewMap.get(removed);
+          playFieldPane.getChildren().remove(ppv);
+          ppv.removed();
         }
       }
     }

@@ -31,6 +31,7 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.util.Duration;
 
+import java.util.ArrayList;
 import java.util.ListIterator;
 import java.util.Observable;
 import java.util.concurrent.Executors;
@@ -82,6 +83,10 @@ public class BreakOutGame extends Observable {
   private static final Ball BALL_TEMPLATE = new Ball(BALL_INITIAL_X, BALL_INITIAL_Y, BALL_INITIAL_RADIUS, 0,
       BALL_INITIAL_SPEED);
 
+  // power up constants
+  private static final int NEXT_POWERUP_OFFSET = 1; // how many destroyed bricks between power ups (needs to be >0)
+  private static final int POWER_UP_FREQUENCY = 5; // power up randomly after 0 to 10 destroyed bricks after offset
+
   /*
    * These values determine the size and dimension of elements in Breakout.
    * In normal MVC the View would use them to build the View elements. As we
@@ -93,7 +98,6 @@ public class BreakOutGame extends Observable {
   // Playfield dimensions
   private final DoubleProperty playfieldWidth = new SimpleDoubleProperty(PLAYFIELD_INITIAL_WIDTH); // see FXML 800 - 2 * 10 Walls
   private final DoubleProperty playfieldHeight = new SimpleDoubleProperty(PLAYFIELD_INITIAL_HEIGHT); // see FXML 520 - 1 * 10 Wall
-
   public DoubleProperty playfieldWidthProperty() {	return playfieldWidth; }
   public DoubleProperty playfieldHeightProperty() { return playfieldHeight; }
 
@@ -151,6 +155,14 @@ public class BreakOutGame extends Observable {
   // count all destroyed bricks
   private int destroyedBricksCounter = 0;
 
+  // counter for power ups
+  private int lastPowerUp = 0;
+  private int nextPowerUp = getNextPowerUp();
+  private PowerPillType powerActive = PowerPillType.NONE;
+  private PowerPill nextPowerPill;
+  private ListProperty<PowerPill> fallingPowerPills = new SimpleListProperty<>();
+  public ListProperty<PowerPill> fallingPowerPillsProperty() { return fallingPowerPills; }
+
   // count each time hte game loop is called
   private long frameLoopCounter = 0;
   private long frameLoopCounterTimeStamp = System.nanoTime();
@@ -167,6 +179,9 @@ public class BreakOutGame extends Observable {
 
     // configure ballManager
     ballManager.set(FXCollections.observableList(new BallManager()));
+
+    // configure fallingPower list
+    fallingPowerPills.set(FXCollections.observableList(new ArrayList<>()));
 
     // start the paddle movements
     paddleMovementLoop.setCycleCount(Timeline.INDEFINITE);
@@ -213,6 +228,9 @@ public class BreakOutGame extends Observable {
     // clear ball manager - delete all balls
     ballManager.clear();
 
+    // clear falling power pills
+    fallingPowerPills.clear();
+
     // create new ball
     Ball newBall = new Ball(BALL_TEMPLATE);
 
@@ -241,14 +259,9 @@ public class BreakOutGame extends Observable {
     // frame loop counter
     if (++frameLoopCounter % 100 == 0) {
       double timeSinceLastFPS = (System.nanoTime() - frameLoopCounterTimeStamp);
-
       fps.set(1000000000 * (frameLoopCounter / timeSinceLastFPS));
-
-      System.out.printf("FPS: %f %n", fps.get());
-
       frameLoopCounter = 0;
       frameLoopCounterTimeStamp = System.nanoTime();
-
     }
 
     // if no more balls we lost a live    
@@ -273,12 +286,46 @@ public class BreakOutGame extends Observable {
 
 //      if (splitBallFlag) {
         // TEST MULTIBALL
-        if (Math.random() < 0.01) {
-          ballManager.add(ballManager.get(0).split());
-          ballManager.add(ballManager.get(0).split());
-          splitBallFlag=false;
-        }
+//        if (Math.random() < 0.01) {
+//          ballManager.add(ballManager.get(0).split());
+//          ballManager.add(ballManager.get(0).split());
+//          splitBallFlag=false;
+//        }
 //      }
+
+      // release next power up
+      if (nextPowerPill != null) {
+//        System.out.println("MODEL PowerPill released: " + nextPowerPill);
+        fallingPowerPills.add(nextPowerPill);
+        nextPowerPill = null;
+      }
+
+      // move power ups down, catch or erase them
+      ListIterator<PowerPill> powerPillListIterator = fallingPowerPills.listIterator();
+      while (powerPillListIterator.hasNext()) {
+        PowerPill pill = powerPillListIterator.next();
+        // move the pill down
+        pill.fall();
+        // get current location
+        // pill is lost -> erase it
+        if (pill.getY() >= playfieldHeight.get()) {
+//          System.out.println("MODEL PowerPill lost: "+pill);
+          powerPillListIterator.remove();
+        }
+        // pill hits paddle
+        else if   (pill.getY() + pill.getHeight() >= paddleY.get()
+                && pill.getY() <= paddleY.get() + paddleHeight.get()
+                && pill.getX() + pill.getWidth() >= paddleX.get()
+                && pill.getX() <= paddleX.get() + paddleWidth.get()) {
+
+          System.out.println("MODEL POWER UP ACTIVE "+pill);
+
+          powerPillListIterator.remove();
+          powerActive = pill.getPowerPillType();
+
+          // TODO activate power up
+        }
+      }
 
       // else loop over all balls
       ListIterator<Ball> listIterator = ballManager.listIterator();
@@ -290,7 +337,7 @@ public class BreakOutGame extends Observable {
         ball.moveStep();
 
         // check collisions from the ball(s) with anything else
-        checkCollisions(ball);
+        checkBallCollisions(ball);
 
       }
 
@@ -336,7 +383,7 @@ public class BreakOutGame extends Observable {
    * if the ball hits a brick and calls <code>ballLost()</code> when ball has left 
    * through bottom.
    */
-  private void checkCollisions(Ball ball) {
+  private void checkBallCollisions(Ball ball) {
     // hit wall left or right
     checkSideWallCollision(ball);
     // hit wall top
@@ -431,23 +478,6 @@ public class BreakOutGame extends Observable {
   }
 
   /**
-   * @param row
-   * @param col
-   */
-  private void brickHit(final int row, final int col) {
-    // which type
-    BrickType brickType = brickLayout.getBrick(row, col).getType();
-    // hit the brick / get points for every destroyed brick
-    final int hitBrickScore = brickLayout.hitBrick(row, col);
-    // increase score
-    increaseScore(brickType, hitBrickScore);
-    // count destroyed bricks
-    if (hitBrickScore > 0) {
-      destroyedBricksCounter++;
-    }
-  }
-
-  /**
    * Checks if bak touches paddle and if so reverses the ball
    * @return true if ball touches paddle
    */
@@ -500,6 +530,49 @@ public class BreakOutGame extends Observable {
     gameOver.set(true);
     setChanged();
     notifyObservers(new GameEvent(GameEventType.GAME_WON));
+  }
+
+  /**
+   * @param row
+   * @param col
+   */
+  private void brickHit(final int row, final int col) {
+    // which type
+    Brick brick = brickLayout.getBrick(row, col);
+    BrickType brickType = brick.getType();
+    // hit the brick / get points for every destroyed brick
+    final int hitBrickScore = brickLayout.hitBrick(row, col);
+    // increase score
+    increaseScore(brickType, hitBrickScore);
+    // count destroyed bricks
+    if (hitBrickScore > 0) {
+      destroyedBricksCounter++;
+      nextPowerUp--;
+      if (nextPowerUp == 0) {
+        nextPowerPill = new PowerPill(
+                PowerPillType.getRandom(),
+                brickLayout.getLeftBound(row, col),
+                brickLayout.getUpperBound(row, col),
+                brickLayout.getBrickWidth(),
+                brickLayout.getBrickHeight()
+                );
+//        System.out.printf("Brick: %f %f %f %f %n Pill: %s%n",
+//                brickLayout.getLeftBound(row, col),
+//                brickLayout.getUpperBound(row, col),
+//                brickLayout.getBrickWidth(),
+//                brickLayout.getBrickHeight(),
+//                nextPowerPill);
+        nextPowerUp = getNextPowerUp();
+      }
+    }
+  }
+
+  /**
+   *
+   * @return number of bricks to be destroyed until next power up
+   */
+  private int getNextPowerUp() {
+    return NEXT_POWERUP_OFFSET + (int) (Math.random() * POWER_UP_FREQUENCY);
   }
 
   /**

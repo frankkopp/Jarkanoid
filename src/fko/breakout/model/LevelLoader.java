@@ -318,7 +318,7 @@ public final class LevelLoader {
 		String powertype = string.substring(2,4);
 
 		BrickType bt;
-		BrickPowerType bpt;
+		PowerPillType bpt;
 
 		switch (bricktype ) {
 		case "GY": bt = BrickType.GREY; break;
@@ -335,14 +335,14 @@ public final class LevelLoader {
 		}
 
 		switch (powertype) {
-		case "NO": bpt = BrickPowerType.NONE; break;
-		case "LA": bpt = BrickPowerType.LASER; break;
-		case "EN": bpt = BrickPowerType.ENLARGE; break;
-		case "CA": bpt = BrickPowerType.CATCH; break;
-		case "SL": bpt = BrickPowerType.SLOW; break;
-		case "BR": bpt = BrickPowerType.BREAK; break;
-		case "DI": bpt = BrickPowerType.DISRUPTIOM; break;
-		case "PL": bpt = BrickPowerType.PLAYER; break;
+		case "NO": bpt = PowerPillType.NONE; break;
+		case "LA": bpt = PowerPillType.LASER; break;
+		case "EN": bpt = PowerPillType.ENLARGE; break;
+		case "CA": bpt = PowerPillType.CATCH; break;
+		case "SL": bpt = PowerPillType.SLOW; break;
+		case "BR": bpt = PowerPillType.BREAK; break;
+		case "DI": bpt = PowerPillType.DISRUPTION; break;
+		case "PL": bpt = PowerPillType.PLAYER; break;
 		default: throw new LevelLoaderFormatException(String.format("Unkwon brick powertype: %s", powertype));
 		}
 

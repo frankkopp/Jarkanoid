@@ -4,11 +4,27 @@
     <option name="ANALYZE_TEST_SOURCES" value="false" />
   </component>
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/src/fko/breakout/model/BreakOutGame.java" line="276" mnemonic="7" />
+    <bookmark url="file://$PROJECT_DIR$/src/fko/breakout/model/BreakOutGame.java" line="289" mnemonic="7" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7addf553-5c04-4a16-899d-8f87f62b1fee" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/src/fko/breakout/model/BrickLayout.java" afterPath="$PROJECT_DIR$/src/fko/breakout/model/BrickLayout.java" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/src/fko/breakout/model/PowerPill.java" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/src/fko/breakout/view/PowerPillView.java" />
+      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/Frank.xml" afterPath="$PROJECT_DIR$/.idea/dictionaries/Frank.xml" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change beforePath="$PROJECT_DIR$/docs/fko/breakout/model/BrickPowerType.html" afterPath="$PROJECT_DIR$/docs/fko/breakout/model/BrickPowerType.html" />
+      <change beforePath="$PROJECT_DIR$/docs/fko/breakout/model/class-use/BrickPowerType.html" afterPath="$PROJECT_DIR$/docs/fko/breakout/model/class-use/BrickPowerType.html" />
+      <change beforePath="$PROJECT_DIR$/out/production/BreakOut/css/breakout.css" afterPath="$PROJECT_DIR$/out/production/BreakOut/css/breakout.css" />
+      <change beforePath="$PROJECT_DIR$/resources/css/breakout.css" afterPath="$PROJECT_DIR$/resources/css/breakout.css" />
+      <change beforePath="$PROJECT_DIR$/src/fko/breakout/controller/MainController.java" afterPath="$PROJECT_DIR$/src/fko/breakout/controller/MainController.java" />
+      <change beforePath="$PROJECT_DIR$/src/fko/breakout/model/BreakOutGame.java" afterPath="$PROJECT_DIR$/src/fko/breakout/model/BreakOutGame.java" />
+      <change beforePath="$PROJECT_DIR$/src/fko/breakout/model/Brick.java" afterPath="$PROJECT_DIR$/src/fko/breakout/model/Brick.java" />
+      <change beforePath="$PROJECT_DIR$/src/fko/breakout/model/BrickPowerType.java" afterPath="$PROJECT_DIR$/src/fko/breakout/model/PowerPillType.java" />
+      <change beforePath="$PROJECT_DIR$/src/fko/breakout/model/LevelLoader.java" afterPath="$PROJECT_DIR$/src/fko/breakout/model/LevelLoader.java" />
+      <change beforePath="$PROJECT_DIR$/src/fko/breakout/view/MainView.java" afterPath="$PROJECT_DIR$/src/fko/breakout/view/MainView.java" />
+      <change beforePath="$PROJECT_DIR$/test/fko/breakout/model/BrickLayoutTest.java" afterPath="$PROJECT_DIR$/test/fko/breakout/model/BrickLayoutTest.java" />
+      <change beforePath="$PROJECT_DIR$/test/fko/breakout/model/BrickTest.java" afterPath="$PROJECT_DIR$/test/fko/breakout/model/BrickTest.java" />
+      <change beforePath="$PROJECT_DIR$/test/fko/breakout/model/LevelLoaderTest.java" afterPath="$PROJECT_DIR$/test/fko/breakout/model/LevelLoaderTest.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -25,14 +41,14 @@
     <favorites_list name="BreakOut" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.5">
+    <splitter split-orientation="horizontal" split-proportion="0.4962106">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
           <file leaf-file-name="BreakOut.java" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/fko/breakout/BreakOut.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1092">
-                  <caret line="85" column="21" lean-forward="true" selection-start-line="85" selection-start-column="21" selection-end-line="85" selection-end-column="21" />
+                <state relative-caret-position="735">
+                  <caret line="68" column="0" lean-forward="false" selection-start-line="68" selection-start-column="0" selection-end-line="68" selection-end-column="0" />
                   <folding>
                     <element signature="e#4347#4348#0" expanded="true" />
                     <element signature="e#4370#4371#0" expanded="true" />
@@ -41,32 +57,44 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="BreakOutGame.java" pinned="false" current-in-tab="false">
+          <file leaf-file-name="BreakOutGame.java" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/fko/breakout/model/BreakOutGame.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="484">
-                  <caret line="670" column="20" lean-forward="false" selection-start-line="670" selection-start-column="20" selection-end-line="670" selection-end-column="20" />
+                <state relative-caret-position="371">
+                  <caret line="317" column="32" lean-forward="false" selection-start-line="317" selection-start-column="32" selection-end-line="317" selection-end-column="32" />
                   <folding>
-                    <element signature="e#20006#20007#0" expanded="true" />
-                    <element signature="e#20056#20057#0" expanded="true" />
-                    <element signature="e#23317#23318#0" expanded="true" />
-                    <element signature="e#23349#23350#0" expanded="true" />
-                    <element signature="e#23430#23431#0" expanded="true" />
-                    <element signature="e#23461#23462#0" expanded="true" />
-                    <element signature="e#23552#23553#0" expanded="true" />
-                    <element signature="e#23580#23581#0" expanded="true" />
-                    <element signature="e#23649#23650#0" expanded="true" />
-                    <element signature="e#23675#23676#0" expanded="true" />
+                    <element signature="e#21946#21947#0" expanded="true" />
+                    <element signature="e#22027#22028#0" expanded="true" />
+                    <element signature="e#22987#22988#0" expanded="true" />
+                    <element signature="e#23037#23038#0" expanded="true" />
+                    <element signature="e#26298#26299#0" expanded="true" />
+                    <element signature="e#26330#26331#0" expanded="true" />
+                    <element signature="e#26411#26412#0" expanded="true" />
+                    <element signature="e#26442#26443#0" expanded="true" />
+                    <element signature="e#26533#26534#0" expanded="true" />
+                    <element signature="e#26561#26562#0" expanded="true" />
+                    <element signature="e#26630#26631#0" expanded="true" />
+                    <element signature="e#26656#26657#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="BrickLayout.java" pinned="false" current-in-tab="true">
+          <file leaf-file-name="breakout.css" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/resources/css/breakout.css">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="709">
+                  <caret line="69" column="0" lean-forward="false" selection-start-line="69" selection-start-column="0" selection-end-line="69" selection-end-column="0" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="BrickLayout.java" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/fko/breakout/model/BrickLayout.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="631">
-                  <caret line="186" column="0" lean-forward="true" selection-start-line="186" selection-start-column="0" selection-end-line="186" selection-end-column="0" />
+                <state relative-caret-position="169">
+                  <caret line="164" column="48" lean-forward="false" selection-start-line="164" selection-start-column="48" selection-end-line="164" selection-end-column="48" />
                   <folding>
                     <element signature="e#3799#3800#0" expanded="true" />
                     <element signature="e#3832#3833#0" expanded="true" />
@@ -74,7 +102,6 @@
                     <element signature="e#4323#4324#0" expanded="true" />
                     <element signature="e#4465#4466#0" expanded="true" />
                     <element signature="e#4512#4513#0" expanded="true" />
-                    <element signature="e#4653#4654#0" expanded="true" />
                     <element signature="e#4693#4694#0" expanded="true" />
                     <element signature="e#4835#4836#0" expanded="true" />
                     <element signature="e#4880#4881#0" expanded="true" />
@@ -95,15 +122,70 @@
               </provider>
             </entry>
           </file>
+          <file leaf-file-name="PowerPill.java" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/fko/breakout/model/PowerPill.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="231">
+                  <caret line="45" column="13" lean-forward="true" selection-start-line="45" selection-start-column="13" selection-end-line="45" selection-end-column="13" />
+                  <folding>
+                    <element signature="imports" expanded="true" />
+                    <element signature="e#2167#2168#0" expanded="true" />
+                    <element signature="e#2197#2198#0" expanded="true" />
+                    <element signature="e#2223#2224#0" expanded="true" />
+                    <element signature="e#2247#2248#0" expanded="true" />
+                    <element signature="e#2286#2287#0" expanded="true" />
+                    <element signature="e#2304#2305#0" expanded="true" />
+                    <element signature="e#2336#2337#0" expanded="true" />
+                    <element signature="e#2359#2360#0" expanded="true" />
+                    <element signature="e#2385#2386#0" expanded="true" />
+                    <element signature="e#2409#2410#0" expanded="true" />
+                    <element signature="e#2448#2449#0" expanded="true" />
+                    <element signature="e#2466#2467#0" expanded="true" />
+                    <element signature="e#2498#2499#0" expanded="true" />
+                    <element signature="e#2521#2522#0" expanded="true" />
+                    <element signature="e#2551#2552#0" expanded="true" />
+                    <element signature="e#2579#2580#0" expanded="true" />
+                    <element signature="e#2622#2623#0" expanded="true" />
+                    <element signature="e#2644#2645#0" expanded="true" />
+                    <element signature="e#2684#2685#0" expanded="true" />
+                    <element signature="e#2715#2716#0" expanded="true" />
+                    <element signature="e#2746#2747#0" expanded="true" />
+                    <element signature="e#2775#2776#0" expanded="true" />
+                    <element signature="e#2819#2820#0" expanded="true" />
+                    <element signature="e#2842#2843#0" expanded="true" />
+                    <element signature="e#2884#2885#0" expanded="true" />
+                    <element signature="e#2917#2918#0" expanded="true" />
+                    <element signature="e#2954#2955#0" expanded="true" />
+                    <element signature="e#2983#2984#0" expanded="true" />
+                    <element signature="e#3037#3038#0" expanded="true" />
+                    <element signature="e#3079#3080#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="PowerPillType.java" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/fko/breakout/model/PowerPillType.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="316">
+                  <caret line="97" column="35" lean-forward="false" selection-start-line="97" selection-start-column="35" selection-end-line="97" selection-end-column="35" />
+                  <folding>
+                    <element signature="e#3258#3259#0" expanded="true" />
+                    <element signature="e#3286#3287#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
         </leaf>
       </split-first>
       <split-second>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-          <file leaf-file-name="MainController.java" pinned="false" current-in-tab="true">
+          <file leaf-file-name="MainController.java" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/fko/breakout/controller/MainController.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="421">
-                  <caret line="108" column="42" lean-forward="true" selection-start-line="108" selection-start-column="42" selection-end-line="108" selection-end-column="42" />
+                <state relative-caret-position="442">
+                  <caret line="134" column="69" lean-forward="false" selection-start-line="134" selection-start-column="69" selection-end-line="134" selection-end-column="69" />
                   <folding />
                 </state>
               </provider>
@@ -112,8 +194,30 @@
           <file leaf-file-name="MainView.java" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/fko/breakout/view/MainView.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="77">
-                  <caret line="78" column="5" lean-forward="false" selection-start-line="78" selection-start-column="5" selection-end-line="78" selection-end-column="5" />
+                <state relative-caret-position="776">
+                  <caret line="183" column="9" lean-forward="false" selection-start-line="183" selection-start-column="9" selection-end-line="183" selection-end-column="9" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="PowerPillView.java" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/src/fko/breakout/view/PowerPillView.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="588">
+                  <caret line="55" column="3" lean-forward="true" selection-start-line="55" selection-start-column="3" selection-end-line="55" selection-end-column="3" />
+                  <folding>
+                    <element signature="imports" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="BrickView.java" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/fko/breakout/view/BrickView.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="547">
+                  <caret line="58" column="0" lean-forward="false" selection-start-line="58" selection-start-column="0" selection-end-line="59" selection-end-column="38" />
                   <folding />
                 </state>
               </provider>
@@ -123,37 +227,7 @@
             <entry file="file://$PROJECT_DIR$/src/fko/breakout/view/BrickLayoutView.java">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="658">
-                  <caret line="75" column="0" lean-forward="true" selection-start-line="75" selection-start-column="0" selection-end-line="75" selection-end-column="0" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="BrickLayoutViewPERFT.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/fko/breakout/view/BrickLayoutViewPERFT.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="358">
-                  <caret line="67" column="20" lean-forward="false" selection-start-line="67" selection-start-column="20" selection-end-line="67" selection-end-column="20" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="Brick.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/fko/breakout/model/Brick.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="2856">
-                  <caret line="174" column="4" lean-forward="false" selection-start-line="174" selection-start-column="4" selection-end-line="174" selection-end-column="4" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="BrickLayoutTest.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/test/fko/breakout/model/BrickLayoutTest.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="358">
-                  <caret line="50" column="0" lean-forward="true" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
+                  <caret line="75" column="0" lean-forward="false" selection-start-line="75" selection-start-column="0" selection-end-line="75" selection-end-column="0" />
                   <folding />
                 </state>
               </provider>
@@ -162,6 +236,13 @@
         </leaf>
       </split-second>
     </splitter>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -183,22 +264,25 @@
         <option value="$PROJECT_DIR$/test/fko/breakout/model/BallTest.java" />
         <option value="$APPLICATION_CONFIG_DIR$/consoles/jshell/jshell_console.snippet" />
         <option value="$PROJECT_DIR$/src/fko/breakout/model/BrickType.java" />
-        <option value="$PROJECT_DIR$/src/fko/breakout/model/BrickPowerType.java" />
         <option value="$PROJECT_DIR$/test/fko/breakout/model/BrickTest.java" />
         <option value="$PROJECT_DIR$/src/fko/breakout/model/SoundManager.java" />
         <option value="$PROJECT_DIR$/src/fko/breakout/model/Ball.java" />
         <option value="$PROJECT_DIR$/src/fko/breakout/model/Brick.java" />
         <option value="$APPLICATION_CONFIG_DIR$/scratches/Learning" />
         <option value="$PROJECT_DIR$/src/fko/breakout/model/LevelLoader.java" />
-        <option value="$PROJECT_DIR$/src/fko/breakout/view/MainView.java" />
-        <option value="$PROJECT_DIR$/resources/css/breakout.css" />
         <option value="$PROJECT_DIR$/src/fko/breakout/view/BrickLayoutView.java" />
         <option value="$PROJECT_DIR$/src/fko/breakout/view/BrickLayoutViewPERFT.java" />
         <option value="$PROJECT_DIR$/test/fko/breakout/model/BrickLayoutTest.java" />
-        <option value="$PROJECT_DIR$/src/fko/breakout/model/BreakOutGame.java" />
-        <option value="$PROJECT_DIR$/src/fko/breakout/controller/MainController.java" />
         <option value="$PROJECT_DIR$/src/fko/breakout/BreakOut.java" />
         <option value="$PROJECT_DIR$/src/fko/breakout/model/BrickLayout.java" />
+        <option value="$PROJECT_DIR$/src/fko/breakout/model/BrickPowerType.java" />
+        <option value="$PROJECT_DIR$/src/fko/breakout/model/PowerPillType.java" />
+        <option value="$PROJECT_DIR$/src/fko/breakout/controller/MainController.java" />
+        <option value="$PROJECT_DIR$/src/fko/breakout/view/MainView.java" />
+        <option value="$PROJECT_DIR$/resources/css/breakout.css" />
+        <option value="$PROJECT_DIR$/src/fko/breakout/model/PowerPill.java" />
+        <option value="$PROJECT_DIR$/src/fko/breakout/view/PowerPillView.java" />
+        <option value="$PROJECT_DIR$/src/fko/breakout/model/BreakOutGame.java" />
       </list>
     </option>
   </component>
@@ -221,6 +305,12 @@
             <id />
           </State>
           <State>
+            <id>Android &gt; Lint &gt; Correctness</id>
+          </State>
+          <State>
+            <id>Android Lint for Kotlin</id>
+          </State>
+          <State>
             <id>Class structureJava</id>
           </State>
           <State>
@@ -230,7 +320,19 @@
             <id>Code maturity issuesJava</id>
           </State>
           <State>
+            <id>Initialization issuesJava</id>
+          </State>
+          <State>
+            <id>J2ME issuesJava</id>
+          </State>
+          <State>
             <id>Java</id>
+          </State>
+          <State>
+            <id>JavaFX</id>
+          </State>
+          <State>
+            <id>toString() issuesJava</id>
           </State>
         </expanded-state>
         <selected-state>
@@ -250,7 +352,7 @@
       <hideEmptyPackages />
       <abbreviatePackageNames />
       <autoscrollToSource />
-      <autoscrollFromSource />
+      <autoscrollFromSource ProjectPane="true" />
       <sortByType />
       <manualOrder />
       <foldersAlwaysOnTop value="true" />
@@ -318,6 +420,36 @@
               <item name="test" type="462c0819:PsiDirectoryNode" />
               <item name="model" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="BreakOut" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+            </path>
+            <path>
+              <item name="BreakOut" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="&lt; 1.8 &gt;" type="70bed36:NamedLibraryElementNode" />
+            </path>
+            <path>
+              <item name="BreakOut" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="&lt; 1.8 &gt;" type="70bed36:NamedLibraryElementNode" />
+              <item name="rt.jar" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="BreakOut" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="&lt; 1.8 &gt;" type="70bed36:NamedLibraryElementNode" />
+              <item name="rt.jar" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="BreakOut" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="&lt; 1.8 &gt;" type="70bed36:NamedLibraryElementNode" />
+              <item name="rt.jar" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="net" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -337,6 +469,12 @@
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="last_opened_file_path" value="$USER_HOME$/visualvm_14" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="fko.breakout.view" />
+      <recent name="fko.breakout.model" />
+    </key>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -671,10 +809,11 @@
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32927817" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.115514904" sideWeight="0.48422498" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15074526" sideWeight="0.48422498" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Problems" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32927817" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32927817" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Learn" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33299458" sideWeight="0.49067315" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.115514904" sideWeight="0.515775" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15074526" sideWeight="0.515775" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -686,7 +825,6 @@
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection Results" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32927817" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32927817" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -760,7 +898,7 @@
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="2" />
+      <option name="time" value="10" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -774,16 +912,18 @@
         <state relative-caret-position="8206">
           <caret line="407" column="15" lean-forward="false" selection-start-line="407" selection-start-column="15" selection-end-line="407" selection-end-column="15" />
           <folding>
-            <element signature="e#20006#20007#0" expanded="true" />
-            <element signature="e#20056#20057#0" expanded="true" />
-            <element signature="e#23317#23318#0" expanded="true" />
-            <element signature="e#23349#23350#0" expanded="true" />
-            <element signature="e#23430#23431#0" expanded="true" />
-            <element signature="e#23461#23462#0" expanded="true" />
-            <element signature="e#23552#23553#0" expanded="true" />
-            <element signature="e#23580#23581#0" expanded="true" />
-            <element signature="e#23649#23650#0" expanded="true" />
-            <element signature="e#23675#23676#0" expanded="true" />
+            <element signature="e#21946#21947#0" expanded="true" />
+            <element signature="e#22027#22028#0" expanded="true" />
+            <element signature="e#22987#22988#0" expanded="true" />
+            <element signature="e#23037#23038#0" expanded="true" />
+            <element signature="e#26298#26299#0" expanded="true" />
+            <element signature="e#26330#26331#0" expanded="true" />
+            <element signature="e#26411#26412#0" expanded="true" />
+            <element signature="e#26442#26443#0" expanded="true" />
+            <element signature="e#26533#26534#0" expanded="true" />
+            <element signature="e#26561#26562#0" expanded="true" />
+            <element signature="e#26630#26631#0" expanded="true" />
+            <element signature="e#26656#26657#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -817,16 +957,18 @@
         <state relative-caret-position="4026">
           <caret line="217" column="30" lean-forward="true" selection-start-line="217" selection-start-column="30" selection-end-line="217" selection-end-column="30" />
           <folding>
-            <element signature="e#20006#20007#0" expanded="true" />
-            <element signature="e#20056#20057#0" expanded="true" />
-            <element signature="e#23317#23318#0" expanded="true" />
-            <element signature="e#23349#23350#0" expanded="true" />
-            <element signature="e#23430#23431#0" expanded="true" />
-            <element signature="e#23461#23462#0" expanded="true" />
-            <element signature="e#23552#23553#0" expanded="true" />
-            <element signature="e#23580#23581#0" expanded="true" />
-            <element signature="e#23649#23650#0" expanded="true" />
-            <element signature="e#23675#23676#0" expanded="true" />
+            <element signature="e#21946#21947#0" expanded="true" />
+            <element signature="e#22027#22028#0" expanded="true" />
+            <element signature="e#22987#22988#0" expanded="true" />
+            <element signature="e#23037#23038#0" expanded="true" />
+            <element signature="e#26298#26299#0" expanded="true" />
+            <element signature="e#26330#26331#0" expanded="true" />
+            <element signature="e#26411#26412#0" expanded="true" />
+            <element signature="e#26442#26443#0" expanded="true" />
+            <element signature="e#26533#26534#0" expanded="true" />
+            <element signature="e#26561#26562#0" expanded="true" />
+            <element signature="e#26630#26631#0" expanded="true" />
+            <element signature="e#26656#26657#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -858,13 +1000,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/fko/breakout/model/BrickPowerType.java">
+    <entry file="file://$PROJECT_DIR$/src/fko/breakout/model/PowerPillType.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1452">
           <caret line="88" column="4" lean-forward="false" selection-start-line="88" selection-start-column="4" selection-end-line="88" selection-end-column="4" />
           <folding>
-            <element signature="e#3234#3235#0" expanded="false" />
-            <element signature="e#3259#3260#0" expanded="false" />
+            <element signature="e#3258#3259#0" expanded="true" />
+            <element signature="e#3286#3287#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -892,6 +1034,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2112">
           <caret line="132" column="0" lean-forward="false" selection-start-line="132" selection-start-column="0" selection-end-line="132" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -940,16 +1083,18 @@
         <state relative-caret-position="76">
           <caret line="45" column="0" lean-forward="false" selection-start-line="45" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
           <folding>
-            <element signature="e#20006#20007#0" expanded="true" />
-            <element signature="e#20056#20057#0" expanded="true" />
-            <element signature="e#23317#23318#0" expanded="true" />
-            <element signature="e#23349#23350#0" expanded="true" />
-            <element signature="e#23430#23431#0" expanded="true" />
-            <element signature="e#23461#23462#0" expanded="true" />
-            <element signature="e#23552#23553#0" expanded="true" />
-            <element signature="e#23580#23581#0" expanded="true" />
-            <element signature="e#23649#23650#0" expanded="true" />
-            <element signature="e#23675#23676#0" expanded="true" />
+            <element signature="e#21946#21947#0" expanded="true" />
+            <element signature="e#22027#22028#0" expanded="true" />
+            <element signature="e#22987#22988#0" expanded="true" />
+            <element signature="e#23037#23038#0" expanded="true" />
+            <element signature="e#26298#26299#0" expanded="true" />
+            <element signature="e#26330#26331#0" expanded="true" />
+            <element signature="e#26411#26412#0" expanded="true" />
+            <element signature="e#26442#26443#0" expanded="true" />
+            <element signature="e#26533#26534#0" expanded="true" />
+            <element signature="e#26561#26562#0" expanded="true" />
+            <element signature="e#26630#26631#0" expanded="true" />
+            <element signature="e#26656#26657#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -999,6 +1144,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2112">
           <caret line="132" column="0" lean-forward="false" selection-start-line="132" selection-start-column="0" selection-end-line="132" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1057,17 +1203,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/fko/breakout/model/BrickPowerType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="629">
-          <caret line="88" column="4" lean-forward="false" selection-start-line="88" selection-start-column="4" selection-end-line="88" selection-end-column="4" />
-          <folding>
-            <element signature="e#3234#3235#0" expanded="false" />
-            <element signature="e#3259#3260#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/fko/breakout/model/SoundManager.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="257">
@@ -1103,14 +1238,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/resources/css/breakout.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1302">
-          <caret line="62" column="22" lean-forward="false" selection-start-line="62" selection-start-column="22" selection-end-line="62" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/fko/breakout/view/BrickLayoutViewPERFT.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="358">
@@ -1122,50 +1249,66 @@
     <entry file="file://$PROJECT_DIR$/test/fko/breakout/model/BrickLayoutTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="358">
-          <caret line="50" column="0" lean-forward="true" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
+          <caret line="50" column="0" lean-forward="false" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/fko/breakout/model/BreakOutGame.java">
+    <entry file="file://$PROJECT_DIR$/src/fko/breakout/view/BrickLayoutView.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="484">
-          <caret line="670" column="20" lean-forward="false" selection-start-line="670" selection-start-column="20" selection-end-line="670" selection-end-column="20" />
+        <state relative-caret-position="658">
+          <caret line="75" column="0" lean-forward="false" selection-start-line="75" selection-start-column="0" selection-end-line="75" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fko/breakout/model/PowerPillType.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="316">
+          <caret line="97" column="35" lean-forward="false" selection-start-line="97" selection-start-column="35" selection-end-line="97" selection-end-column="35" />
           <folding>
-            <element signature="e#20006#20007#0" expanded="true" />
-            <element signature="e#20056#20057#0" expanded="true" />
-            <element signature="e#23317#23318#0" expanded="true" />
-            <element signature="e#23349#23350#0" expanded="true" />
-            <element signature="e#23430#23431#0" expanded="true" />
-            <element signature="e#23461#23462#0" expanded="true" />
-            <element signature="e#23552#23553#0" expanded="true" />
-            <element signature="e#23580#23581#0" expanded="true" />
-            <element signature="e#23649#23650#0" expanded="true" />
-            <element signature="e#23675#23676#0" expanded="true" />
+            <element signature="e#3258#3259#0" expanded="true" />
+            <element signature="e#3286#3287#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fko/breakout/view/MainView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="77">
-          <caret line="78" column="5" lean-forward="false" selection-start-line="78" selection-start-column="5" selection-end-line="78" selection-end-column="5" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/fko/breakout/controller/MainController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="421">
-          <caret line="108" column="42" lean-forward="true" selection-start-line="108" selection-start-column="42" selection-end-line="108" selection-end-column="42" />
+        <state relative-caret-position="442">
+          <caret line="134" column="69" lean-forward="false" selection-start-line="134" selection-start-column="69" selection-end-line="134" selection-end-column="69" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fko/breakout/view/MainView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="776">
+          <caret line="183" column="9" lean-forward="false" selection-start-line="183" selection-start-column="9" selection-end-line="183" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fko/breakout/view/BrickView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="547">
+          <caret line="58" column="0" lean-forward="false" selection-start-line="58" selection-start-column="0" selection-end-line="59" selection-end-column="38" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/css/breakout.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="709">
+          <caret line="69" column="0" lean-forward="false" selection-start-line="69" selection-start-column="0" selection-end-line="69" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/fko/breakout/BreakOut.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1092">
-          <caret line="85" column="21" lean-forward="true" selection-start-line="85" selection-start-column="21" selection-end-line="85" selection-end-column="21" />
+        <state relative-caret-position="735">
+          <caret line="68" column="0" lean-forward="false" selection-start-line="68" selection-start-column="0" selection-end-line="68" selection-end-column="0" />
           <folding>
             <element signature="e#4347#4348#0" expanded="true" />
             <element signature="e#4370#4371#0" expanded="true" />
@@ -1173,18 +1316,58 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/fko/breakout/view/BrickLayoutView.java">
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_152/src.zip!/java/net/URLClassLoader.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="658">
-          <caret line="75" column="0" lean-forward="true" selection-start-line="75" selection-start-column="0" selection-end-line="75" selection-end-column="0" />
+        <state relative-caret-position="233">
+          <caret line="380" column="0" lean-forward="false" selection-start-line="380" selection-start-column="0" selection-end-line="380" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fko/breakout/model/PowerPill.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="231">
+          <caret line="45" column="13" lean-forward="true" selection-start-line="45" selection-start-column="13" selection-end-line="45" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#2167#2168#0" expanded="true" />
+            <element signature="e#2197#2198#0" expanded="true" />
+            <element signature="e#2223#2224#0" expanded="true" />
+            <element signature="e#2247#2248#0" expanded="true" />
+            <element signature="e#2286#2287#0" expanded="true" />
+            <element signature="e#2304#2305#0" expanded="true" />
+            <element signature="e#2336#2337#0" expanded="true" />
+            <element signature="e#2359#2360#0" expanded="true" />
+            <element signature="e#2385#2386#0" expanded="true" />
+            <element signature="e#2409#2410#0" expanded="true" />
+            <element signature="e#2448#2449#0" expanded="true" />
+            <element signature="e#2466#2467#0" expanded="true" />
+            <element signature="e#2498#2499#0" expanded="true" />
+            <element signature="e#2521#2522#0" expanded="true" />
+            <element signature="e#2551#2552#0" expanded="true" />
+            <element signature="e#2579#2580#0" expanded="true" />
+            <element signature="e#2622#2623#0" expanded="true" />
+            <element signature="e#2644#2645#0" expanded="true" />
+            <element signature="e#2684#2685#0" expanded="true" />
+            <element signature="e#2715#2716#0" expanded="true" />
+            <element signature="e#2746#2747#0" expanded="true" />
+            <element signature="e#2775#2776#0" expanded="true" />
+            <element signature="e#2819#2820#0" expanded="true" />
+            <element signature="e#2842#2843#0" expanded="true" />
+            <element signature="e#2884#2885#0" expanded="true" />
+            <element signature="e#2917#2918#0" expanded="true" />
+            <element signature="e#2954#2955#0" expanded="true" />
+            <element signature="e#2983#2984#0" expanded="true" />
+            <element signature="e#3037#3038#0" expanded="true" />
+            <element signature="e#3079#3080#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/fko/breakout/model/BrickLayout.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="631">
-          <caret line="186" column="0" lean-forward="true" selection-start-line="186" selection-start-column="0" selection-end-line="186" selection-end-column="0" />
+        <state relative-caret-position="169">
+          <caret line="164" column="48" lean-forward="false" selection-start-line="164" selection-start-column="48" selection-end-line="164" selection-end-column="48" />
           <folding>
             <element signature="e#3799#3800#0" expanded="true" />
             <element signature="e#3832#3833#0" expanded="true" />
@@ -1192,7 +1375,6 @@
             <element signature="e#4323#4324#0" expanded="true" />
             <element signature="e#4465#4466#0" expanded="true" />
             <element signature="e#4512#4513#0" expanded="true" />
-            <element signature="e#4653#4654#0" expanded="true" />
             <element signature="e#4693#4694#0" expanded="true" />
             <element signature="e#4835#4836#0" expanded="true" />
             <element signature="e#4880#4881#0" expanded="true" />
@@ -1208,6 +1390,37 @@
             <element signature="e#5485#5486#0" expanded="true" />
             <element signature="e#5568#5569#0" expanded="true" />
             <element signature="e#5599#5600#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fko/breakout/view/PowerPillView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="588">
+          <caret line="55" column="3" lean-forward="true" selection-start-line="55" selection-start-column="3" selection-end-line="55" selection-end-column="3" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fko/breakout/model/BreakOutGame.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="371">
+          <caret line="317" column="32" lean-forward="false" selection-start-line="317" selection-start-column="32" selection-end-line="317" selection-end-column="32" />
+          <folding>
+            <element signature="e#21946#21947#0" expanded="true" />
+            <element signature="e#22027#22028#0" expanded="true" />
+            <element signature="e#22987#22988#0" expanded="true" />
+            <element signature="e#23037#23038#0" expanded="true" />
+            <element signature="e#26298#26299#0" expanded="true" />
+            <element signature="e#26330#26331#0" expanded="true" />
+            <element signature="e#26411#26412#0" expanded="true" />
+            <element signature="e#26442#26443#0" expanded="true" />
+            <element signature="e#26533#26534#0" expanded="true" />
+            <element signature="e#26561#26562#0" expanded="true" />
+            <element signature="e#26630#26631#0" expanded="true" />
+            <element signature="e#26656#26657#0" expanded="true" />
           </folding>
         </state>
       </provider>

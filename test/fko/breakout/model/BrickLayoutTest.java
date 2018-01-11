@@ -90,7 +90,7 @@ class BrickLayoutTest {
   @Test
   void testSetGetBrick() {
     BrickLayout bl = new BrickLayout(playfieldWidth, playfieldWidth);
-    Brick b1 = new Brick(BrickType.GREY, BrickPowerType.NONE);
+    Brick b1 = new Brick(BrickType.GREY, PowerPillType.NONE);
     bl.setBrick(4, 4, b1);
     System.out.println(bl);
     assertEquals(b1, bl.getBrick(4, 4));

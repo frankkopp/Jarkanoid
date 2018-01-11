@@ -33,6 +33,7 @@ import fko.breakout.events.GameEvent;
 import fko.breakout.events.GameEvent.GameEventType;
 import fko.breakout.model.Ball;
 import fko.breakout.model.BreakOutGame;
+import fko.breakout.model.PowerPill;
 import fko.breakout.model.SoundManager;
 import fko.breakout.model.SoundManager.Clips;
 import fko.breakout.view.MainView;
@@ -128,6 +129,10 @@ public class MainController implements Initializable, Observer {
     // update handler for ball manager
     model.getBallManager().addListener(
         (ListChangeListener.Change<?> change) -> view.updateBallList((Change<Ball>) change));
+
+    // update handler for fallingPills
+    model.fallingPowerPillsProperty().addListener(
+            (ListChangeListener.Change<?> change) -> view.updateFallingPillList((Change<PowerPill>) change));
 
     // startstopButton text updater
     model.isPlayingProperty().addListener((v, o, n) -> {
