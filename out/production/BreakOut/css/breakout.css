@@ -59,7 +59,10 @@
 }
 
 .brick {
-    -fx-effect: innershadow(one-pass-box, white, 5, 0.3, 1, 1);
+   -fx-stroke: #000000;
+   -fx-stroke-width: 1;
+   -fx-stroke-type: INSIDE;
+   -fx-effect: innershadow(three-pass-box, white, 2, 0.0, 1, 1);
 }
 
 .button {
