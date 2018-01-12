@@ -45,11 +45,8 @@ import java.util.concurrent.TimeUnit;
  * occur.
  *
  * @author Frank Kopp
- *
- * TODO: add acceleration
- * TODO: create all levels
- * TODO: implement powers
- * FIXME: ball caught in endless loop
+ *     <p>TODO: add acceleration TODO: create all levels TODO: implement powers FIXME: ball caught
+ *     in endless loop
  */
 public class BreakOutGame extends Observable {
 
@@ -104,14 +101,6 @@ public class BreakOutGame extends Observable {
   private final DoubleProperty playfieldHeight =
       new SimpleDoubleProperty(PLAYFIELD_INITIAL_HEIGHT); // see FXML 520 - 1 * 10 Wall
 
-  public DoubleProperty playfieldWidthProperty() {
-    return playfieldWidth;
-  }
-
-  public DoubleProperty playfieldHeightProperty() {
-    return playfieldHeight;
-  }
-
   // Paddle dimensions and position
   private final DoubleProperty paddleWidth =
       new SimpleDoubleProperty(PADDEL_INITIAL_WIDTH); // see FXML
@@ -120,67 +109,19 @@ public class BreakOutGame extends Observable {
   private final DoubleProperty paddleX = new SimpleDoubleProperty(PADDLE_INITIAL_X); // see FXML
   private final DoubleProperty paddleY = new SimpleDoubleProperty(PADDLE_INITIAL_Y); // see FXML
 
-  public DoubleProperty paddleHeightProperty() {
-    return paddleHeight;
-  }
-
-  public DoubleProperty paddleWidthProperty() {
-    return paddleWidth;
-  }
-
-  public DoubleProperty paddleXProperty() {
-    return paddleX;
-  }
-
-  public DoubleProperty paddleYProperty() {
-    return paddleY;
-  }
-
   // game status
   private final ReadOnlyBooleanWrapper isPlaying = new ReadOnlyBooleanWrapper(false);
-
-  public ReadOnlyBooleanProperty isPlayingProperty() {
-    return isPlaying.getReadOnlyProperty();
-  }
-
   private final ReadOnlyBooleanWrapper isPaused = new ReadOnlyBooleanWrapper(false);
-
-  public ReadOnlyBooleanProperty isPausedProperty() {
-    return isPaused.getReadOnlyProperty();
-  }
-
   private final ReadOnlyBooleanWrapper gameOver = new ReadOnlyBooleanWrapper(false);
-
-  public ReadOnlyBooleanProperty gameOverProperty() {
-    return gameOver.getReadOnlyProperty();
-  }
 
   // game statistics
   private final ReadOnlyIntegerWrapper currentLevel = new ReadOnlyIntegerWrapper(START_LEVEL);
-
-  public ReadOnlyIntegerProperty currentLevelProperty() {
-    return currentLevel.getReadOnlyProperty();
-  };
-
   private final ReadOnlyIntegerWrapper currentRemainingLives =
       new ReadOnlyIntegerWrapper(START_LIVES);
-
-  public ReadOnlyIntegerProperty currentRemainingLivesProperty() {
-    return currentRemainingLives.getReadOnlyProperty();
-  };
-
   private final ReadOnlyIntegerWrapper currentScore = new ReadOnlyIntegerWrapper(0);
-
-  public ReadOnlyIntegerProperty currentScoreProperty() {
-    return currentScore.getReadOnlyProperty();
-  };
 
   // ball manager
   private final ListProperty<Ball> ballManager = new SimpleListProperty<>();
-
-  public ListProperty<Ball> getBallManager() {
-    return ballManager;
-  }
 
   // main Game Loop / moves ball(s) and handles collisions
   private final Timeline mainGameLoop = new Timeline();
@@ -188,53 +129,37 @@ public class BreakOutGame extends Observable {
   // paddle movements have their own game loop so we can move it outside of a running game
   private final Timeline paddleMovementLoop = new Timeline();
 
-  // called when key is pressed/released to indicate paddle movement to movement animation
-  private boolean paddleLeft;
-  private boolean paddleRight;
-
-  public void setPaddleLeft(boolean b) {
-    paddleLeft = b;
-  }
-
-  public void setPaddleRight(boolean b) {
-    paddleRight = b;
-  }
-
   // used to delay starts of game
   private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-  private ScheduledFuture scheduledStart;
 
   // the brick layout holds all bricks and its positions of the games
   private final BrickLayout brickLayout;
 
+  // called when key is pressed/released to indicate paddle movement to movement animation
+  private boolean paddleLeft;
+  private boolean paddleRight;;
+  private ScheduledFuture scheduledStart;
+
   // signals the game loop to split the ball into multiple balls
-  private boolean splitBallFlag = false;
+  private boolean splitBallFlag = false;;
 
   // count all destroyed bricks
   private int destroyedBricksCounter = 0;
 
-  // counter for power ups
+  // power ups
   private int lastPowerUp = 0;
   private int nextPowerUp = getNextPowerUp();
-  private PowerPillType powerActive = PowerPillType.NONE;
   private PowerPill nextPowerPill;
-  private ListProperty<PowerPill> fallingPowerPills = new SimpleListProperty<>();
-
-  public ListProperty<PowerPill> fallingPowerPillsProperty() {
-    return fallingPowerPills;
-  }
+  private final ListProperty<PowerPill> fallingPowerPills = new SimpleListProperty<>();
+  private final ObjectProperty<PowerPillType> activePower =
+      new SimpleObjectProperty<PowerPillType>(PowerPillType.NONE);
 
   // count each time hte game loop is called
   private long frameLoopCounter = 0;
   private long frameLoopCounterTimeStamp = System.nanoTime();
-  private final DoubleProperty fps = new SimpleDoubleProperty(BALL_INITIAL_FRAMERATE);
-
-  public DoubleProperty fpsProperty() {
-    return fps;
-  }
-
   private long lastloopTime;
   private long commulativeLoopTime;
+  private final DoubleProperty fps = new SimpleDoubleProperty(BALL_INITIAL_FRAMERATE);;
 
   /** Constructor - prepares the brick layout and the game loops. */
   public BreakOutGame() {
@@ -284,6 +209,11 @@ public class BreakOutGame extends Observable {
     launchBall(SLEEP_BETWEEN_LIVES);
   }
 
+  /** @return true of game is running */
+  public boolean isPlaying() {
+    return isPlaying.get();
+  }
+
   /**
    * Loads a level and sets the brick matrix
    *
@@ -305,6 +235,45 @@ public class BreakOutGame extends Observable {
     // Level done
     setChanged();
     notifyObservers(new GameEvent(GameEventType.LEVEL_START));
+  }
+
+  /** Called when game is won - last level is cleared */
+  private void gameWon() {
+    stopPlaying();
+    gameOver.set(true);
+    setChanged();
+    notifyObservers(new GameEvent(GameEventType.GAME_WON));
+  }
+
+  /** stops the current game */
+  public void stopPlaying() {
+    if (!isPlaying()) return;
+
+    // incase we already started a game
+    scheduledStart.cancel(true);
+
+    // set status
+    isPlaying.set(false);
+    isPaused.set(false);
+    gameOver.set(false);
+
+    // stop game loop
+    mainGameLoop.stop();
+
+    // clean up
+    cleanUpPlayfield();
+    brickLayout.resetMatrix();
+    setChanged();
+    notifyObservers(new GameEvent(GameEventType.GAME_STOPPED));
+  }
+
+  /** Cleans up balls and pills */
+  private void cleanUpPlayfield() {
+    // clear ball manager - delete all balls
+    ballManager.clear();
+
+    // clear falling power pills
+    fallingPowerPills.clear();
   }
 
   /**
@@ -338,6 +307,29 @@ public class BreakOutGame extends Observable {
             },
             delay,
             TimeUnit.MILLISECONDS);
+  }
+
+  /** Binds the ball to the paddle movement before start of the game */
+  private void bindBallToPaddle(Ball b) {
+    // bind ball to paddle
+    b.centerXProperty()
+        .bind(paddleX.add(paddleWidth.divide(2)).add(20)); // slightly to the right of the middle
+    b.centerYProperty().bind(paddleY.subtract(b.getRadius()).subtract(1.0));
+  }
+
+  /** @return true if game is paused */
+  public boolean isPaused() {
+    return isPaused.get();
+  }
+
+  /**
+   * Releases the ball to the paddle movement before start of the game
+   *
+   * @param newBall
+   */
+  private void unbindBallFromPaddle(Ball newBall) {
+    newBall.centerXProperty().unbind(); // unbind the ball from the paddle
+    newBall.centerYProperty().unbind(); // unbind the ball from the paddle
   }
 
   /**
@@ -441,8 +433,9 @@ public class BreakOutGame extends Observable {
 
   /** update power pills */
   private void updatePowerPills() {
-    // release next power up
-    if (nextPowerPill != null) {
+    // release next power up - no new powers when more than 1 ball in play
+    if (nextPowerPill != null && ballManager.size() == 1) {
+
       fallingPowerPills.add(nextPowerPill);
       nextPowerPill = null;
     }
@@ -466,14 +459,85 @@ public class BreakOutGame extends Observable {
         //          System.out.println("MODEL POWER UP ACTIVE "+pill.getPowerPillType().name());
 
         powerPillListIterator.remove();
-        powerActive = pill.getPowerPillType();
 
-        // TODO activate power up
-
-        ballManager.add(ballManager.get(0).split());
-        ballManager.add(ballManager.get(0).split());
-        splitBallFlag = false;
+        activatePower(pill);
       }
+    }
+  }
+
+  /** Activates the current power */
+  private void activatePower(PowerPill pill) {
+
+    if (activePower == null) {
+      activePower.set(PowerPillType.NONE);
+    }
+
+    PowerPillType oldType = activePower.get();
+    PowerPillType newType = pill.getPowerPillType();
+
+    // deactivate old power if necessary
+    switch (oldType) {
+      case NONE:
+        break;
+      case LASER:
+        break;
+      case ENLARGE:
+        break;
+      case CATCH:
+        break;
+      case SLOW:
+        // deactivate only if it is not SLOW again
+        if (!newType.equals(PowerPillType.SLOW)) {
+          // reset speed
+          ballManager.get(0).setVelocity(BALL_INITIAL_SPEED);
+        }
+        break;
+      case BREAK:
+        break;
+      case DISRUPTION:
+        break;
+      case PLAYER:
+        break;
+    }
+
+    // set new power
+    activePower.set(newType);
+
+    // activate new power
+    switch (activePower.get()) {
+      case NONE:
+        break;
+      case LASER:
+        break;
+      case ENLARGE:
+        break;
+      case CATCH:
+        break;
+      case SLOW:
+        assert ballManager.size() == 1;
+        final Ball b = ballManager.get(0);
+        b.setVelocity(b.getYVelocity() * 0.8f);
+        break;
+      case BREAK:
+        // clear matrix and advance to next level
+        // TODO: open a portal instead directly to the next level
+        brickLayout.resetMatrix();
+        break;
+      case DISRUPTION:
+        // add balls up to three balls
+        switch (ballManager.size()) {
+          case 1:
+            ballManager.add(ballManager.get(0).split());
+          case 2:
+            ballManager.add(ballManager.get(0).split());
+            break;
+          default:
+        }
+        break;
+      case PLAYER:
+        // adds a player live
+        increaeRemainingLives();
+        break;
     }
   }
 
@@ -642,23 +706,6 @@ public class BreakOutGame extends Observable {
     notifyObservers(new GameEvent(GameEventType.GAME_OVER));
   }
 
-  /** Called when game is won - last level is cleared */
-  private void gameWon() {
-    stopPlaying();
-    gameOver.set(true);
-    setChanged();
-    notifyObservers(new GameEvent(GameEventType.GAME_WON));
-  }
-
-  /** Cleans up balls and pills */
-  private void cleanUpPlayfield() {
-    // clear ball manager - delete all balls
-    ballManager.clear();
-
-    // clear falling power pills
-    fallingPowerPills.clear();
-  }
-
   /**
    * @param row
    * @param col
@@ -688,33 +735,6 @@ public class BreakOutGame extends Observable {
     }
   }
 
-  /** stops the current game */
-  public void stopPlaying() {
-    if (!isPlaying()) return;
-
-    // incase we already started a game
-    scheduledStart.cancel(true);
-
-    // set status
-    isPlaying.set(false);
-    isPaused.set(false);
-    gameOver.set(false);
-
-    // stop game loop
-    mainGameLoop.stop();
-
-    // clean up
-    cleanUpPlayfield();
-    brickLayout.resetMatrix();
-    setChanged();
-    notifyObservers(new GameEvent(GameEventType.GAME_STOPPED));
-  }
-
-  /** @return number of bricks to be destroyed until next power up */
-  private int getNextPowerUp() {
-    return NEXT_POWERUP_OFFSET + (int) (Math.random() * POWER_UP_FREQUENCY);
-  }
-
   /**
    * Increases score and adds lives at certain score levels
    *
@@ -729,12 +749,12 @@ public class BreakOutGame extends Observable {
     currentScore.set(newScore);
     // add new lives after 20.000 and after every other 60.000 points
     if (previousScore < 20000 && newScore > 20000) {
-      currentRemainingLives.set(currentRemainingLives.get() + 1);
+      increaeRemainingLives();
     } else if (previousScore > 20000) {
       int modBefore = previousScore / 60000;
       int modAfter = newScore / 60000;
       if (modAfter > modBefore) {
-        currentRemainingLives.set(currentRemainingLives.get() + 1);
+        increaeRemainingLives();
       }
     }
   }
@@ -742,6 +762,11 @@ public class BreakOutGame extends Observable {
   /** Increases level by 1 */
   private void increaseLevel() {
     currentLevel.set(currentLevel.get() + 1);
+  }
+
+  /** adds a lives after score thresholds or Player PowerType */
+  private void increaeRemainingLives() {
+    currentRemainingLives.set(currentRemainingLives.get() + 1);
   }
 
   /**
@@ -752,24 +777,6 @@ public class BreakOutGame extends Observable {
   private int decreaseRemainingLives() {
     currentRemainingLives.set(currentRemainingLives.get() - 1);
     return currentRemainingLives.get();
-  }
-
-  /** Binds the ball to the paddle movement before start of the game */
-  private void bindBallToPaddle(Ball b) {
-    // bind ball to paddle
-    b.centerXProperty()
-        .bind(paddleX.add(paddleWidth.divide(2)).add(20)); // slightly to the right of the middle
-    b.centerYProperty().bind(paddleY.subtract(b.getRadius()).subtract(1.0));
-  }
-
-  /**
-   * Releases the ball to the paddle movement before start of the game
-   *
-   * @param newBall
-   */
-  private void unbindBallFromPaddle(Ball newBall) {
-    newBall.centerXProperty().unbind(); // unbind the ball from the paddle
-    newBall.centerYProperty().unbind(); // unbind the ball from the paddle
   }
 
   /**
@@ -799,21 +806,6 @@ public class BreakOutGame extends Observable {
     mainGameLoop.play();
   }
 
-  /** @return true of game is running */
-  public boolean isPlaying() {
-    return isPlaying.get();
-  }
-
-  /** @return true if game is paused */
-  public boolean isPaused() {
-    return isPaused.get();
-  }
-
-  /** @return the current brick layout */
-  public BrickLayout getBrickLayout() {
-    return brickLayout;
-  }
-
   /**
    * Called from controller by mouse move events. Moves the paddle according to the mouse's x
    * position when mouse is in window. The paddle's center will be set to the current mouse
@@ -835,8 +827,94 @@ public class BreakOutGame extends Observable {
     }
   }
 
+  public DoubleProperty paddleWidthProperty() {
+    return paddleWidth;
+  }
+
+  public DoubleProperty paddleXProperty() {
+    return paddleX;
+  }
+
+  public DoubleProperty playfieldWidthProperty() {
+    return playfieldWidth;
+  }
+
+  public DoubleProperty playfieldHeightProperty() {
+    return playfieldHeight;
+  }
+
+  public DoubleProperty paddleHeightProperty() {
+    return paddleHeight;
+  }
+
+  public DoubleProperty paddleYProperty() {
+    return paddleY;
+  }
+
+  public ReadOnlyBooleanProperty isPlayingProperty() {
+    return isPlaying.getReadOnlyProperty();
+  }
+
+  public ReadOnlyBooleanProperty isPausedProperty() {
+    return isPaused.getReadOnlyProperty();
+  }
+
+  public ReadOnlyBooleanProperty gameOverProperty() {
+    return gameOver.getReadOnlyProperty();
+  }
+
+  public ReadOnlyIntegerProperty currentLevelProperty() {
+    return currentLevel.getReadOnlyProperty();
+  }
+
+  public ReadOnlyIntegerProperty currentRemainingLivesProperty() {
+    return currentRemainingLives.getReadOnlyProperty();
+  }
+
+  public ReadOnlyIntegerProperty currentScoreProperty() {
+    return currentScore.getReadOnlyProperty();
+  }
+
+  public void setPaddleLeft(boolean b) {
+    paddleLeft = b;
+  }
+
+  public void setPaddleRight(boolean b) {
+    paddleRight = b;
+  }
+
+  public ListProperty<PowerPill> fallingPowerPillsProperty() {
+    return fallingPowerPills;
+  }
+
+  public ObjectProperty<PowerPillType> activePowerProperty() {
+    return activePower;
+  }
+
+  public DoubleProperty fpsProperty() {
+    return fps;
+  }
+
+  public ListProperty<Ball> getBallManager() {
+    return ballManager;
+  }
+
+  /** @return the current brick layout */
+  public BrickLayout getBrickLayout() {
+    return brickLayout;
+  }
+
   /** @return the current fps */
   public double getFps() {
     return fps.get();
+  }
+
+  /** @return number of bricks to be destroyed until next power up */
+  private int getNextPowerUp() {
+    return NEXT_POWERUP_OFFSET + (int) (Math.random() * POWER_UP_FREQUENCY);
+  }
+
+  public PowerPillType getActivePower() {
+    return activePower.get();
   }
 }

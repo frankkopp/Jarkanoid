@@ -28,10 +28,7 @@ import java.util.ResourceBundle;
 import fko.breakout.BreakOut;
 import fko.breakout.events.GameEvent;
 import fko.breakout.events.GameEvent.GameEventType;
-import fko.breakout.model.Ball;
-import fko.breakout.model.BreakOutGame;
-import fko.breakout.model.PowerPill;
-import fko.breakout.model.SoundManager;
+import fko.breakout.model.*;
 import fko.breakout.model.SoundManager.Clips;
 import fko.breakout.view.MainView;
 import javafx.beans.property.SimpleStringProperty;
@@ -64,10 +61,23 @@ public class MainController implements Initializable, Observer {
 
   // handles to model and view
   private final BreakOutGame model;
-  private MainView view;
-
   // sounds
   private final SoundManager sounds = SoundManager.getInstance();
+  private MainView view;
+
+  // FXML injected fields
+  @FXML private Button startStopButton;
+  @FXML private Button pauseResumeButton;
+  @FXML private Button soundButton;
+  @FXML private Text levelLabel;
+  @FXML private Text livesLabel;
+  @FXML private Text pointsLabel;
+  @FXML private Pane playfieldPane;
+  @FXML private Rectangle ceilingWall;
+  @FXML private Rectangle leftWall;
+  @FXML private Rectangle rightWall;
+  @FXML private Rectangle paddle;
+  @FXML private Text gameOverSplash;
 
   /**
    * Creates the MainController
@@ -142,6 +152,12 @@ public class MainController implements Initializable, Observer {
             (ListChangeListener.Change<?> change) ->
                 view.updateFallingPillList((Change<PowerPill>) change));
 
+    // update handler for active power ups
+    //noinspection unchecked
+    model
+        .activePowerProperty()
+        .addListener((observable, oldValue, newValue) -> updateActivePower(oldValue, newValue));
+
     // startstopButton text updater
     model
         .isPlayingProperty()
@@ -178,6 +194,48 @@ public class MainController implements Initializable, Observer {
     // game over splash text
     // TODO: GAME_OVER vs. GAME_WIN
     gameOverSplash.visibleProperty().bind(model.gameOverProperty());
+  }
+
+  private void updateActivePower(final PowerPillType oldPowerType, final PowerPillType newPowerType) {
+    System.out.printf("Power activated in VIEW: %s %n",newPowerType.toString());
+
+    switch (oldPowerType) {
+      case NONE:
+        break;
+      case LASER:
+        break;
+      case ENLARGE:
+        break;
+      case CATCH:
+        break;
+      case SLOW:
+        break;
+      case BREAK:
+        break;
+      case DISRUPTION:
+        break;
+      case PLAYER:
+        break;
+    }
+
+    switch (newPowerType) {
+      case NONE:
+        break;
+      case LASER:
+        break;
+      case ENLARGE:
+        break;
+      case CATCH:
+        break;
+      case SLOW:
+        break;
+      case BREAK:
+        break;
+      case DISRUPTION:
+        break;
+      case PLAYER:
+        break;
+    }
   }
 
   /**
@@ -282,24 +340,6 @@ public class MainController implements Initializable, Observer {
   }
 
   /**
-   * Handles key released events
-   *
-   * @param event
-   */
-  private void keyReleasedAction(KeyEvent event) {
-    switch (event.getCode()) {
-        // paddle control
-      case LEFT:
-        onPaddleLeftAction(false);
-        break;
-      case RIGHT:
-        onPaddleRightAction(false);
-        break;
-      default:
-    }
-  }
-
-  /**
    * Paddle action
    *
    * @param b
@@ -317,11 +357,6 @@ public class MainController implements Initializable, Observer {
   private void onPaddleRightAction(boolean b) {
     if (b) model.setPaddleRight(true);
     else model.setPaddleRight(false);
-  }
-
-  /** Mouse action */
-  private void mouseMovedAction(MouseEvent event) {
-    model.setMouseXPosition(event.getX());
   }
 
   /** Toggles Start/Stop game */
@@ -366,6 +401,29 @@ public class MainController implements Initializable, Observer {
     }
   }
 
+  /**
+   * Handles key released events
+   *
+   * @param event
+   */
+  private void keyReleasedAction(KeyEvent event) {
+    switch (event.getCode()) {
+        // paddle control
+      case LEFT:
+        onPaddleLeftAction(false);
+        break;
+      case RIGHT:
+        onPaddleRightAction(false);
+        break;
+      default:
+    }
+  }
+
+  /** Mouse action */
+  private void mouseMovedAction(MouseEvent event) {
+    model.setMouseXPosition(event.getX());
+  }
+
   @FXML
   void paddleMouseClickAction(MouseEvent event) {
     // not used
@@ -375,32 +433,4 @@ public class MainController implements Initializable, Observer {
   void paddleMouseReleasedAction(MouseEvent event) {
     // not used
   }
-
-  /* ********************************************************
-   * FXML - injected by FXMLLoader
-   * ********************************************************/
-
-  @FXML private Button startStopButton;
-
-  @FXML private Button pauseResumeButton;
-
-  @FXML private Button soundButton;
-
-  @FXML private Text levelLabel;
-
-  @FXML private Text livesLabel;
-
-  @FXML private Text pointsLabel;
-
-  @FXML private Pane playfieldPane;
-
-  @FXML private Rectangle ceilingWall;
-
-  @FXML private Rectangle leftWall;
-
-  @FXML private Rectangle rightWall;
-
-  @FXML private Rectangle paddle;
-
-  @FXML private Text gameOverSplash;
 }

@@ -116,6 +116,7 @@ public class BrickLayout {
    * Updates data fields when loading new matrix
    */
   private void updateDataForMatrix() {
+    numberOfBricks = 0;
     Arrays.stream(brickMatrix)
             .flatMap(Arrays::stream)
             .filter(aBrick -> aBrick != null // found a brick
