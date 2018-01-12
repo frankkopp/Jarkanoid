@@ -48,6 +48,7 @@ import java.util.concurrent.TimeUnit;
  * 02.01.2018
  * @author Frank Kopp
  * TODO: add acceleration
+ * FIXME PERFORMANCE - loop takes too long
  * FIXME: ball caught in endless loop
  */
 public class BreakOutGame extends Observable {
@@ -260,18 +261,7 @@ public class BreakOutGame extends Observable {
 
     long startLoopTime = System.nanoTime();
 
-    // frame loop counter
-    if (++frameLoopCounter % 100 == 0) {
-      double timeSinceLastFPS = (System.nanoTime() - frameLoopCounterTimeStamp);
-      fps.set(1000000000 * (frameLoopCounter / timeSinceLastFPS));
-
-      System.out.printf("Avg. Time for loop: %.6f ms (framelimit %.6f ms) %n",
-              (double) (commulativeLoopTime/frameLoopCounter/1000000.0), (1/BALL_INITIAL_FRAMERATE));
-
-      commulativeLoopTime = 0;
-      frameLoopCounter = 0;
-      frameLoopCounterTimeStamp = System.nanoTime();
-    }
+    frameStatistics();
 
     // if no more balls we lost a live    
     if (ballManager.isEmpty()) {
@@ -292,40 +282,7 @@ public class BreakOutGame extends Observable {
 
     } else { // still at least one ball in play
 
-      // release next power up
-      if (nextPowerPill != null) {
-        fallingPowerPills.add(nextPowerPill);
-        nextPowerPill = null;
-      }
-
-      // move power ups down, catch or erase them
-      ListIterator<PowerPill> powerPillListIterator = fallingPowerPills.listIterator();
-      while (powerPillListIterator.hasNext()) {
-        PowerPill pill = powerPillListIterator.next();
-        // move the pill down
-        pill.fall();
-        // pill is lost -> erase it
-        if (pill.getY() >= playfieldHeight.get()) {
-          powerPillListIterator.remove();
-        }
-        // pill hits paddle
-        else if   (pill.getY() + pill.getHeight() >= paddleY.get()
-                && pill.getY() <= paddleY.get() + paddleHeight.get()
-                && pill.getX() + pill.getWidth() >= paddleX.get()
-                && pill.getX() <= paddleX.get() + paddleWidth.get()) {
-
-//          System.out.println("MODEL POWER UP ACTIVE "+pill.getPowerPillType().name());
-
-          powerPillListIterator.remove();
-          powerActive = pill.getPowerPillType();
-
-          // TODO activate power up
-
-          ballManager.add(ballManager.get(0).split());
-          ballManager.add(ballManager.get(0).split());
-          splitBallFlag=false;
-        }
-      }
+      handlePowerPills();
 
       // else loop over all balls
       ListIterator<Ball> listIterator = ballManager.listIterator();
@@ -357,9 +314,6 @@ public class BreakOutGame extends Observable {
         };
       }
 
-      // should we accelerate ball? 
-      // randomly between each 
-
       // check if level is cleared
       if (brickLayout.getNumberOfBricks() == 0) {
         // pause game animation
@@ -377,6 +331,64 @@ public class BreakOutGame extends Observable {
     lastloopTime = System.nanoTime() - startLoopTime;
     commulativeLoopTime += lastloopTime;
 
+  }
+
+  /**
+   * Calculate some statistics
+   */
+  private void frameStatistics() {
+    // frame loop counter
+    if (++frameLoopCounter % 100 == 0) {
+      double timeSinceLastFPS = (System.nanoTime() - frameLoopCounterTimeStamp);
+      fps.set(1000000000 * (frameLoopCounter / timeSinceLastFPS));
+
+      System.out.printf("Avg. Time for loop: %.6f ms (framelimit %.6f ms) %n",
+              (double) (commulativeLoopTime/frameLoopCounter/1000000.0), (1/BALL_INITIAL_FRAMERATE));
+
+      commulativeLoopTime = 0;
+      frameLoopCounter = 0;
+      frameLoopCounterTimeStamp = System.nanoTime();
+    }
+  }
+
+  /**
+   * Handle power pills
+   */
+  private void handlePowerPills() {
+    // release next power up
+    if (nextPowerPill != null) {
+      fallingPowerPills.add(nextPowerPill);
+      nextPowerPill = null;
+    }
+
+    // move power ups down, catch or erase them
+    ListIterator<PowerPill> powerPillListIterator = fallingPowerPills.listIterator();
+    while (powerPillListIterator.hasNext()) {
+      PowerPill pill = powerPillListIterator.next();
+      // move the pill down
+      pill.fall();
+      // pill is lost -> erase it
+      if (pill.getY() >= playfieldHeight.get()) {
+        powerPillListIterator.remove();
+      }
+      // pill hits paddle
+      else if   (pill.getY() + pill.getHeight() >= paddleY.get()
+              && pill.getY() <= paddleY.get() + paddleHeight.get()
+              && pill.getX() + pill.getWidth() >= paddleX.get()
+              && pill.getX() <= paddleX.get() + paddleWidth.get()) {
+
+//          System.out.println("MODEL POWER UP ACTIVE "+pill.getPowerPillType().name());
+
+        powerPillListIterator.remove();
+        powerActive = pill.getPowerPillType();
+
+        // TODO activate power up
+
+        ballManager.add(ballManager.get(0).split());
+        ballManager.add(ballManager.get(0).split());
+        splitBallFlag=false;
+      }
+    }
   }
 
   /**
@@ -558,12 +570,6 @@ public class BreakOutGame extends Observable {
                 brickLayout.getBrickWidth(),
                 brickLayout.getBrickHeight()
         );
-//        System.out.printf("Brick: %f %f %f %f %n Pill: %s%n",
-//                brickLayout.getLeftBound(row, col),
-//                brickLayout.getUpperBound(row, col),
-//                brickLayout.getBrickWidth(),
-//                brickLayout.getBrickHeight(),
-//                nextPowerPill);
         nextPowerUp = getNextPowerUp();
       }
     }
