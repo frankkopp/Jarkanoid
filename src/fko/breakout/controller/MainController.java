@@ -126,6 +126,7 @@ public class MainController implements Initializable, Observer {
 
     // add mouse handlers
     view.asParent().getScene().setOnMouseMoved(this::mouseMovedAction);
+    view.asParent().getScene().setOnMousePressed(this::mousePressedAction);
 
     // playfield dimensions
     playfieldPane.prefWidthProperty().bind(model.playfieldWidthProperty());
@@ -319,8 +320,11 @@ public class MainController implements Initializable, Observer {
   private void keyPressedAction(KeyEvent event) {
     switch (event.getCode()) {
         // game control
-      case SPACE:
+      case N:
         startStopButtonAction(new ActionEvent());
+        break;
+      case SPACE:
+        restartCaughtBallAction(new ActionEvent());
         break;
       case P:
         pauseResumeButtonAction(new ActionEvent());
@@ -337,6 +341,14 @@ public class MainController implements Initializable, Observer {
         break;
       default:
     }
+  }
+
+  /**
+   * Action when the mouse left button has been clicked.
+   * @param mouseEvent
+   */
+  private void mousePressedAction(final MouseEvent mouseEvent) {
+    model.restartCaughtBall();
   }
 
   /**
@@ -367,6 +379,11 @@ public class MainController implements Initializable, Observer {
     } else {
       model.startPlaying();
     }
+  }
+
+  /** Called when user wants to restart a caught Ball */
+  private void restartCaughtBallAction(final ActionEvent actionEvent) {
+    model.restartCaughtBall();
   }
 
   /**

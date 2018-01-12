@@ -153,6 +153,7 @@ public class BreakOutGame extends Observable {
   private final ListProperty<PowerPill> fallingPowerPills = new SimpleListProperty<>();
   private final ObjectProperty<PowerPillType> activePower =
       new SimpleObjectProperty<PowerPillType>(PowerPillType.NONE);
+  private boolean ballCatchedFlag = false;
 
   // count each time hte game loop is called
   private long frameLoopCounter = 0;
@@ -274,6 +275,9 @@ public class BreakOutGame extends Observable {
 
     // clear falling power pills
     fallingPowerPills.clear();
+
+    // clear power
+    activePower.set(PowerPillType.NONE);
   }
 
   /**
@@ -292,7 +296,7 @@ public class BreakOutGame extends Observable {
     ballManager.add(newBall);
 
     // move the ball with the paddle before start of game
-    bindBallToPaddle(newBall);
+    bindBallToPaddle(newBall, paddleWidth.get()/2+20);
 
     // show the ball for a short time then start the animation
     // check if the game has been stopped while we were waiting
@@ -310,16 +314,10 @@ public class BreakOutGame extends Observable {
   }
 
   /** Binds the ball to the paddle movement before start of the game */
-  private void bindBallToPaddle(Ball b) {
+  private void bindBallToPaddle(Ball ball, double xLocationOnPaddle) {
     // bind ball to paddle
-    b.centerXProperty()
-        .bind(paddleX.add(paddleWidth.divide(2)).add(20)); // slightly to the right of the middle
-    b.centerYProperty().bind(paddleY.subtract(b.getRadius()).subtract(1.0));
-  }
-
-  /** @return true if game is paused */
-  public boolean isPaused() {
-    return isPaused.get();
+    ball.centerXProperty().bind(paddleX.add(xLocationOnPaddle)); // slightly to the right of the middle
+    ball.centerYProperty().bind(paddleY.subtract(ball.getRadius()).subtract(1.0));
   }
 
   /**
@@ -406,9 +404,11 @@ public class BreakOutGame extends Observable {
     ListIterator<Ball> listIterator = ballManager.listIterator();
     while (listIterator.hasNext()) {
       Ball ball = listIterator.next();
-      unbindBallFromPaddle(ball);
       // move the ball
-      ball.moveStep();
+      if (!ballCatchedFlag) {
+        unbindBallFromPaddle(ball);
+        ball.moveStep();
+      }
       // check collisions from the ball(s) with anything else
       checkBallCollisions(ball);
     }
@@ -435,7 +435,6 @@ public class BreakOutGame extends Observable {
   private void updatePowerPills() {
     // release next power up - no new powers when more than 1 ball in play
     if (nextPowerPill != null && ballManager.size() == 1) {
-
       fallingPowerPills.add(nextPowerPill);
       nextPowerPill = null;
     }
@@ -482,6 +481,10 @@ public class BreakOutGame extends Observable {
       case LASER:
         break;
       case ENLARGE:
+        // only shrink it if the next pill is something else
+        if (!newType.equals(PowerPillType.ENLARGE)) {
+          paddleWidth.set(PADDEL_INITIAL_WIDTH);
+        }
         break;
       case CATCH:
         break;
@@ -495,6 +498,8 @@ public class BreakOutGame extends Observable {
       case BREAK:
         break;
       case DISRUPTION:
+        // do nothing - will be handled before pills are generated as we do not get any new pills
+        // if we have more than 1 ball.
         break;
       case PLAYER:
         break;
@@ -510,8 +515,23 @@ public class BreakOutGame extends Observable {
       case LASER:
         break;
       case ENLARGE:
+        // if we are not already large we growing big
+        if (!oldType.equals(PowerPillType.ENLARGE)) {
+          float factor = 1.4f;
+          // bigger
+          paddleWidth.set(factor * PADDEL_INITIAL_WIDTH);
+          // move to the left to make it look as if it grew from the middle
+          paddleX.set(paddleX.get() - ((factor - 1) / 2) * PADDEL_INITIAL_WIDTH);
+          // push the paddle betweem the walls in case it was outside
+          if (paddleX.get() + paddleWidth.get() >= playfieldWidth.get()) {
+            paddleX.set(playfieldWidth.get() - paddleWidth.get());
+          } else if (paddleX.get() <= 0) {
+            paddleX.set(0);
+          }
+        }
         break;
       case CATCH:
+        // is handled in paddle colission and updateBall
         break;
       case SLOW:
         assert ballManager.size() == 1;
@@ -680,6 +700,10 @@ public class BreakOutGame extends Observable {
 
       // give the ball the new angle always upwards
       ball.bounceFromPaddle(newAngle);
+      if (activePower.get().equals(PowerPillType.CATCH) && !ballCatchedFlag) {
+        ballCatchedFlag = true;
+        bindBallToPaddle(ball, hitPointAbsolute);
+      }
 
       setChanged();
       notifyObservers(new GameEvent(GameEventType.HIT_PADDLE, ball));
@@ -792,11 +816,23 @@ public class BreakOutGame extends Observable {
     }
   }
 
+  /** is called when a user restarts a catched ball by pressing a key or mouse button * */
+  public void restartCaughtBall() {
+    if (ballCatchedFlag) {
+      ballCatchedFlag = false;
+    }
+  }
+
   /** pauses a running game */
   public void pausePlaying() {
     if (!isPlaying()) return; // ignore if not playing
     isPaused.set(true);
     mainGameLoop.pause();
+  }
+
+  /** @return true if game is paused */
+  public boolean isPaused() {
+    return isPaused.get();
   }
 
   /** resumes a paused running game */
