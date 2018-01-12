@@ -26,32 +26,80 @@
 package fko.breakout.view;
 
 import fko.breakout.model.PowerPill;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.scene.effect.Light;
+import javafx.scene.effect.Lighting;
+import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
+import javafx.util.Duration;
 
-public class PowerPillView extends Rectangle {
+public class PowerPillView extends StackPane {
 
   private final PowerPill powerPill;
+
+  private Timeline pillAnimationTimer = new Timeline();
+
+//  private static final Font newFont = Font.font(null, FontWeight.EXTRA_BOLD, FontPosture.REGULAR, 18);
 
   /**
    * @param powerPill
    */
   public PowerPillView(PowerPill powerPill) {
+    super();
     this.powerPill = powerPill;
 //    System.out.println("VIEW: Added PowerPill: "+powerPill);
 
-    // let the CSS determine the look of the ball
+    // let the CSS determine the look of the pill
     this.getStyleClass().add("powerpill");
 
-    this.setFill(powerPill.getPowerPillType().color);
+    final Light.Distant light = new Light.Distant();
+    light.setAzimuth(0.0);
+    final Lighting effect = new Lighting();
+    effect.setLight(light);
+    effect.setSurfaceScale(5.0f);
 
-    this.xProperty().bind(powerPill.xProperty());
-    this.yProperty().bind(powerPill.yProperty());
-    this.widthProperty().bind(powerPill.widthProperty());
-    this.heightProperty().bind(powerPill.heightProperty());
+    final Rectangle rectangle = new Rectangle();
+    rectangle.setWidth(powerPill.getWidth());
+    rectangle.setHeight(powerPill.getHeight());
+    rectangle.setEffect(effect);
+    rectangle.setFill(powerPill.getPowerPillType().color);
+    rectangle.getStyleClass().add("powerpill_rec");
+//    rectangle.setArcHeight(20.0);
+//    rectangle.setArcWidth(20.0);
 
+    final Text label = new Text(powerPill.getPowerPillType().token);
+    label.getStyleClass().add("powerpill_text");
+//    label.setFill(Color.DARKGRAY);
+//    label.setFont(newFont);
+
+    pillAnimationTimer.setCycleCount(Animation.INDEFINITE);
+    pillAnimationTimer.setAutoReverse(false);
+    final KeyFrame kf = new KeyFrame(Duration.millis(1000), new KeyValue(label.rotateProperty(), 360));
+    final KeyFrame kf2 = new KeyFrame(Duration.millis(1000), new KeyValue(light.azimuthProperty(), 360));
+    pillAnimationTimer.getKeyFrames().addAll(kf, kf2);
+    pillAnimationTimer.play();
+
+    this.translateXProperty().bind(powerPill.xProperty());
+    this.translateYProperty().bind(powerPill.yProperty());
+
+    this.getChildren().addAll(rectangle, label);
   }
 
   public void removed() {
-//    System.out.println("VIEW: Removed PowerPill: "+ powerPill);
+  }
+
+  @Override
+  public String toString() {
+    return "PowerPillView{" +
+            "powerPill=" + powerPill + System.lineSeparator() +
+            "layoutX=" + getLayoutX() + " " +
+            "layoutY=" + getLayoutY() + " " +
+            "translateX=" + getTranslateX() + " " +
+            "translateY=" + getTranslateY() + " " +
+            '}';
   }
 }

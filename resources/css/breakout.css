@@ -66,6 +66,18 @@
 }
 
 .powerpill {
+}
+
+.powerpill_rec {
+	-fx-arc-height: 20px;
+	-fx-arc-width: 20px;
+}
+
+.powerpill_text {
+	-fx-fill: #aaaaaa;
+	-fx-font-size: 18;
+	-fx-font-style: normal;
+	-fx-font-weight: bolder;
 
 }
 

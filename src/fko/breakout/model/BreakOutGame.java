@@ -1,25 +1,25 @@
 /**
-MIT License
+ MIT License
 
-Copyright (c) 2018 Frank Kopp
+ Copyright (c) 2018 Frank Kopp
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ SOFTWARE.
  */
 package fko.breakout.model;
 
@@ -54,7 +54,7 @@ public class BreakOutGame extends Observable {
 
   /*
    * Constants for game dimensions and other relevant settings.
-   * Need to be aligned with FXML UI Design. 
+   * Need to be aligned with FXML UI Design.
    */
   private static final int 	START_LEVEL = 1;
   private static final int 	START_LIVES = 3;
@@ -81,7 +81,7 @@ public class BreakOutGame extends Observable {
 
   // Template of a starting ball to copy when a new level starts
   private static final Ball BALL_TEMPLATE = new Ball(BALL_INITIAL_X, BALL_INITIAL_Y, BALL_INITIAL_RADIUS, 0,
-      BALL_INITIAL_SPEED);
+          BALL_INITIAL_SPEED);
 
   // power up constants
   private static final int NEXT_POWERUP_OFFSET = 1; // how many destroyed bricks between power ups (needs to be >0)
@@ -91,13 +91,14 @@ public class BreakOutGame extends Observable {
    * These values determine the size and dimension of elements in Breakout.
    * In normal MVC the View would use them to build the View elements. As we
    * us JavaFX and FXML with Scene Builder these values are already set by the FXML.
-   * Therefore we duplicate them in den model and make sure they stay synchronized through 
-   * property bindings. 
+   * Therefore we duplicate them in den model and make sure they stay synchronized through
+   * property bindings.
    */
 
   // Playfield dimensions
   private final DoubleProperty playfieldWidth = new SimpleDoubleProperty(PLAYFIELD_INITIAL_WIDTH); // see FXML 800 - 2 * 10 Walls
   private final DoubleProperty playfieldHeight = new SimpleDoubleProperty(PLAYFIELD_INITIAL_HEIGHT); // see FXML 520 - 1 * 10 Wall
+
   public DoubleProperty playfieldWidthProperty() {	return playfieldWidth; }
   public DoubleProperty playfieldHeightProperty() { return playfieldHeight; }
 
@@ -168,6 +169,8 @@ public class BreakOutGame extends Observable {
   private long frameLoopCounterTimeStamp = System.nanoTime();
   private final DoubleProperty fps = new SimpleDoubleProperty(BALL_INITIAL_FRAMERATE);
   public DoubleProperty fpsProperty() { return fps; }
+  private long lastloopTime;
+  private long commulativeLoopTime;
 
   /**
    * Constructor - prepares the brick layout and the game loops.
@@ -185,15 +188,15 @@ public class BreakOutGame extends Observable {
 
     // start the paddle movements
     paddleMovementLoop.setCycleCount(Timeline.INDEFINITE);
-    KeyFrame movePaddle = 
-        new KeyFrame(Duration.seconds(1.0/PADDLE_INITIAL_FRAMERATE), e -> { paddleMovementLoop();	});
+    KeyFrame movePaddle =
+            new KeyFrame(Duration.seconds(1.0/PADDLE_INITIAL_FRAMERATE), e -> paddleMovementLoop());
     paddleMovementLoop.getKeyFrames().add(movePaddle);
     paddleMovementLoop.play();
 
     // prepare ball movements (will be start in startGame())
     mainGameLoop.setCycleCount(Timeline.INDEFINITE);
-    KeyFrame moveBall = 
-        new KeyFrame(Duration.seconds(1.0/BALL_INITIAL_FRAMERATE), e -> {	gameLoop();	});
+    KeyFrame moveBall =
+            new KeyFrame(Duration.seconds(1.0/BALL_INITIAL_FRAMERATE), e -> gameLoop());
     mainGameLoop.getKeyFrames().add(moveBall);
 
   }
@@ -206,7 +209,7 @@ public class BreakOutGame extends Observable {
 
     // load next level or game is won if non available
     final Brick[][] newLevel = LevelLoader.getInstance().getLevel(level);
-    if (newLevel == null) { 
+    if (newLevel == null) {
       gameWon();
       return;
     };
@@ -251,22 +254,27 @@ public class BreakOutGame extends Observable {
   }
 
   /**
-   * Called by the <code>mainGameLoop</code> animation event to move the ball.<br>
-   * Calls <code>checkCollision()</code>
+   * Called by the <code>mainGameLoop</code> animation event to make a new frame of the game.<br>
    */
   private void gameLoop() {
+
+    long startLoopTime = System.nanoTime();
 
     // frame loop counter
     if (++frameLoopCounter % 100 == 0) {
       double timeSinceLastFPS = (System.nanoTime() - frameLoopCounterTimeStamp);
       fps.set(1000000000 * (frameLoopCounter / timeSinceLastFPS));
+
+      System.out.printf("Avg. Time for loop: %.6f ms (framelimit %.6f ms) %n",
+              (double) (commulativeLoopTime/frameLoopCounter/1000000.0), (1/BALL_INITIAL_FRAMERATE));
+
+      commulativeLoopTime = 0;
       frameLoopCounter = 0;
       frameLoopCounterTimeStamp = System.nanoTime();
     }
 
     // if no more balls we lost a live    
     if (ballManager.isEmpty()) {
-
       final int remainingLives = decreaseRemainingLives();
 
       // out of lives => game over
@@ -284,18 +292,8 @@ public class BreakOutGame extends Observable {
 
     } else { // still at least one ball in play
 
-//      if (splitBallFlag) {
-        // TEST MULTIBALL
-//        if (Math.random() < 0.01) {
-//          ballManager.add(ballManager.get(0).split());
-//          ballManager.add(ballManager.get(0).split());
-//          splitBallFlag=false;
-//        }
-//      }
-
       // release next power up
       if (nextPowerPill != null) {
-//        System.out.println("MODEL PowerPill released: " + nextPowerPill);
         fallingPowerPills.add(nextPowerPill);
         nextPowerPill = null;
       }
@@ -306,10 +304,8 @@ public class BreakOutGame extends Observable {
         PowerPill pill = powerPillListIterator.next();
         // move the pill down
         pill.fall();
-        // get current location
         // pill is lost -> erase it
         if (pill.getY() >= playfieldHeight.get()) {
-//          System.out.println("MODEL PowerPill lost: "+pill);
           powerPillListIterator.remove();
         }
         // pill hits paddle
@@ -318,18 +314,22 @@ public class BreakOutGame extends Observable {
                 && pill.getX() + pill.getWidth() >= paddleX.get()
                 && pill.getX() <= paddleX.get() + paddleWidth.get()) {
 
-          System.out.println("MODEL POWER UP ACTIVE "+pill);
+//          System.out.println("MODEL POWER UP ACTIVE "+pill.getPowerPillType().name());
 
           powerPillListIterator.remove();
           powerActive = pill.getPowerPillType();
 
           // TODO activate power up
+
+          ballManager.add(ballManager.get(0).split());
+          ballManager.add(ballManager.get(0).split());
+          splitBallFlag=false;
         }
       }
 
       // else loop over all balls
       ListIterator<Ball> listIterator = ballManager.listIterator();
-      while (listIterator.hasNext()) { 
+      while (listIterator.hasNext()) {
 
         Ball ball = listIterator.next();
 
@@ -362,8 +362,6 @@ public class BreakOutGame extends Observable {
 
       // check if level is cleared
       if (brickLayout.getNumberOfBricks() == 0) {
-        // empty ball list
-        ballManager.clear();
         // pause game animation
         mainGameLoop.pause();
         // Level done
@@ -375,6 +373,10 @@ public class BreakOutGame extends Observable {
         startRound(SLEEP_BETWEEN_LEVELS);
       }
     }
+
+    lastloopTime = System.nanoTime() - startLoopTime;
+    commulativeLoopTime += lastloopTime;
+
   }
 
   /**
@@ -521,7 +523,7 @@ public class BreakOutGame extends Observable {
     setChanged();
     notifyObservers(new GameEvent(GameEventType.GAME_OVER));
   }
-  
+
   /**
    * Called when game is won - last level is cleared
    */
@@ -555,7 +557,7 @@ public class BreakOutGame extends Observable {
                 brickLayout.getUpperBound(row, col),
                 brickLayout.getBrickWidth(),
                 brickLayout.getBrickHeight()
-                );
+        );
 //        System.out.printf("Brick: %f %f %f %f %n Pill: %s%n",
 //                brickLayout.getLeftBound(row, col),
 //                brickLayout.getUpperBound(row, col),
@@ -622,7 +624,7 @@ public class BreakOutGame extends Observable {
     b.centerXProperty().bind(paddleX.add(paddleWidth.divide(2)).add(20)); // slightly to the right of the middle
     b.centerYProperty().bind(paddleY.subtract(b.getRadius()).subtract(1.0));
   }
-  
+
   /**
    * Releases the ball to the paddle movement before start of the game
    * @param newBall
@@ -631,29 +633,29 @@ public class BreakOutGame extends Observable {
     newBall.centerXProperty().unbind();  // unbind the ball from the paddle
     newBall.centerYProperty().unbind();  // unbind the ball from the paddle
   }
-  
+
   /**
    * Called by the <code>paddleMovementTimeline<code> animation event to move the paddles.
    */
   private void paddleMovementLoop() {
     if (isPaused()) return; // no paddle movement when game is paused
-    if (paddleLeft 
-        && paddleX.get() > 0.0) {
+    if (paddleLeft
+            && paddleX.get() > 0.0) {
       paddleX.setValue(paddleX.getValue() - PADDLE_MOVE_STEPS);
     }
-    if (paddleRight 
-        && paddleX.get() + paddleWidth.get() < playfieldWidth.get()) {
+    if (paddleRight
+            && paddleX.get() + paddleWidth.get() < playfieldWidth.get()) {
       paddleX.setValue(paddleX.getValue() + PADDLE_MOVE_STEPS);
     }
   }
-  
+
   /**
    * Called from controller by mouse move events. Moves the paddle according to the mouse's x position
    * when mouse is in window. The paddle's center will be set to the current mouse position. 
    * @param mouseX
    */
   public void setMouseXPosition(double mouseX) {
-    if (isPaused()) return; 
+    if (isPaused()) return;
     double x = mouseX;
     double halfPaddleWidth = paddleWidthProperty().get()/2;
     if (x - halfPaddleWidth < 0.0) {
@@ -722,7 +724,7 @@ public class BreakOutGame extends Observable {
   public boolean isPlaying() {
     return isPlaying.get();
   }
-  
+
   /**
    * @return true if game is paused
    */

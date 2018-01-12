@@ -32,7 +32,7 @@ import javafx.scene.paint.Color;
  */
 public enum PowerPillType {
 
-  NONE (Color.WHITE),
+  NONE (Color.WHITE, "N"),
 
   /**
    *  	Collect the red capsule to transform the Vaus into its Laser-firing configuration. In this
@@ -40,19 +40,19 @@ public enum PowerPillType {
    *  used against every brick except Gold bricks, and against enemies. Silver bricks can only be
    *  destroyed by lasers when they are hit the required number of times.
    */
-  LASER (Color.RED),
+  LASER (Color.RED, "L"),
 
   /**
    * Collect the blue capsule to extend the width of the Vaus.
    */
-  ENLARGE (Color.BLUE),
+  ENLARGE (Color.BLUE, "E"),
 
   /**
    * Collect the green capsule to gain the catch ability. When the ball hits the Vaus, it will stick
    * to the surface. Press the Fire button to release the ball. The ball will automatically release
    * after a certain period of time has passed.
    */
-  CATCH (Color.GREEN),
+  CATCH (Color.GREEN, "C"),
 
   /**
    * Collect the orange capsule to slow the velocity at which the ball moves. Collecting multiple orange
@@ -60,14 +60,14 @@ public enum PowerPillType {
    * the ball velocity will gradually increase as it bounces and destroys bricks. The velocity may
    * sometimes suddenly increase with little warning.
    */
-  SLOW (Color.ORANGE),
+  SLOW (Color.ORANGE, "S"),
 
   /**
    * Collect the violet capsule to create a "break out" exit on the right side of the stage. Passing
    * through this exit will cause you to advance to the next stage immediately, as well as earn
    * a 10,000 point bonus.
    */
-  BREAK (Color.PURPLE),
+  BREAK (Color.PURPLE, "B"),
 
   /**
    * Collect the cyan capsule to cause the ball to split into three instances of itself. All three
@@ -75,17 +75,19 @@ public enum PowerPillType {
    * will fall as long as there is more than one ball in play. This is the only power up that, while
    * in effect, prevents other power ups from falling.
    */
-  DISRUPTION (Color.CYAN),
+  DISRUPTION (Color.CYAN, "D"),
 
   /**
    * Collect the gray capsule to earn an extra Vaus.
    */
-  PLAYER (Color.GRAY);
+  PLAYER (Color.GRAY, "P");
 
   public final Color color;
+  public final String token;
 
-  PowerPillType(Color color) {
+  PowerPillType(Color color, String token) {
     this.color = color;
+    this.token = token;
   }
 
   /**
@@ -105,4 +107,11 @@ public enum PowerPillType {
     return NONE;
   }
 
+  @Override
+  public String toString() {
+    return "PowerPillType{" +
+            "color=" + color +
+            ", token=" + token +
+            '}';
+  }
 }
