@@ -92,10 +92,10 @@ public class MainController implements Initializable, Observer {
   }
 
   /**
-   * Bind views to model data mostly through property bindings but also through Observer pattern. 
+   * Bind views to model data mostly through property bindings but also through Observer pattern.<br>
+   * See update()
    * @param view 
    */
-  @SuppressWarnings("unchecked")
   public void bindModelToView(MainView view) {
     this.view = view;
 
@@ -135,8 +135,8 @@ public class MainController implements Initializable, Observer {
             (ListChangeListener.Change<?> change) -> view.updateFallingPillList((Change<PowerPill>) change));
 
     // startstopButton text updater
-    model.isPlayingProperty().addListener((v, o, n) -> {
-      if (n) {
+    model.isPlayingProperty().addListener((observable, oldValue, newValue) -> {
+      if (newValue) {
         startStopButton.setText("Stop");
       } else {
         startStopButton.setText("Play");
@@ -144,8 +144,8 @@ public class MainController implements Initializable, Observer {
     });
 
     // pauseResumeButton text updater
-    model.isPausedProperty().addListener((v, o, n) -> {
-      if (n) {
+    model.isPausedProperty().addListener((observable, oldValue, newValue) -> {
+      if (newValue) {
         pauseResumeButton.setText("Resume");
       } else {
         pauseResumeButton.setText("Pause");
@@ -188,7 +188,7 @@ public class MainController implements Initializable, Observer {
       break;
     case HIT_WALL:      
       view.ballHit((Ball) param[0]); 
-      sounds.playClip(Clips.WALL); 
+      //sounds.playClip(Clips.WALL);
       break;
     case HIT_BRICK:     
       handleHitBrickEvent(gameEvent); 
@@ -207,7 +207,9 @@ public class MainController implements Initializable, Observer {
 
     // update brickLayoutView
     if (gameEvent.getEventType().equals(GameEventType.LEVEL_START) 
-        || gameEvent.getEventType().equals(GameEventType.HIT_BRICK)) {
+        || gameEvent.getEventType().equals(GameEventType.HIT_BRICK)
+        || gameEvent.getEventType().equals(GameEventType.GAME_STOPPED)) {
+
       view.getBrickLayoutView().draw(model.getBrickLayout());
     }
   }

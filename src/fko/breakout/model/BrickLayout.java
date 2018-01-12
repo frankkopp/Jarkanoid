@@ -106,6 +106,13 @@ public class BrickLayout {
   }
 
   /**
+   * Resets the matrix to empty
+   */
+  public void resetMatrix() {
+    setMatrix(new Brick[ROWS][COLUMNS]);
+  }
+
+  /**
    * Updates data fields when loading new matrix
    */
   private void updateDataForMatrix() {

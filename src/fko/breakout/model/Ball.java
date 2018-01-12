@@ -35,7 +35,7 @@ import javafx.beans.property.SimpleDoubleProperty;
  * 
  * @author Frank Kopp
  */
-public class Ball implements Cloneable {
+public class Ball {
 
   // ball size and position properties
   private final DoubleProperty ballRadius;

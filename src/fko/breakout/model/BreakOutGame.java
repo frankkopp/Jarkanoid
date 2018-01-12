@@ -36,6 +36,7 @@ import java.util.ListIterator;
 import java.util.Observable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -99,7 +100,6 @@ public class BreakOutGame extends Observable {
   // Playfield dimensions
   private final DoubleProperty playfieldWidth = new SimpleDoubleProperty(PLAYFIELD_INITIAL_WIDTH); // see FXML 800 - 2 * 10 Walls
   private final DoubleProperty playfieldHeight = new SimpleDoubleProperty(PLAYFIELD_INITIAL_HEIGHT); // see FXML 520 - 1 * 10 Wall
-
   public DoubleProperty playfieldWidthProperty() {	return playfieldWidth; }
   public DoubleProperty playfieldHeightProperty() { return playfieldHeight; }
 
@@ -147,6 +147,7 @@ public class BreakOutGame extends Observable {
 
   // used to delay starts of game
   private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+  private ScheduledFuture scheduledStart;
 
   // the brick layout holds all bricks and its positions of the games
   private final BrickLayout brickLayout;
@@ -203,7 +204,31 @@ public class BreakOutGame extends Observable {
   }
 
   /**
-   * Loads a level and sets the brick matrix 
+   * Starts a new game.
+   */
+  public void startPlaying() {
+    if (isPlaying()) return;
+
+    isPlaying.set(true);
+    isPaused.set(false);
+    gameOver.set(false);
+
+    // initialize new game
+    currentLevel.set(START_LEVEL);
+    currentRemainingLives.set(START_LIVES);
+    currentScore.set(0);
+    brickLayout.resetMatrix();
+    destroyedBricksCounter = 0;
+    setChanged();
+    notifyObservers(new GameEvent(GameEventType.GAME_START));
+
+    loadLevel(currentLevel.get());
+
+    launchBall(SLEEP_BETWEEN_LIVES);
+  }
+
+  /**
+   * Loads a level and sets the brick matrix
    * @param level
    */
   private void loadLevel(int level) {
@@ -228,12 +253,9 @@ public class BreakOutGame extends Observable {
    * Starts a new round after loosing a ball or completing a level
    * @param delay
    */
-  private void startRound(long delay) {
-    // clear ball manager - delete all balls
-    ballManager.clear();
-
-    // clear falling power pills
-    fallingPowerPills.clear();
+  private void launchBall(long delay) {
+    // remove balls, pills
+    cleanUpPlayfield();
 
     // create new ball
     Ball newBall = new Ball(BALL_TEMPLATE);
@@ -245,12 +267,12 @@ public class BreakOutGame extends Observable {
     bindBallToPaddle(newBall);
 
     // show the ball for a short time then start the animation
-    executor.schedule(() -> {
-
-      if (!isPlaying()) return; // check if the game has been stopped while we were waiting
+    // check if the game has been stopped while we were waiting
+// start the gameLoop
+    scheduledStart = executor.schedule(() -> {
+      if (!isPlaying() || isPaused()) return; // check if the game has been stopped while we were waiting
       unbindBallFromPaddle(newBall);
       mainGameLoop.play(); // start the gameLoop
-
     }, delay, TimeUnit.MILLISECONDS);
   }
 
@@ -258,92 +280,34 @@ public class BreakOutGame extends Observable {
    * Called by the <code>mainGameLoop</code> animation event to make a new frame of the game.<br>
    */
   private void gameLoop() {
+    if (!isPlaying()) return;
 
     long startLoopTime = System.nanoTime();
 
-    frameStatistics();
-
-    // if no more balls we lost a live    
-    if (ballManager.isEmpty()) {
-      final int remainingLives = decreaseRemainingLives();
-
-      // out of lives => game over
-      if (remainingLives < 0) {
-        currentRemainingLives.set(0);
-        gameOver();
-        return;
-      };
-
-      // pause animation
-      mainGameLoop.pause();
-
-      // start new round
-      startRound(SLEEP_BETWEEN_LIVES);
-
-    } else { // still at least one ball in play
-
-      handlePowerPills();
-
-      // else loop over all balls
-      ListIterator<Ball> listIterator = ballManager.listIterator();
-      while (listIterator.hasNext()) {
-
-        Ball ball = listIterator.next();
-
-        // move the ball 
-        ball.moveStep();
-
-        // check collisions from the ball(s) with anything else
-        checkBallCollisions(ball);
-
-      }
-
-      // remove balls marked for removal
-      listIterator = ballManager.listIterator();
-      while (listIterator.hasNext()) {
-        Ball ball = listIterator.next();
-        if (ball.isMarkedForRemoval()) {
-          listIterator.remove();
-          if (ballManager.isEmpty()) { // lost last ball
-            setChanged();
-            notifyObservers(new GameEvent(GameEventType.LAST_BALL_LOST, ball));
-          } else {
-            setChanged();
-            notifyObservers(new GameEvent(GameEventType.BALL_LOST, ball));
-          }
-        };
-      }
-
-      // check if level is cleared
-      if (brickLayout.getNumberOfBricks() == 0) {
-        // pause game animation
-        mainGameLoop.pause();
-        // Level done
-        setChanged();
-        notifyObservers(new GameEvent(GameEventType.LEVEL_COMPLETE));
-        // load new level or game over WON
-        increaseLevel();
-        loadLevel(currentLevel.get());
-        startRound(SLEEP_BETWEEN_LEVELS);
-      }
-    }
+    updateGameState();
 
     lastloopTime = System.nanoTime() - startLoopTime;
     commulativeLoopTime += lastloopTime;
+
+    updateFPS();
 
   }
 
   /**
    * Calculate some statistics
    */
-  private void frameStatistics() {
+  private void updateFPS() {
     // frame loop counter
     if (++frameLoopCounter % 100 == 0) {
       double timeSinceLastFPS = (System.nanoTime() - frameLoopCounterTimeStamp);
-      fps.set(1000000000 * (frameLoopCounter / timeSinceLastFPS));
+      fps.set(1e9f * (frameLoopCounter / timeSinceLastFPS));
 
-      System.out.printf("Avg. Time for loop: %.6f ms (framelimit %.6f ms) %n",
-              (double) (commulativeLoopTime/frameLoopCounter/1000000.0), (1/BALL_INITIAL_FRAMERATE));
+      double tLoop = ((commulativeLoopTime / frameLoopCounter) / 1e6f);
+      double tFrame = 1000 / BALL_INITIAL_FRAMERATE;
+      //System.out.printf("Avg. Time for loop: %.6f ms (framelimit %.6f ms) %n", tLoop, tFrame);
+      if (tLoop > tFrame) {
+        System.err.printf("FRAME LIMIT VIOLATION: %.6f ms (framelimit %.6f ms) %n", tLoop, tFrame);
+      }
 
       commulativeLoopTime = 0;
       frameLoopCounter = 0;
@@ -351,10 +315,75 @@ public class BreakOutGame extends Observable {
     }
   }
 
+  private void updateGameState() {
+
+    // if no more balls we lost a live
+    if (ballManager.isEmpty()) {
+
+      updateLives();
+
+    } else { // still at least one ball in play
+
+      updatePowerPills();
+      updateBalls();
+      updateLevel();
+
+    }
+  }
+
+  private void updateLives() {
+    final int remainingLives = decreaseRemainingLives();
+
+    // out of lives => game over
+    if (remainingLives < 0) {
+      currentRemainingLives.set(0);
+      gameOver();
+      return;
+    }
+
+    // pause animation
+    mainGameLoop.pause();
+
+    // launch a new ball
+    launchBall(SLEEP_BETWEEN_LIVES);
+  }
+
   /**
-   * Handle power pills
+   * updates all balls, checks collisions fom balls with anything else and removes lost balls
    */
-  private void handlePowerPills() {
+  private void updateBalls() {
+    // else loop over all balls
+    ListIterator<Ball> listIterator = ballManager.listIterator();
+    while (listIterator.hasNext()) {
+      Ball ball = listIterator.next();
+      unbindBallFromPaddle(ball);
+      // move the ball
+      ball.moveStep();
+      // check collisions from the ball(s) with anything else
+      checkBallCollisions(ball);
+    }
+
+    // remove balls marked for removal
+    listIterator = ballManager.listIterator();
+    while (listIterator.hasNext()) {
+      Ball ball = listIterator.next();
+      if (ball.isMarkedForRemoval()) {
+        listIterator.remove();
+        if (ballManager.isEmpty()) { // lost last ball
+          setChanged();
+          notifyObservers(new GameEvent(GameEventType.LAST_BALL_LOST, ball));
+        } else {
+          setChanged();
+          notifyObservers(new GameEvent(GameEventType.BALL_LOST, ball));
+        }
+      };
+    }
+  }
+
+  /**
+   * update power pills
+   */
+  private void updatePowerPills() {
     // release next power up
     if (nextPowerPill != null) {
       fallingPowerPills.add(nextPowerPill);
@@ -392,9 +421,27 @@ public class BreakOutGame extends Observable {
   }
 
   /**
-   * Checks if the ball(s) have hit a wall, the paddle, a block or has left 
-   * through the bottom. Calculates new speeds for each direction, tells brickLayout 
-   * if the ball hits a brick and calls <code>ballLost()</code> when ball has left 
+   * Checks if all bricks are gone and if so
+   * icreases level and launches new ball.
+   */
+  private void updateLevel() {
+    if (brickLayout.getNumberOfBricks() == 0) {
+      // pause game animation
+      mainGameLoop.pause();
+      // Level done
+      setChanged();
+      notifyObservers(new GameEvent(GameEventType.LEVEL_COMPLETE));
+      // load new level or game over WON
+      increaseLevel();
+      loadLevel(currentLevel.get());
+      launchBall(SLEEP_BETWEEN_LEVELS);
+    }
+  }
+
+  /**
+   * Checks if the ball(s) have hit a wall, the paddle, a block or has left
+   * through the bottom. Calculates new speeds for each direction, tells brickLayout
+   * if the ball hits a brick and calls <code>ballLost()</code> when ball has left
    * through bottom.
    */
   private void checkBallCollisions(Ball ball) {
@@ -492,7 +539,7 @@ public class BreakOutGame extends Observable {
   }
 
   /**
-   * Checks if bak touches paddle and if so reverses the ball
+   * Checks if ball touches paddle and if so reverses the ball
    * @return true if ball touches paddle
    */
   private void checkPaddleCollision(Ball ball) {
@@ -547,6 +594,17 @@ public class BreakOutGame extends Observable {
   }
 
   /**
+   * Cleans up balls and pills
+   */
+  private void cleanUpPlayfield() {
+    // clear ball manager - delete all balls
+    ballManager.clear();
+
+    // clear falling power pills
+    fallingPowerPills.clear();
+  }
+
+  /**
    * @param row
    * @param col
    */
@@ -573,6 +631,30 @@ public class BreakOutGame extends Observable {
         nextPowerUp = getNextPowerUp();
       }
     }
+  }
+
+  /**
+   * stops the current game
+   */
+  public void stopPlaying() {
+    if (!isPlaying()) return;
+
+    // incase we already started a game
+    scheduledStart.cancel(true);
+
+    // set status
+    isPlaying.set(false);
+    isPaused.set(false);
+    gameOver.set(false);
+
+    // stop game loop
+    mainGameLoop.stop();
+
+    // clean up
+    cleanUpPlayfield();
+    brickLayout.resetMatrix();
+    setChanged();
+    notifyObservers(new GameEvent(GameEventType.GAME_STOPPED));
   }
 
   /**
@@ -656,58 +738,7 @@ public class BreakOutGame extends Observable {
   }
 
   /**
-   * Called from controller by mouse move events. Moves the paddle according to the mouse's x position
-   * when mouse is in window. The paddle's center will be set to the current mouse position. 
-   * @param mouseX
-   */
-  public void setMouseXPosition(double mouseX) {
-    if (isPaused()) return;
-    double x = mouseX;
-    double halfPaddleWidth = paddleWidthProperty().get()/2;
-    if (x - halfPaddleWidth < 0.0) {
-      x = halfPaddleWidth;
-    } else if (x + halfPaddleWidth > playfieldWidth.get()) {
-      x = playfieldWidth.get() - halfPaddleWidth;
-    }
-    if (paddleX.get() >= 0.0 && paddleX.get() + paddleWidth.get() <= playfieldWidth.get()){
-      paddleXProperty().set(x-halfPaddleWidth);
-    }
-  }
-
-  /**
-   * Starts a new game.
-   */
-  public void startPlaying() {
-    isPlaying.set(true);
-    isPaused.set(false);
-    gameOver.set(false);
-
-    // initialize new game
-    currentLevel.set(START_LEVEL);
-    currentRemainingLives.set(START_LIVES);
-    currentScore.set(0);
-    destroyedBricksCounter = 0;
-
-    setChanged();
-    notifyObservers(new GameEvent(GameEventType.GAME_START));
-
-    loadLevel(currentLevel.get());
-    startRound(SLEEP_BETWEEN_LIVES);
-  }
-
-  /**
-   * stops the current game
-   */
-  public void stopPlaying() {
-    isPlaying.set(false);
-    isPaused.set(false);
-    gameOver.set(false);
-    // stop game loop
-    mainGameLoop.stop();
-  }
-
-  /**
-   * pauses a running game 
+   * pauses a running game
    */
   public void pausePlaying() {
     if (!isPlaying()) return; // ignore if not playing
@@ -743,6 +774,25 @@ public class BreakOutGame extends Observable {
    */
   public BrickLayout getBrickLayout() {
     return brickLayout;
+  }
+
+  /**
+   * Called from controller by mouse move events. Moves the paddle according to the mouse's x position
+   * when mouse is in window. The paddle's center will be set to the current mouse position.
+   * @param mouseX
+   */
+  public void setMouseXPosition(double mouseX) {
+    if (isPaused()) return;
+    double x = mouseX;
+    double halfPaddleWidth = paddleWidthProperty().get()/2;
+    if (x - halfPaddleWidth < 0.0) {
+      x = halfPaddleWidth;
+    } else if (x + halfPaddleWidth > playfieldWidth.get()) {
+      x = playfieldWidth.get() - halfPaddleWidth;
+    }
+    if (paddleX.get() >= 0.0 && paddleX.get() + paddleWidth.get() <= playfieldWidth.get()){
+      paddleXProperty().set(x-halfPaddleWidth);
+    }
   }
 
   /**

@@ -61,7 +61,13 @@ public class BallView extends Circle {
   }
 
   public void hit() {
-    ballHitAnimation.play();
+    try {
+      ballHitAnimation.play();
+    } catch (NullPointerException e) {
+      // FIXME: null pointer in animation in BallView.
+      System.err.println("Null Pointer in hitBrick ");
+      //e.printStackTrace();
+    }
   }
 
   public void removed() {
