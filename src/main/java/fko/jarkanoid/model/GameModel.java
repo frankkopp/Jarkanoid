@@ -610,6 +610,7 @@ public class GameModel extends Observable {
         switch (ballManager.size()) {
           case 1:
             ballManager.add(ballManager.get(0).split());
+            // fall through
           case 2:
             ballManager.add(ballManager.get(0).split());
             break;
