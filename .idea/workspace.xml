@@ -1,14 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="7addf553-5c04-4a16-899d-8f87f62b1fee" name="Default" comment="Experimenting on a Scene Capture Recorder">
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/recorder/Recorder.java" />
-      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/Frank.xml" afterPath="$PROJECT_DIR$/.idea/dictionaries/Frank.xml" />
+    <list default="true" id="7addf553-5c04-4a16-899d-8f87f62b1fee" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/Jarkanoid.java" afterPath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/Jarkanoid.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/GameModel.java" afterPath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/GameModel.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/levels/Level-7.txt" afterPath="$PROJECT_DIR$/src/main/resources/levels/Level-7.txt" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -916,6 +910,14 @@
       <option name="presentableId" value="Default" />
       <updated>1515623274777</updated>
     </task>
+    <task id="LOCAL-00001" summary="Experimenting on a Scene Capture Recorder">
+      <created>1515886868809</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1515886868809</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TestHistory">
