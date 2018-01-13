@@ -69,8 +69,7 @@ public class Ball {
    * @param vXball
    * @param vYball
    */
-  public Ball(
-          double centerX, double centerY, double radius, double vXball, double vYball) {
+  public Ball(double centerX, double centerY, double radius, double vXball, double vYball) {
     super();
     this.centerX = new SimpleDoubleProperty(centerX);
     this.centerY = new SimpleDoubleProperty(centerY);
@@ -97,10 +96,9 @@ public class Ball {
   }
 
   public void setVelocity(final double newSpeed) {
-    final double ratio = newSpeed/velocity;
-    setXYVelocity(vX*ratio, vY*ratio);
+    final double ratio = newSpeed / velocity;
+    setXYVelocity(vX * ratio, vY * ratio);
   }
-
 
   /** Creates a clone of the ball and randomly changes direction slightly */
   public Ball split() {
@@ -206,7 +204,6 @@ public class Ball {
     return centerX.get() + radius.get();
   }
 
-  /** GETTER & SETTER END **/
   public double getXVelocity() {
     return vX;
   }
@@ -223,7 +220,6 @@ public class Ball {
     setXYVelocity(vX, newVY);
   }
 
-/** GETTER & SETTER START **/
   public double getCenterX() {
     return centerX.get();
   }

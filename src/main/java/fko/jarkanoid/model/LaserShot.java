@@ -83,8 +83,6 @@ public class LaserShot {
 
   /**
    * Defines the X coordinate of the upper-left corner of the rectangle.
-   *
-   * @defaultValue 0.0
    */
   private DoubleProperty x = new SimpleDoubleProperty();
 
@@ -102,8 +100,6 @@ public class LaserShot {
 
   /**
    * Defines the Y coordinate of the upper-left corner of the rectangle.
-   *
-   * @defaultValue 0.0
    */
   private DoubleProperty y = new SimpleDoubleProperty();
 
@@ -121,8 +117,6 @@ public class LaserShot {
 
   /**
    * Defines the width of the rectangle.
-   *
-   * @defaultValue 0.0
    */
   private final DoubleProperty width = new SimpleDoubleProperty();
 
@@ -140,8 +134,6 @@ public class LaserShot {
 
   /**
    * Defines the height of the rectangle.
-   *
-   * @defaultValue 0.0
    */
   private final DoubleProperty height = new SimpleDoubleProperty();
 
