@@ -44,11 +44,22 @@ public final class SoundManager {
    */
   public enum Clips {
     // ENUM		Filename w/o .wav
-    WALL 		("WallHit"),
     PADDLE 		("PaddleHit"),
-    BRICK_S 		("BrickHit_Special"),
-    BRICK		("BrickHit_Normal"),
-    BALL_LOST	("Ball_Lost");
+    BRICK		("BrickHit"),
+    BRICK_S 	("BrickHitSolid"),
+    BALL_LOST	("Ball_Lost"),
+    CAUGHT      ("Caught"),
+    FINAL       ("FinalMusic"),
+    HIT_ALIEN   ("HitAlien"),
+    HIT_BOSS    ("HitBoss"),
+    INTRO       ("Intro"),
+    KILL_BOSS   ("KillBoss"),
+    LASER       ("Laser"),
+    NEW_LEVEL   ("NewLevel"),
+    NEW_LIFE    ("NewLife"),
+    PADDLE_HIT  ("PaddleHit"),
+    POWER_E     ("Power_Enlarge"),
+    WALL_HIT    ("WallHit");
 
     private final String _name;
 

@@ -52,7 +52,10 @@ public class GameModel extends Observable {
   // TODO: create all main.resources.levels
   // TODO: improve powers / animation etc.
   // TODO: Highscore
-  // FIXME: ball caught
+  // IDEAS: Powers: multiball (star), Trasher (no bouncing on bricks detroyed), extra wide, smaller paddle, thehered paddle,
+  // IDEAS:         upside down, reverse control, cloaked, power not falling in straight line
+  // IDEAS:   Bricks: moving bricks, zombi bricks - come back to life, shield for bricks
+  // IDEAS:   Special: flying aliens, flying powers, ball catcher, ball beamer, ball warper
 
   /*
    * Constants for game dimensions and other relevant settings.
@@ -590,6 +593,8 @@ public class GameModel extends Observable {
           } else if (paddleX.get() <= 0) {
             paddleX.set(0);
           }
+          setChanged();
+          notifyObservers(new GameEvent(GameEventType.ENLARGE));
         }
         break;
       case CATCH:
@@ -764,16 +769,18 @@ public class GameModel extends Observable {
       // give the ball the new angle always upwards
       ball.bounceFromPaddle(newAngle);
 
-      // check if we should
+      // check if we should catch the ball
       if (activePower.get().equals(PowerPillType.CATCH)
           && !ballCatchedFlag // not already catched
           && ballManager.size() == 1) { // only when only one ball in play
         ballCatchedFlag = true;
         bindBallToPaddle(ball, hitPointAbsolute);
+        setChanged();
+        notifyObservers(new GameEvent(GameEventType.CAUGHT));
+      } else {
+        setChanged();
+        notifyObservers(new GameEvent(GameEventType.HIT_PADDLE, ball));
       }
-
-      setChanged();
-      notifyObservers(new GameEvent(GameEventType.HIT_PADDLE, ball));
     }
   }
 
@@ -901,6 +908,10 @@ public class GameModel extends Observable {
               LASER_SPEED);
 
       laserShotManager.addAll(ls1, ls2);
+
+      setChanged();
+      notifyObservers(new GameEvent(GameEventType.LASER_SHOT, ls1, ls2));
+
     }
   }
 

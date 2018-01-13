@@ -288,9 +288,11 @@ public class MainController implements Initializable, Observer {
       case LEVEL_COMPLETE:
         break;
       case LEVEL_START:
+        sounds.playClip(Clips.NEW_LEVEL);
         view.getBrickLayoutView().draw(model.getBrickLayout());
         break;
       case GAME_START:
+        //sounds.playClip(Clips.INTRO);
         break;
       case GAME_STOPPED:
         view.getBrickLayoutView().draw(model.getBrickLayout());
@@ -300,7 +302,17 @@ public class MainController implements Initializable, Observer {
       case LASER_HIT:
         view.getBrickLayoutView().draw(model.getBrickLayout());
         break;
+      case LASER_SHOT:
+        sounds.playClip(Clips.LASER);
+        break;
       case GAME_WON:
+        sounds.playClip(Clips.FINAL);
+        break;
+      case CAUGHT:
+        sounds.playClip(Clips.CAUGHT);
+        break;
+      case ENLARGE:
+        sounds.playClip(Clips.POWER_E);
         break;
       default:
     }
