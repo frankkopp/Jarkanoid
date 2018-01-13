@@ -56,19 +56,23 @@ public class BreakOutGame extends Observable {
    */
   private static final int START_LEVEL = 1;
   private static final int START_LIVES = 3;
+
   private static final long SLEEP_BETWEEN_LIVES = 2000; // in ms
   private static final long SLEEP_BETWEEN_LEVELS = 3000; // in ms
 
   private static final double PLAYFIELD_INITIAL_HEIGHT = 710;
   private static final double PLAYFIELD_INITIAL_WIDTH = 780;
 
+  // paddle constants
   private static final double PADDLE_INITIAL_FRAMERATE = 100; // Framerate for paddle movements
   private static final double PADDLE_MOVE_STEPS = 5.0; // steps per animation cycle
   private static final double PADDLE_INITIAL_Y = 670;
   private static final double PADDLE_INITIAL_X = 315;
   private static final double PADDEL_INITIAL_WIDTH = 150;
   private static final double PADDLE_INITIAL_HEIGHT = 20;
+  private static final float PADDLE_ENLARGEMENT_FACTOR = 1.4f;
 
+  // Ball constants
   private static final double BALL_INITIAL_RADIUS = 8;
   private static final double BALL_MAX_ANGLE = 60;
   private static final double BALL_INITIAL_X = 390;
@@ -77,15 +81,21 @@ public class BreakOutGame extends Observable {
   // Absolute speed of ball, when vertical equals px in y, when horizontal equals px in x
   private static final double BALL_INITIAL_SPEED = 10.0;
 
+  // Laser constants
+  private static final double LASER_EDGE_OFFSET = 45;
+  private static final double LASER_WIDTH = 5;
+  private static final double LASER_HEIGHT = 15;
+  private static final double LASER_SPEED = 15;
+
   // Template of a starting ball to copy when a new level starts
   private static final Ball BALL_TEMPLATE =
       new Ball(BALL_INITIAL_X, BALL_INITIAL_Y, BALL_INITIAL_RADIUS, 0, BALL_INITIAL_SPEED);
 
   // power up constants
-  private static final int NEXT_POWERUP_OFFSET =
-      1; // how many destroyed bricks between power ups (needs to be >0)
-  private static final int POWER_UP_FREQUENCY =
-      5; // power up randomly after 0 to 10 destroyed bricks after offset
+  // how many destroyed bricks between power ups (needs to be >0)
+  private static final int NEXT_POWERUP_OFFSET = 1;
+  // power up randomly after 0 to 10 destroyed bricks after offset
+  private static final int POWER_UP_FREQUENCY = 5;
 
   /*
    * These values determine the size and dimension of elements in Breakout.
@@ -122,6 +132,9 @@ public class BreakOutGame extends Observable {
 
   // ball manager
   private final ListProperty<Ball> ballManager = new SimpleListProperty<>();
+
+  // LaserShot manager
+  private final ListProperty<LaserShot> laserShotManager = new SimpleListProperty<>();
 
   // main Game Loop / moves ball(s) and handles collisions
   private final Timeline mainGameLoop = new Timeline();
@@ -169,7 +182,10 @@ public class BreakOutGame extends Observable {
     brickLayout = new BrickLayout(playfieldWidth, playfieldHeight);
 
     // configure ballManager
-    ballManager.set(FXCollections.observableList(new BallManager()));
+    ballManager.set(FXCollections.observableList(new ArrayList<>(3)));
+
+    // configure laserShotManager
+    laserShotManager.set(FXCollections.observableList(new ArrayList<>()));
 
     // configure fallingPower list
     fallingPowerPills.set(FXCollections.observableList(new ArrayList<>()));
@@ -278,6 +294,9 @@ public class BreakOutGame extends Observable {
 
     // clear power
     activePower.set(PowerPillType.NONE);
+
+    // clear lasers
+    laserShotManager.clear();
   }
 
   /**
@@ -296,7 +315,7 @@ public class BreakOutGame extends Observable {
     ballManager.add(newBall);
 
     // move the ball with the paddle before start of game
-    bindBallToPaddle(newBall, paddleWidth.get()/2+20);
+    bindBallToPaddle(newBall, paddleWidth.get() / 2 + 20);
 
     // show the ball for a short time then start the animation
     // check if the game has been stopped while we were waiting
@@ -316,7 +335,8 @@ public class BreakOutGame extends Observable {
   /** Binds the ball to the paddle movement before start of the game */
   private void bindBallToPaddle(Ball ball, double xLocationOnPaddle) {
     // bind ball to paddle
-    ball.centerXProperty().bind(paddleX.add(xLocationOnPaddle)); // slightly to the right of the middle
+    ball.centerXProperty()
+        .bind(paddleX.add(xLocationOnPaddle)); // slightly to the right of the middle
     ball.centerYProperty().bind(paddleY.subtract(ball.getRadius()).subtract(1.0));
   }
 
@@ -376,6 +396,7 @@ public class BreakOutGame extends Observable {
     } else { // still at least one ball in play
 
       updatePowerPills();
+      updateLaser();
       updateBalls();
       updateLevel();
     }
@@ -398,25 +419,51 @@ public class BreakOutGame extends Observable {
     launchBall(SLEEP_BETWEEN_LIVES);
   }
 
+  private void updateLaser() {
+    // else loop over all laser shots
+    ListIterator<LaserShot> listIterator = laserShotManager.listIterator();
+    while (listIterator.hasNext()) {
+      LaserShot ls = listIterator.next();
+      // remove laser shots from list
+      if (ls.isMarkedForRemoval()) {
+        listIterator.remove();
+        continue;
+      }
+      // move the laser shot up
+      ls.moveStep();
+      // check collisions from the ball(s) with anything else
+      checkLaserCollisions(ls);
+    }
+  }
+
+  private void checkLaserCollisions(final LaserShot ls) {
+    // check if hit upper wall
+    if (ls.getUpperBound() <= 0) {
+      ls.markForRemoval();
+      return;
+    }
+
+    // calculate laser edge's brick cell
+    final int lsRow = (int) (ls.getUpperBound() / brickLayout.getBrickHeight());
+    final int lsCol = (int) ((ls.getLeftBound() + LASER_WIDTH/2) / brickLayout.getBrickWidth());
+
+    // hit above
+    if (brickLayout.getBrick(lsRow, lsCol) != null) {
+      brickHit(lsRow, lsCol);
+      ls.markForRemoval();
+      setChanged();
+      notifyObservers(new GameEvent(GameEventType.LASER_HIT, lsRow, lsCol, ls));
+    }
+
+  }
+
   /** updates all balls, checks collisions fom balls with anything else and removes lost balls */
   private void updateBalls() {
     // else loop over all balls
     ListIterator<Ball> listIterator = ballManager.listIterator();
     while (listIterator.hasNext()) {
       Ball ball = listIterator.next();
-      // move the ball
-      if (!ballCatchedFlag) {
-        unbindBallFromPaddle(ball);
-        ball.moveStep();
-      }
-      // check collisions from the ball(s) with anything else
-      checkBallCollisions(ball);
-    }
 
-    // remove balls marked for removal
-    listIterator = ballManager.listIterator();
-    while (listIterator.hasNext()) {
-      Ball ball = listIterator.next();
       if (ball.isMarkedForRemoval()) {
         listIterator.remove();
         if (ballManager.isEmpty()) { // lost last ball
@@ -426,8 +473,17 @@ public class BreakOutGame extends Observable {
           setChanged();
           notifyObservers(new GameEvent(GameEventType.BALL_LOST, ball));
         }
+        continue;
       }
-      ;
+
+      // move the ball
+      if (!ballCatchedFlag) {
+        unbindBallFromPaddle(ball);
+        ball.moveStep();
+      }
+
+      // check collisions from the ball(s) with anything else
+      checkBallCollisions(ball);
     }
   }
 
@@ -484,9 +540,15 @@ public class BreakOutGame extends Observable {
         // only shrink it if the next pill is something else
         if (!newType.equals(PowerPillType.ENLARGE)) {
           paddleWidth.set(PADDEL_INITIAL_WIDTH);
+          // move to the right to make it look as if it grew from the middle
+          paddleX.set(paddleX.get() + ((PADDLE_ENLARGEMENT_FACTOR - 1) / 2) * PADDEL_INITIAL_WIDTH);
         }
         break;
       case CATCH:
+        if (!newType.equals(PowerPillType.CATCH)) {
+          ballManager.forEach(this::unbindBallFromPaddle);
+          ballCatchedFlag=false;
+        }
         break;
       case SLOW:
         // deactivate only if it is not SLOW again
@@ -517,11 +579,10 @@ public class BreakOutGame extends Observable {
       case ENLARGE:
         // if we are not already large we growing big
         if (!oldType.equals(PowerPillType.ENLARGE)) {
-          float factor = 1.4f;
           // bigger
-          paddleWidth.set(factor * PADDEL_INITIAL_WIDTH);
+          paddleWidth.set(PADDLE_ENLARGEMENT_FACTOR * PADDEL_INITIAL_WIDTH);
           // move to the left to make it look as if it grew from the middle
-          paddleX.set(paddleX.get() - ((factor - 1) / 2) * PADDEL_INITIAL_WIDTH);
+          paddleX.set(paddleX.get() - ((PADDLE_ENLARGEMENT_FACTOR - 1) / 2) * PADDEL_INITIAL_WIDTH);
           // push the paddle betweem the walls in case it was outside
           if (paddleX.get() + paddleWidth.get() >= playfieldWidth.get()) {
             paddleX.set(playfieldWidth.get() - paddleWidth.get());
@@ -700,7 +761,11 @@ public class BreakOutGame extends Observable {
 
       // give the ball the new angle always upwards
       ball.bounceFromPaddle(newAngle);
-      if (activePower.get().equals(PowerPillType.CATCH) && !ballCatchedFlag) {
+
+      // check if we should
+      if (activePower.get().equals(PowerPillType.CATCH)
+          && !ballCatchedFlag // not already catched
+          && ballManager.size() == 1) { // only when only one ball in play
         ballCatchedFlag = true;
         bindBallToPaddle(ball, hitPointAbsolute);
       }
@@ -816,8 +881,29 @@ public class BreakOutGame extends Observable {
     }
   }
 
+  public void shootLaser() {
+    if (isPlaying() && !isPaused() && activePower.get().equals(PowerPillType.LASER)) {
+      LaserShot ls1 =
+              new LaserShot(
+                      paddleX.get() + LASER_EDGE_OFFSET,
+                      paddleY.get(),
+                      LASER_WIDTH,
+                      LASER_HEIGHT,
+                      LASER_SPEED);
+      LaserShot ls2 =
+              new LaserShot(
+                      paddleX.get() + paddleWidth.get() - LASER_EDGE_OFFSET,
+                      paddleY.get(),
+                      LASER_WIDTH,
+                      LASER_HEIGHT,
+                      LASER_SPEED);
+
+      laserShotManager.addAll(ls1, ls2);
+    }
+  }
+
   /** is called when a user restarts a catched ball by pressing a key or mouse button * */
-  public void restartCaughtBall() {
+  public void releaseCaughtBall() {
     if (ballCatchedFlag) {
       ballCatchedFlag = false;
     }
@@ -933,6 +1019,10 @@ public class BreakOutGame extends Observable {
 
   public ListProperty<Ball> getBallManager() {
     return ballManager;
+  }
+
+  public ListProperty<LaserShot> getLaserShotManager() {
+    return laserShotManager;
   }
 
   /** @return the current brick layout */

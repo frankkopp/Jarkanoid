@@ -20,14 +20,8 @@
  */
 package fko.breakout.controller;
 
-import java.net.URL;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.ResourceBundle;
-
 import fko.breakout.BreakOut;
 import fko.breakout.events.GameEvent;
-import fko.breakout.events.GameEvent.GameEventType;
 import fko.breakout.model.*;
 import fko.breakout.model.SoundManager.Clips;
 import fko.breakout.view.MainView;
@@ -43,6 +37,11 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+
+import java.net.URL;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.ResourceBundle;
 
 /**
  * MainController
@@ -145,6 +144,14 @@ public class MainController implements Initializable, Observer {
         .addListener(
             (ListChangeListener.Change<?> change) -> view.updateBallList((Change<Ball>) change));
 
+    // update handler for laser shot manager
+    //noinspection unchecked
+    model
+        .getLaserShotManager()
+        .addListener(
+            (ListChangeListener.Change<?> change) ->
+                view.updateLaserShotList((Change<LaserShot>) change));
+
     // update handler for fallingPills
     //noinspection unchecked
     model
@@ -197,8 +204,9 @@ public class MainController implements Initializable, Observer {
     gameOverSplash.visibleProperty().bind(model.gameOverProperty());
   }
 
-  private void updateActivePower(final PowerPillType oldPowerType, final PowerPillType newPowerType) {
-    System.out.printf("Power activated in VIEW: %s %n",newPowerType.toString());
+  private void updateActivePower(
+      final PowerPillType oldPowerType, final PowerPillType newPowerType) {
+    System.out.printf("Power activated in VIEW: %s %n", newPowerType.toString());
 
     switch (oldPowerType) {
       case NONE:
@@ -257,6 +265,8 @@ public class MainController implements Initializable, Observer {
 
     // define actions for different events
     switch (gameEvent.getEventType()) {
+      case NONE:
+        break;
       case HIT_PADDLE:
         view.paddleHit((Ball) param[0]);
         sounds.playClip(Clips.PADDLE);
@@ -267,31 +277,33 @@ public class MainController implements Initializable, Observer {
         break;
       case HIT_BRICK:
         handleHitBrickEvent(gameEvent);
+        view.getBrickLayoutView().draw(model.getBrickLayout());
         break;
       case LAST_BALL_LOST:
         sounds.playClip(Clips.BALL_LOST);
         break;
       case BALL_LOST:
         break;
+      case NEW_BALL:
+        break;
       case LEVEL_COMPLETE:
         break;
       case LEVEL_START:
+        view.getBrickLayoutView().draw(model.getBrickLayout());
         break;
       case GAME_START:
         break;
+      case GAME_STOPPED:
+        view.getBrickLayoutView().draw(model.getBrickLayout());
+        break;
       case GAME_OVER:
+        break;
+      case LASER_HIT:
+        view.getBrickLayoutView().draw(model.getBrickLayout());
         break;
       case GAME_WON:
         break;
       default:
-    }
-
-    // update brickLayoutView
-    if (gameEvent.getEventType().equals(GameEventType.LEVEL_START)
-        || gameEvent.getEventType().equals(GameEventType.HIT_BRICK)
-        || gameEvent.getEventType().equals(GameEventType.GAME_STOPPED)) {
-
-      view.getBrickLayoutView().draw(model.getBrickLayout());
     }
   }
 
@@ -345,10 +357,12 @@ public class MainController implements Initializable, Observer {
 
   /**
    * Action when the mouse left button has been clicked.
+   *
    * @param mouseEvent
    */
   private void mousePressedAction(final MouseEvent mouseEvent) {
-    model.restartCaughtBall();
+    model.releaseCaughtBall();
+    model.shootLaser();
   }
 
   /**
@@ -383,7 +397,8 @@ public class MainController implements Initializable, Observer {
 
   /** Called when user wants to restart a caught Ball */
   private void restartCaughtBallAction(final ActionEvent actionEvent) {
-    model.restartCaughtBall();
+    model.releaseCaughtBall();
+    model.shootLaser();
   }
 
   /**

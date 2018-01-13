@@ -58,6 +58,13 @@
 	-fx-stroke: #000000;
 }
 
+.lasershot {
+	-fx-fill: yellow;
+	-fx-stroke: red;
+	-fx-arc-height: 5px;
+    -fx-arc-width: 5px;
+}
+
 .brick {
    -fx-stroke: #000000;
    -fx-stroke-width: 1;

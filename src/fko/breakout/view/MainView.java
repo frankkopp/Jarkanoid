@@ -30,6 +30,7 @@ import java.util.List;
 import fko.breakout.controller.MainController;
 import fko.breakout.model.Ball;
 import fko.breakout.model.BreakOutGame;
+import fko.breakout.model.LaserShot;
 import fko.breakout.model.PowerPill;
 import javafx.animation.ParallelTransition;
 import javafx.animation.ScaleTransition;
@@ -69,6 +70,9 @@ public class MainView {
 
   // Balls
   private final HashMap<Ball, BallView> ballViewMap = new HashMap<>();
+
+  // LaserShots
+  private final HashMap<LaserShot, LaserShotView> laserShotViewMap = new HashMap<>();
 
   // falling PowerPills
   private final HashMap<PowerPill, PowerPillView> powerPillViewMap = new HashMap<>();
@@ -139,7 +143,7 @@ public class MainView {
   }
 
   /**
-   * Called when model updates the Set of balls
+   * Called when model updates the List of balls
    * @param change
    */
   public void updateBallList(ListChangeListener.Change<Ball> change) {
@@ -159,6 +163,40 @@ public class MainView {
           playFieldPane.getChildren().remove(bv);
           ballViewMap.remove(removedBall);
           bv.removed();
+        }
+      }
+    }
+  }
+
+  /**
+   * Called when model updates the Set of balls
+   * @param change
+   */
+  public void updateLaserShotList(ListChangeListener.Change<LaserShot> change) {
+    while (change.next()) {
+      if (change.wasAdded()) {
+        for (LaserShot added : change.getAddedSubList()) {
+          final LaserShotView laserShotView = new LaserShotView(model, added);
+          laserShotView.visibleProperty().bind(model.isPlayingProperty());
+          laserShotView.xProperty().bind(added.xProperty());
+          laserShotView.yProperty().bind(added.yProperty());
+          laserShotView.widthProperty().bind(added.widthProperty());
+          laserShotView.heightProperty().bind(added.heightProperty());
+          laserShotViewMap.put(added, laserShotView);
+          playFieldPane.getChildren().add(laserShotView);
+        }
+
+      } else if (change.wasRemoved()) {
+        for (LaserShot removed : change.getRemoved()) {
+          final LaserShotView laserShotView = laserShotViewMap.get(removed);
+          laserShotView.visibleProperty().unbind();
+          laserShotView.xProperty().unbind();
+          laserShotView.yProperty().unbind();
+          laserShotView.widthProperty().unbind();
+          laserShotView.heightProperty().unbind();
+          playFieldPane.getChildren().remove(laserShotView);
+          laserShotViewMap.remove(removed);
+          laserShotView.removed();
         }
       }
     }
