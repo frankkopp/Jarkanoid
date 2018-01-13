@@ -45,10 +45,14 @@ import java.util.concurrent.TimeUnit;
  * occur.
  *
  * @author Frank Kopp
- *     <p>TODO: add acceleration TODO: create all levels TODO: implement powers FIXME: ball caught
- *     in endless loop
  */
 public class BreakOutGame extends Observable {
+
+  // TODO: add acceleration
+  // TODO: create all levels
+  // TODO: improve powers / animation etc.
+  // TODO: Highscore
+  // FIXME: ball caught
 
   /*
    * Constants for game dimensions and other relevant settings.
@@ -93,9 +97,9 @@ public class BreakOutGame extends Observable {
 
   // power up constants
   // how many destroyed bricks between power ups (needs to be >0)
-  private static final int NEXT_POWERUP_OFFSET = 1;
+  private static final int NEXT_POWERUP_OFFSET = 3;
   // power up randomly after 0 to 10 destroyed bricks after offset
-  private static final int POWER_UP_FREQUENCY = 5;
+  private static final int POWER_UP_FREQUENCY = 10;
 
   /*
    * These values determine the size and dimension of elements in Breakout.
@@ -445,7 +449,7 @@ public class BreakOutGame extends Observable {
 
     // calculate laser edge's brick cell
     final int lsRow = (int) (ls.getUpperBound() / brickLayout.getBrickHeight());
-    final int lsCol = (int) ((ls.getLeftBound() + LASER_WIDTH/2) / brickLayout.getBrickWidth());
+    final int lsCol = (int) ((ls.getLeftBound() + LASER_WIDTH / 2) / brickLayout.getBrickWidth());
 
     // hit above
     if (brickLayout.getBrick(lsRow, lsCol) != null) {
@@ -454,7 +458,6 @@ public class BreakOutGame extends Observable {
       setChanged();
       notifyObservers(new GameEvent(GameEventType.LASER_HIT, lsRow, lsCol, ls));
     }
-
   }
 
   /** updates all balls, checks collisions fom balls with anything else and removes lost balls */
@@ -511,8 +514,6 @@ public class BreakOutGame extends Observable {
           && pill.getX() + pill.getWidth() >= paddleX.get()
           && pill.getX() <= paddleX.get() + paddleWidth.get()) {
 
-        //          System.out.println("MODEL POWER UP ACTIVE "+pill.getPowerPillType().name());
-
         powerPillListIterator.remove();
 
         activatePower(pill);
@@ -547,7 +548,7 @@ public class BreakOutGame extends Observable {
       case CATCH:
         if (!newType.equals(PowerPillType.CATCH)) {
           ballManager.forEach(this::unbindBallFromPaddle);
-          ballCatchedFlag=false;
+          ballCatchedFlag = false;
         }
         break;
       case SLOW:
@@ -884,19 +885,19 @@ public class BreakOutGame extends Observable {
   public void shootLaser() {
     if (isPlaying() && !isPaused() && activePower.get().equals(PowerPillType.LASER)) {
       LaserShot ls1 =
-              new LaserShot(
-                      paddleX.get() + LASER_EDGE_OFFSET,
-                      paddleY.get(),
-                      LASER_WIDTH,
-                      LASER_HEIGHT,
-                      LASER_SPEED);
+          new LaserShot(
+              paddleX.get() + LASER_EDGE_OFFSET,
+              paddleY.get(),
+              LASER_WIDTH,
+              LASER_HEIGHT,
+              LASER_SPEED);
       LaserShot ls2 =
-              new LaserShot(
-                      paddleX.get() + paddleWidth.get() - LASER_EDGE_OFFSET,
-                      paddleY.get(),
-                      LASER_WIDTH,
-                      LASER_HEIGHT,
-                      LASER_SPEED);
+          new LaserShot(
+              paddleX.get() + paddleWidth.get() - LASER_EDGE_OFFSET,
+              paddleY.get(),
+              LASER_WIDTH,
+              LASER_HEIGHT,
+              LASER_SPEED);
 
       laserShotManager.addAll(ls1, ls2);
     }

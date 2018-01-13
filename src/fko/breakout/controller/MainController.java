@@ -206,7 +206,6 @@ public class MainController implements Initializable, Observer {
 
   private void updateActivePower(
       final PowerPillType oldPowerType, final PowerPillType newPowerType) {
-    System.out.printf("Power activated in VIEW: %s %n", newPowerType.toString());
 
     switch (oldPowerType) {
       case NONE:
