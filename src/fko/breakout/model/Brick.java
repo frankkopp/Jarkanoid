@@ -39,7 +39,7 @@ import javafx.scene.paint.Color;
 public class Brick {
 
   private final BrickType brickType;
-  private final BrickPowerType powerType;
+  private final PowerPillType powerType;
 
   private int hitCount = 0;
 
@@ -50,7 +50,7 @@ public class Brick {
    * Creates a Brick.
    * @param brickType
    */
-  public Brick(BrickType brickType, BrickPowerType powerType) {
+  public Brick(BrickType brickType, PowerPillType powerType) {
     this.brickType = brickType;
     this.powerType = powerType;
     if (brickType.equals(BrickType.GOLD)) isInvincible = true;
@@ -103,7 +103,7 @@ public class Brick {
   /**
    * @return the powerType
    */
-  public BrickPowerType getPowerType() {
+  public PowerPillType getPowerType() {
     return powerType;
   }
 

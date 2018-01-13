@@ -47,6 +47,8 @@ public class BallView extends Circle {
     
     // let the CSS determine the look of the ball
     this.getStyleClass().add("ball");
+//    this.setFill(Color.DODGERBLUE);
+//    this.setStroke(Color.BLACK);
 
     // bing this ball to the model's ball
     this.centerXProperty().bind(ball.centerXProperty());
@@ -59,7 +61,13 @@ public class BallView extends Circle {
   }
 
   public void hit() {
-    ballHitAnimation.play();
+    try {
+      ballHitAnimation.play();
+    } catch (NullPointerException e) {
+      // FIXME: null pointer in animation in BallView.
+      System.err.println("Null Pointer in hitBrick ");
+      //e.printStackTrace();
+    }
   }
 
   public void removed() {

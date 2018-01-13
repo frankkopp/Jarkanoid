@@ -40,7 +40,7 @@ public class BallTest {
    * @throws java.lang.Exception
    */
   @BeforeAll
-  public void setUp() throws Exception {
+  public static void setUp() throws Exception {
   }
 
   @Test
@@ -129,4 +129,26 @@ public class BallTest {
   
     }
 
+  @Test
+  void setSpeed() {
+    Ball b;
+    b = new Ball(100, 100, 5, -1, 1);
+    assertEquals(b.getVelocity(), Math.sqrt(2), 0.001);
+    System.out.printf("Speed %f x:%f y:%f %n", b.getVelocity(), b.getXVelocity(), b.getYVelocity());
+    b.setVelocity(Math.sqrt(8));
+    System.out.printf("Speed %f x:%f y:%f %n", b.getVelocity(), b.getXVelocity(), b.getYVelocity());
+
+    b = new Ball(100, 100, 5, 1, 2);
+    assertEquals(b.getVelocity(), Math.sqrt(5), 0.001);
+    System.out.printf("Speed %f x:%f y:%f %n", b.getVelocity(), b.getXVelocity(), b.getYVelocity());
+    b.setVelocity(Math.sqrt(12));
+    System.out.printf("Speed %f x:%f y:%f %n", b.getVelocity(), b.getXVelocity(), b.getYVelocity());
+
+    b = new Ball(100, 100, 5, 2, -5);
+    assertEquals(b.getVelocity(), Math.sqrt(29), 0.001);
+    System.out.printf("Speed %f x:%f y:%f %n", b.getVelocity(), b.getXVelocity(), b.getYVelocity());
+    b.setVelocity(Math.sqrt(29)/2);
+    System.out.printf("Speed %f x:%f y:%f %n", b.getVelocity(), b.getXVelocity(), b.getYVelocity());
+
+  }
 }

@@ -99,13 +99,13 @@ public class LevelLoaderTest {
 	@Test
 	public void testItemToBrick() throws Exception {
 
-		assertEquals(new Brick(BrickType.BLUE, BrickPowerType.CATCH), 
+		assertEquals(new Brick(BrickType.BLUE, PowerPillType.CATCH),
 				LevelLoader.itemToBrick("BLCA"));
 
-		assertEquals(new Brick(BrickType.GREY, BrickPowerType.LASER), 
+		assertEquals(new Brick(BrickType.GREY, PowerPillType.LASER),
 				LevelLoader.itemToBrick("GYLA"));
 
-		assertEquals(new Brick(BrickType.GOLD, BrickPowerType.NONE), 
+		assertEquals(new Brick(BrickType.GOLD, PowerPillType.NONE),
 				LevelLoader.itemToBrick("GONO"));
 
 	}

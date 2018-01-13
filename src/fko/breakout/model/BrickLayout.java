@@ -106,9 +106,17 @@ public class BrickLayout {
   }
 
   /**
+   * Resets the matrix to empty
+   */
+  public void resetMatrix() {
+    setMatrix(new Brick[ROWS][COLUMNS]);
+  }
+
+  /**
    * Updates data fields when loading new matrix
    */
   private void updateDataForMatrix() {
+    numberOfBricks = 0;
     Arrays.stream(brickMatrix)
             .flatMap(Arrays::stream)
             .filter(aBrick -> aBrick != null // found a brick
@@ -184,7 +192,6 @@ public class BrickLayout {
   public void setBrick(int row, int col, Brick brick) {
     brickMatrix[row][col] = brick;
   }
-
 
   /**
    * @return the brickWidth

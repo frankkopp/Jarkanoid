@@ -25,8 +25,11 @@ package fko.breakout.view;
 
 import fko.breakout.model.Brick;
 import javafx.animation.FillTransition;
+import javafx.scene.effect.BlurType;
+import javafx.scene.effect.InnerShadow;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.StrokeType;
 import javafx.util.Duration;
 
 /**
@@ -44,6 +47,9 @@ public class BrickView extends Rectangle {
   
   private final Brick brick;
 
+//  private static final InnerShadow effect = new InnerShadow(BlurType.ONE_PASS_BOX, Color.WHITE,
+//          2.0, 0.0, 1.0, 1.0);
+
   /**
    * Creates a new Brick view which is an extension of a Rectangle
    * @param x
@@ -57,9 +63,14 @@ public class BrickView extends Rectangle {
     this.brick = brick;
 
     // let the CSS determine the look of the ball
-    this.getStyleClass().add("brick");
-    
     this.setFill(brick.getColor());
+    this.getStyleClass().add("brick");
+//    this.setArcWidth(5.0);
+//    this.setArcHeight(5.0);
+//    this.setStroke(Color.BLACK);
+//    this.setStrokeType(StrokeType.INSIDE);
+//    this.setStrokeWidth(1.0);
+//    this.setEffect(effect);
 
     solidBrickHitTimeline = new FillTransition(Duration.millis(75));
     solidBrickHitTimeline.setFromValue(brick.getColor());
