@@ -3,8 +3,59 @@
   <component name="AnalysisUIOptions">
     <option name="ANALYZE_TEST_SOURCES" value="false" />
   </component>
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="Jarkanoid:jar" />
+    </artifacts-to-build>
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="7addf553-5c04-4a16-899d-8f87f62b1fee" name="Default" comment="" />
+    <list default="true" id="7addf553-5c04-4a16-899d-8f87f62b1fee" name="Default" comment="">
+      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/artifacts/Jarkanoid_jar.xml" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/release/META-INF/MANIFEST.MF" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change beforePath="$PROJECT_DIR$/out/production/BreakOut/css/breakout.css" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/out/production/BreakOut/fonts/AstronomicMono.otf" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/out/production/BreakOut/fonts/DroidSansFallback.ttf" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/out/production/BreakOut/fonts/DroidSansMono.ttf" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/out/production/BreakOut/fonts/LCD.ttf" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/out/production/BreakOut/fonts/TRON.ttf" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/out/production/BreakOut/fxml/BreakOutMainView.fxml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/out/production/BreakOut/images/background.jpg" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/out/production/BreakOut/levels/Level-1.txt" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/out/production/BreakOut/levels/Level-10.txt" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/out/production/BreakOut/levels/Level-11.txt" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/out/production/BreakOut/levels/Level-12.txt" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/out/production/BreakOut/levels/Level-2.txt" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/out/production/BreakOut/levels/Level-3.txt" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/out/production/BreakOut/levels/Level-4.txt" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/out/production/BreakOut/levels/Level-5.txt" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/out/production/BreakOut/levels/Level-6.txt" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/out/production/BreakOut/levels/Level-7.txt" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/out/production/BreakOut/levels/Level-8.txt" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/out/production/BreakOut/levels/Level-9.txt" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/out/production/BreakOut/levels/Test_Level-1.txt" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/out/production/BreakOut/levelsTest/test1/Level-1.csv" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/out/production/BreakOut/levelsTest/test1/Level-1.txt" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/out/production/BreakOut/levelsTest/test1/Level-2.txt" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/out/production/BreakOut/levelsTest/test1/Level-3.txt" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/out/production/BreakOut/levelsTest/test1/Level-4.txt" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/out/production/BreakOut/levelsTest/test1/Test.txt" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/out/production/BreakOut/levelsTest/test1/empty/keep_folder.txt" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/out/production/BreakOut/levelsTest/test2/Level-1.txt" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/out/production/BreakOut/sounds/Arkanoid SFX (1).wav" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/out/production/BreakOut/sounds/Arkanoid SFX (11).wav" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/out/production/BreakOut/sounds/Arkanoid SFX (12).wav" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/out/production/BreakOut/sounds/Arkanoid SFX (2).wav" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/out/production/BreakOut/sounds/Arkanoid SFX (3).wav" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/out/production/BreakOut/sounds/Arkanoid SFX (4).wav" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/out/production/BreakOut/sounds/Arkanoid SFX (5).wav" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/out/production/BreakOut/sounds/Arkanoid SFX (9).wav" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/out/production/BreakOut/sounds/Ball_Lost.wav" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/out/production/BreakOut/sounds/BrickHit_Normal.wav" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/out/production/BreakOut/sounds/BrickHit_Special.wav" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/out/production/BreakOut/sounds/PaddleHit.wav" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/out/production/BreakOut/sounds/WallHit.wav" afterPath="" />
+    </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -26,8 +77,8 @@
           <file leaf-file-name="LevelLoaderTest.java" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/test/fko/breakout/model/LevelLoaderTest.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1174">
-                  <caret line="107" column="0" lean-forward="true" selection-start-line="107" selection-start-column="0" selection-end-line="107" selection-end-column="0" />
+                <state relative-caret-position="1701">
+                  <caret line="81" column="21" lean-forward="false" selection-start-line="81" selection-start-column="21" selection-end-line="81" selection-end-column="21" />
                   <folding>
                     <element signature="imports" expanded="true" />
                   </folding>
@@ -39,7 +90,7 @@
             <entry file="file://$PROJECT_DIR$/test/fko/breakout/model/BallTest.java">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="630">
-                  <caret line="52" column="12" lean-forward="true" selection-start-line="52" selection-start-column="12" selection-end-line="52" selection-end-column="12" />
+                  <caret line="52" column="12" lean-forward="false" selection-start-line="52" selection-start-column="12" selection-end-line="52" selection-end-column="12" />
                   <folding>
                     <element signature="imports" expanded="true" />
                   </folding>
@@ -258,6 +309,9 @@
       </profile-state>
     </entry>
   </component>
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
       <flattenPackages />
@@ -346,10 +400,15 @@
     <property name="Downloaded.Files.Path.Enabled" value="false" />
     <property name="Repository.Attach.JavaDocs" value="true" />
     <property name="Repository.Attach.Sources" value="true" />
-    <property name="project.structure.last.edited" value="Problems" />
-    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="last_opened_file_path" value="$USER_HOME$/visualvm_14" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/release/Jarkanoid.jar" />
+    <property name="GenerateAntBuildDialog.generateSingleFile" value="true" />
+    <property name="GenerateAntBuildDialog.enableUiFormCompile" value="true" />
+    <property name="GenerateAntBuildDialog.forceTargetJdk" value="true" />
+    <property name="GenerateAntBuildDialog.backupFiles" value="true" />
+    <property name="GenerateAntBuildDialog.outputFileNameProperty" value="jarkanoid" />
   </component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
@@ -439,6 +498,22 @@
       <envs />
       <patterns />
     </configuration>
+    <configuration name="Jarkanoid JAR" type="JarApplication" factoryName="JAR Application">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <option name="JAR_PATH" value="$PROJECT_DIR$/release/Jarkanoid.jar" />
+      <option name="WORKING_DIRECTORY" value="C:\Users\Frank\Dropbox\Private\Projekte\_GITHUB\Jarkanoid\release" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <envs />
+      <module name="Jarkanoid" />
+    </configuration>
+    <configuration default="true" type="JarApplication" factoryName="JAR Application">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <option name="JAR_PATH" value="$PROJECT_DIR$/release/Jarkanoid.jar" />
+      <option name="WORKING_DIRECTORY" value="C:\Users\Frank\Dropbox\Private\Projekte\_GITHUB\Jarkanoid\release" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <envs />
+      <module name="Jarkanoid" />
+    </configuration>
     <configuration default="true" type="Remote" factoryName="Remote">
       <option name="USE_SOCKET_TRANSPORT" value="true" />
       <option name="SERVER_MODE" value="false" />
@@ -479,9 +554,10 @@
       <option name="PROGRAM_PARAMETERS" />
       <predefined_log_file id="idea.log" enabled="true" />
     </configuration>
-    <list size="2">
+    <list size="3">
       <item index="0" class="java.lang.String" itemvalue="Application.Jarkanoid" />
       <item index="1" class="java.lang.String" itemvalue="Application.Jarkanoid Xint" />
+      <item index="2" class="java.lang.String" itemvalue="JAR Application.Jarkanoid JAR" />
     </list>
   </component>
   <component name="ShelveChangesManager" show_recycled="false">
@@ -550,7 +626,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="83" y="0" width="3028" height="1401" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32927817" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -565,7 +640,7 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32927817" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15616532" sideWeight="0.4679634" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15616532" sideWeight="0.4679634" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Problems" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32927817" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32927817" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Learn" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33299458" sideWeight="0.49067315" order="4" side_tool="false" content_ui="tabs" />
@@ -1052,7 +1127,7 @@
     <entry file="file://$PROJECT_DIR$/test/fko/breakout/model/BallTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="630">
-          <caret line="52" column="12" lean-forward="true" selection-start-line="52" selection-start-column="12" selection-end-line="52" selection-end-column="12" />
+          <caret line="52" column="12" lean-forward="false" selection-start-line="52" selection-start-column="12" selection-end-line="52" selection-end-column="12" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -1061,8 +1136,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/test/fko/breakout/model/LevelLoaderTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1174">
-          <caret line="107" column="0" lean-forward="true" selection-start-line="107" selection-start-column="0" selection-end-line="107" selection-end-column="0" />
+        <state relative-caret-position="1701">
+          <caret line="81" column="21" lean-forward="false" selection-start-line="81" selection-start-column="21" selection-end-line="81" selection-end-column="21" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -1074,11 +1149,18 @@
     <states>
       <state key="ArtifactsStructureConfigurable.UI">
         <settings>
-          <artifact-editor />
+          <artifact-editor>
+            <show-content>
+              <type id="artifact" />
+              <type id="library" />
+            </show-content>
+          </artifact-editor>
+          <last-edited>Jarkanoid:jar</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
                 <option value="0.2" />
+                <option value="0.5" />
               </list>
             </option>
           </splitter-proportions>
