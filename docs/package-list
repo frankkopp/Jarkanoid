@@ -1,6 +1,6 @@
-fko.breakout
-fko.breakout.controller
-fko.breakout.events
-fko.breakout.model
-fko.breakout.model.exceptions
-fko.breakout.view
+fko.jarkanoid
+fko.jarkanoid.controller
+fko.jarkanoid.events
+fko.jarkanoid.model
+fko.jarkanoid.model.exceptions
+fko.jarkanoid.view
