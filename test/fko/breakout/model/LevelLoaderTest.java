@@ -4,12 +4,16 @@ package fko.breakout.model;
 import fko.breakout.model.exceptions.LevelLoaderFormatException;
 import fko.breakout.model.exceptions.LevelLoaderIOException;
 import fko.breakout.model.exceptions.LevelLoaderNoLevelFilesException;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.Before;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 public class LevelLoaderTest {
 
@@ -20,7 +24,7 @@ public class LevelLoaderTest {
 	private String preFix = "Level-";
 	private String fileType = ".txt";
 
-	@BeforeAll
+	@Before
 	public static void setUp() throws Exception {
 	}
 

@@ -39,7 +39,7 @@ import java.util.Map;
 import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 
-import fko.breakout.BreakOut;
+import fko.breakout.Jarkanoid;
 import fko.breakout.model.exceptions.LevelLoaderFormatException;
 import fko.breakout.model.exceptions.LevelLoaderIOException;
 import fko.breakout.model.exceptions.LevelLoaderNoLevelFilesException;
@@ -194,7 +194,7 @@ public final class LevelLoader {
 
 		} else { // Run with IDE
 
-			final URL folderURL = BreakOut.class.getResource(folder);
+			final URL folderURL = Jarkanoid.class.getResource(folder);
 			if (folderURL == null) {
 				throw new LevelLoaderIOException("While loading levels: Folder not found: "+folder);
 			}
@@ -227,7 +227,7 @@ public final class LevelLoader {
 	 * @return
 	 */
 	protected List<String> getLinesFromLevelFile(String folder, String file) {
-		final InputStream fileStream = BreakOut.class.getResourceAsStream(folder+file);
+		final InputStream fileStream = Jarkanoid.class.getResourceAsStream(folder+file);
 		if (fileStream == null) {
 			throw new LevelLoaderIOException(
 					String.format("While loading level file %s: File not found!",folder+file));

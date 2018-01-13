@@ -46,7 +46,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author Frank Kopp
  */
-public class BreakOutGame extends Observable {
+public class GameModel extends Observable {
 
   // TODO: add acceleration
   // TODO: create all levels
@@ -180,7 +180,7 @@ public class BreakOutGame extends Observable {
   private final DoubleProperty fps = new SimpleDoubleProperty(BALL_INITIAL_FRAMERATE);;
 
   /** Constructor - prepares the brick layout and the game loops. */
-  public BreakOutGame() {
+  public GameModel() {
 
     // setup BrickLayout
     brickLayout = new BrickLayout(playfieldWidth, playfieldHeight);

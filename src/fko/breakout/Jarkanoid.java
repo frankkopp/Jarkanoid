@@ -26,7 +26,7 @@ package fko.breakout;
 import java.net.URL;
 
 import fko.breakout.controller.MainController;
-import fko.breakout.model.BreakOutGame;
+import fko.breakout.model.GameModel;
 import fko.breakout.view.MainView;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -44,7 +44,7 @@ import javafx.stage.Stage;
  *
  * TODO: use Logger
  */
-public class BreakOut extends Application {
+public class Jarkanoid extends Application {
 
   // VERSION
   public static final String VERSION = "0.3";
@@ -66,7 +66,7 @@ public class BreakOut extends Application {
 
     pStage = primaryStage;
 
-    BreakOutGame model = new BreakOutGame();
+    GameModel model = new GameModel();
     MainController controller = new MainController(model);
     MainView view = new MainView(model, controller);
 
@@ -96,7 +96,7 @@ public class BreakOut extends Application {
   @Override
   public void init() throws Exception {
     super.init();
-    final URL urlResource = BreakOut.class.getResource("/fonts/AstronomicMono.otf");
+    final URL urlResource = Jarkanoid.class.getResource("/fonts/AstronomicMono.otf");
     if (urlResource == null) {
       criticalError("Font could not be found!");
     } else {

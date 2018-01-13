@@ -25,7 +25,7 @@
 
 package fko.breakout.view;
 
-import fko.breakout.model.BreakOutGame;
+import fko.breakout.model.GameModel;
 import fko.breakout.model.LaserShot;
 import javafx.scene.shape.Rectangle;
 
@@ -38,7 +38,7 @@ public class LaserShotView extends Rectangle {
    *
    * @param laserShot
    */
-  public LaserShotView(BreakOutGame model, LaserShot laserShot) {
+  public LaserShotView(GameModel model, LaserShot laserShot) {
     this.laserShot = laserShot;
 
     // let the CSS determine the look of the ball

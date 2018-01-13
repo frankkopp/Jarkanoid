@@ -20,7 +20,7 @@
  */
 package fko.breakout.controller;
 
-import fko.breakout.BreakOut;
+import fko.breakout.Jarkanoid;
 import fko.breakout.events.GameEvent;
 import fko.breakout.model.*;
 import fko.breakout.model.SoundManager.Clips;
@@ -59,7 +59,7 @@ import java.util.ResourceBundle;
 public class MainController implements Initializable, Observer {
 
   // handles to model and view
-  private final BreakOutGame model;
+  private final GameModel model;
   // sounds
   private final SoundManager sounds = SoundManager.getInstance();
   private MainView view;
@@ -83,7 +83,7 @@ public class MainController implements Initializable, Observer {
    *
    * @param model
    */
-  public MainController(BreakOutGame model) {
+  public MainController(GameModel model) {
     this.model = model;
   }
 
@@ -111,8 +111,8 @@ public class MainController implements Initializable, Observer {
     model.addObserver(this);
 
     // scene title
-    String tmpTitle = BreakOut.getPrimaryStage().getTitle();
-    BreakOut.getPrimaryStage()
+    String tmpTitle = Jarkanoid.getPrimaryStage().getTitle();
+    Jarkanoid.getPrimaryStage()
         .titleProperty()
         .bind(
             new SimpleStringProperty(tmpTitle + " (fps:")
@@ -255,7 +255,7 @@ public class MainController implements Initializable, Observer {
   @Override
   public void update(Observable o, Object e) {
     if (!(e instanceof GameEvent)) {
-      BreakOut.fatalError("Unknown event type. Event is not of type GameEvent");
+      Jarkanoid.fatalError("Unknown event type. Event is not of type GameEvent");
     }
 
     GameEvent gameEvent = (GameEvent) e;

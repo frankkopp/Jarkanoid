@@ -25,11 +25,10 @@ package fko.breakout.view;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 
 import fko.breakout.controller.MainController;
 import fko.breakout.model.Ball;
-import fko.breakout.model.BreakOutGame;
+import fko.breakout.model.GameModel;
 import fko.breakout.model.LaserShot;
 import fko.breakout.model.PowerPill;
 import javafx.animation.ParallelTransition;
@@ -57,7 +56,7 @@ import javafx.util.Duration;
 public class MainView {
 
   @SuppressWarnings("unused")
-  private BreakOutGame model;
+  private GameModel model;
 
   @SuppressWarnings("unused")
   private MainController controller;
@@ -87,7 +86,7 @@ public class MainView {
    * @param controller
    * @throws IOException 
    */
-  public MainView(BreakOutGame model, MainController controller) throws IOException {
+  public MainView(GameModel model, MainController controller) throws IOException {
     this.model = model;
     this.controller = controller;
 

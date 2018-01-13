@@ -5,9 +5,34 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7addf553-5c04-4a16-899d-8f87f62b1fee" name="Default" comment="">
+      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/Jarkanoid.iml" />
+      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/Frank.xml" afterPath="$PROJECT_DIR$/.idea/dictionaries/Frank.xml" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change beforePath="$PROJECT_DIR$/BreakOut.iml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/docs/constant-values.html" afterPath="$PROJECT_DIR$/docs/constant-values.html" />
+      <change beforePath="$PROJECT_DIR$/docs/fko/breakout/BreakOut.html" afterPath="$PROJECT_DIR$/docs/fko/breakout/BreakOut.html" />
+      <change beforePath="$PROJECT_DIR$/docs/fko/breakout/class-use/BreakOut.html" afterPath="$PROJECT_DIR$/docs/fko/breakout/class-use/BreakOut.html" />
+      <change beforePath="$PROJECT_DIR$/docs/fko/breakout/controller/MainController.html" afterPath="$PROJECT_DIR$/docs/fko/breakout/controller/MainController.html" />
+      <change beforePath="$PROJECT_DIR$/docs/fko/breakout/controller/class-use/MainController.html" afterPath="$PROJECT_DIR$/docs/fko/breakout/controller/class-use/MainController.html" />
+      <change beforePath="$PROJECT_DIR$/docs/fko/breakout/model/BreakOutGame.html" afterPath="$PROJECT_DIR$/docs/fko/breakout/model/BreakOutGame.html" />
+      <change beforePath="$PROJECT_DIR$/docs/fko/breakout/model/class-use/Ball.html" afterPath="$PROJECT_DIR$/docs/fko/breakout/model/class-use/Ball.html" />
+      <change beforePath="$PROJECT_DIR$/docs/fko/breakout/model/class-use/BreakOutGame.html" afterPath="$PROJECT_DIR$/docs/fko/breakout/model/class-use/BreakOutGame.html" />
+      <change beforePath="$PROJECT_DIR$/docs/fko/breakout/view/BallView.html" afterPath="$PROJECT_DIR$/docs/fko/breakout/view/BallView.html" />
+      <change beforePath="$PROJECT_DIR$/docs/fko/breakout/view/MainView.html" afterPath="$PROJECT_DIR$/docs/fko/breakout/view/MainView.html" />
+      <change beforePath="$PROJECT_DIR$/docs/index-files/index-11.html" afterPath="$PROJECT_DIR$/docs/index-files/index-11.html" />
+      <change beforePath="$PROJECT_DIR$/docs/index-files/index-2.html" afterPath="$PROJECT_DIR$/docs/index-files/index-2.html" />
+      <change beforePath="$PROJECT_DIR$/makejar.xml" afterPath="$PROJECT_DIR$/makejar.xml" />
+      <change beforePath="$PROJECT_DIR$/src/fko/breakout/BreakOut.java" afterPath="$PROJECT_DIR$/src/fko/breakout/Jarkanoid.java" />
       <change beforePath="$PROJECT_DIR$/src/fko/breakout/controller/MainController.java" afterPath="$PROJECT_DIR$/src/fko/breakout/controller/MainController.java" />
-      <change beforePath="$PROJECT_DIR$/src/fko/breakout/model/BreakOutGame.java" afterPath="$PROJECT_DIR$/src/fko/breakout/model/BreakOutGame.java" />
+      <change beforePath="$PROJECT_DIR$/src/fko/breakout/model/BreakOutGame.java" afterPath="$PROJECT_DIR$/src/fko/breakout/model/GameModel.java" />
+      <change beforePath="$PROJECT_DIR$/src/fko/breakout/model/LevelLoader.java" afterPath="$PROJECT_DIR$/src/fko/breakout/model/LevelLoader.java" />
+      <change beforePath="$PROJECT_DIR$/src/fko/breakout/model/SoundManager.java" afterPath="$PROJECT_DIR$/src/fko/breakout/model/SoundManager.java" />
+      <change beforePath="$PROJECT_DIR$/src/fko/breakout/view/BallView.java" afterPath="$PROJECT_DIR$/src/fko/breakout/view/BallView.java" />
+      <change beforePath="$PROJECT_DIR$/src/fko/breakout/view/LaserShotView.java" afterPath="$PROJECT_DIR$/src/fko/breakout/view/LaserShotView.java" />
+      <change beforePath="$PROJECT_DIR$/src/fko/breakout/view/MainView.java" afterPath="$PROJECT_DIR$/src/fko/breakout/view/MainView.java" />
+      <change beforePath="$PROJECT_DIR$/test/fko/breakout/model/BallTest.java" afterPath="$PROJECT_DIR$/test/fko/breakout/model/BallTest.java" />
+      <change beforePath="$PROJECT_DIR$/test/fko/breakout/model/LevelLoaderTest.java" afterPath="$PROJECT_DIR$/test/fko/breakout/model/LevelLoaderTest.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -27,91 +52,45 @@
     <splitter split-orientation="horizontal" split-proportion="0.4962106">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-          <file leaf-file-name="BreakOutGame.java" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/src/fko/breakout/model/BreakOutGame.java">
+          <file leaf-file-name="LevelLoaderTest.java" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/test/fko/breakout/model/LevelLoaderTest.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="209">
-                  <caret line="53" column="11" lean-forward="false" selection-start-line="53" selection-start-column="11" selection-end-line="53" selection-end-column="11" />
-                  <folding>
-                    <element signature="e#7377#7392#0" expanded="true" />
-                    <element signature="e#9439#9440#0" expanded="true" />
-                    <element signature="e#9471#9472#0" expanded="true" />
-                    <element signature="e#29229#29230#0" expanded="true" />
-                    <element signature="e#29279#29280#0" expanded="true" />
-                    <element signature="e#29386#29387#0" expanded="true" />
-                    <element signature="e#29454#29455#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="breakout.css" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/resources/css/breakout.css">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1659">
-                  <caret line="79" column="24" lean-forward="false" selection-start-line="79" selection-start-column="24" selection-end-line="79" selection-end-column="24" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="BrickLayout.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/fko/breakout/model/BrickLayout.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="2730">
-                  <caret line="164" column="42" lean-forward="false" selection-start-line="164" selection-start-column="42" selection-end-line="164" selection-end-column="42" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="PowerPill.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/fko/breakout/model/PowerPill.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="441">
-                  <caret line="45" column="13" lean-forward="false" selection-start-line="45" selection-start-column="13" selection-end-line="45" selection-end-column="13" />
+                <state relative-caret-position="1174">
+                  <caret line="107" column="0" lean-forward="true" selection-start-line="107" selection-start-column="0" selection-end-line="107" selection-end-column="0" />
                   <folding>
                     <element signature="imports" expanded="true" />
-                    <element signature="e#2167#2168#0" expanded="true" />
-                    <element signature="e#2197#2198#0" expanded="true" />
-                    <element signature="e#2223#2224#0" expanded="true" />
-                    <element signature="e#2247#2248#0" expanded="true" />
-                    <element signature="e#2286#2287#0" expanded="true" />
-                    <element signature="e#2304#2305#0" expanded="true" />
-                    <element signature="e#2336#2337#0" expanded="true" />
-                    <element signature="e#2359#2360#0" expanded="true" />
-                    <element signature="e#2385#2386#0" expanded="true" />
-                    <element signature="e#2409#2410#0" expanded="true" />
-                    <element signature="e#2448#2449#0" expanded="true" />
-                    <element signature="e#2466#2467#0" expanded="true" />
-                    <element signature="e#2498#2499#0" expanded="true" />
-                    <element signature="e#2521#2522#0" expanded="true" />
-                    <element signature="e#2551#2552#0" expanded="true" />
-                    <element signature="e#2579#2580#0" expanded="true" />
-                    <element signature="e#2622#2623#0" expanded="true" />
-                    <element signature="e#2644#2645#0" expanded="true" />
-                    <element signature="e#2684#2685#0" expanded="true" />
-                    <element signature="e#2715#2716#0" expanded="true" />
-                    <element signature="e#2746#2747#0" expanded="true" />
-                    <element signature="e#2775#2776#0" expanded="true" />
-                    <element signature="e#2819#2820#0" expanded="true" />
-                    <element signature="e#2842#2843#0" expanded="true" />
-                    <element signature="e#2884#2885#0" expanded="true" />
-                    <element signature="e#2917#2918#0" expanded="true" />
-                    <element signature="e#2954#2955#0" expanded="true" />
-                    <element signature="e#2983#2984#0" expanded="true" />
-                    <element signature="e#3037#3038#0" expanded="true" />
-                    <element signature="e#3079#3080#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="PowerPillType.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/fko/breakout/model/PowerPillType.java">
+          <file leaf-file-name="BallTest.java" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/test/fko/breakout/model/BallTest.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="0">
-                  <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+                <state relative-caret-position="630">
+                  <caret line="52" column="12" lean-forward="true" selection-start-line="52" selection-start-column="12" selection-end-line="52" selection-end-column="12" />
+                  <folding>
+                    <element signature="imports" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="BrickLayoutTest.java" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/test/fko/breakout/model/BrickLayoutTest.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="358">
+                  <caret line="50" column="0" lean-forward="false" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="BrickTest.java" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/test/fko/breakout/model/BrickTest.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="1621">
+                  <caret line="142" column="43" lean-forward="false" selection-start-line="142" selection-start-column="43" selection-end-line="142" selection-end-column="43" />
                   <folding />
                 </state>
               </provider>
@@ -124,18 +103,28 @@
           <file leaf-file-name="MainView.java" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/fko/breakout/view/MainView.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="776">
-                  <caret line="136" column="44" lean-forward="false" selection-start-line="134" selection-start-column="12" selection-end-line="136" selection-end-column="44" />
+                <state relative-caret-position="1974">
+                  <caret line="135" column="44" lean-forward="false" selection-start-line="133" selection-start-column="12" selection-end-line="135" selection-end-column="44" />
                   <folding />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="MainController.java" pinned="false" current-in-tab="true">
+          <file leaf-file-name="MainController.java" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/fko/breakout/controller/MainController.java">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="651">
-                  <caret line="223" column="14" lean-forward="true" selection-start-line="223" selection-start-column="14" selection-end-line="223" selection-end-column="14" />
+                  <caret line="223" column="14" lean-forward="false" selection-start-line="223" selection-start-column="14" selection-end-line="223" selection-end-column="14" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="Jarkanoid.iml" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/Jarkanoid.iml">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="0">
+                  <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
                   <folding />
                 </state>
               </provider>
@@ -164,7 +153,7 @@
           <file leaf-file-name="PowerPillView.java" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/fko/breakout/view/PowerPillView.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="21">
+                <state relative-caret-position="252">
                   <caret line="35" column="32" lean-forward="false" selection-start-line="35" selection-start-column="32" selection-end-line="35" selection-end-column="32" />
                   <folding />
                 </state>
@@ -202,15 +191,13 @@
     </option>
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/src/fko/breakout/model/BreakOutGame.java" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/src/fko/breakout/view/MainView.java" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/src/fko/breakout/model/GameModel.java" root0="SKIP_INSPECTION" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/src/fko/breakout/controller/SetPropertyTest.java" />
-        <option value="$PROJECT_DIR$/test/fko/breakout/model/LevelLoaderTest.java" />
-        <option value="$PROJECT_DIR$/test/fko/breakout/model/BallTest.java" />
         <option value="$APPLICATION_CONFIG_DIR$/consoles/jshell/jshell_console.snippet" />
         <option value="$PROJECT_DIR$/src/fko/breakout/model/BrickType.java" />
         <option value="$PROJECT_DIR$/test/fko/breakout/model/BrickTest.java" />
@@ -235,7 +222,11 @@
         <option value="$PROJECT_DIR$/src/fko/breakout/view/BrickView.java" />
         <option value="$PROJECT_DIR$/src/fko/breakout/view/PowerPillView.java" />
         <option value="$PROJECT_DIR$/src/fko/breakout/controller/MainController.java" />
+        <option value="$PROJECT_DIR$/src/fko/breakout/Jarkanoid.java" />
         <option value="$PROJECT_DIR$/src/fko/breakout/model/BreakOutGame.java" />
+        <option value="$PROJECT_DIR$/src/fko/breakout/model/GameModel.java" />
+        <option value="$PROJECT_DIR$/test/fko/breakout/model/BallTest.java" />
+        <option value="$PROJECT_DIR$/test/fko/breakout/model/LevelLoaderTest.java" />
       </list>
     </option>
   </component>
@@ -311,148 +302,79 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
       <pane id="AndroidView" />
-      <pane id="Scope" />
       <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
             <path>
-              <item name="BreakOut" type="b2602c69:ProjectViewProjectNode" />
-              <item name="BreakOut" type="462c0819:PsiDirectoryNode" />
+              <item name="Jarkanoid" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Jarkanoid" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
-              <item name="BreakOut" type="b2602c69:ProjectViewProjectNode" />
-              <item name="BreakOut" type="462c0819:PsiDirectoryNode" />
+              <item name="Jarkanoid" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Jarkanoid" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
-              <item name="BreakOut" type="b2602c69:ProjectViewProjectNode" />
-              <item name="BreakOut" type="462c0819:PsiDirectoryNode" />
+              <item name="Jarkanoid" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Jarkanoid" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="breakout" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
-              <item name="BreakOut" type="b2602c69:ProjectViewProjectNode" />
-              <item name="BreakOut" type="462c0819:PsiDirectoryNode" />
+              <item name="Jarkanoid" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Jarkanoid" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="breakout" type="462c0819:PsiDirectoryNode" />
               <item name="controller" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
-              <item name="BreakOut" type="b2602c69:ProjectViewProjectNode" />
-              <item name="BreakOut" type="462c0819:PsiDirectoryNode" />
+              <item name="Jarkanoid" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Jarkanoid" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="breakout" type="462c0819:PsiDirectoryNode" />
               <item name="events" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
-              <item name="BreakOut" type="b2602c69:ProjectViewProjectNode" />
-              <item name="BreakOut" type="462c0819:PsiDirectoryNode" />
+              <item name="Jarkanoid" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Jarkanoid" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="breakout" type="462c0819:PsiDirectoryNode" />
               <item name="model" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
-              <item name="BreakOut" type="b2602c69:ProjectViewProjectNode" />
-              <item name="BreakOut" type="462c0819:PsiDirectoryNode" />
+              <item name="Jarkanoid" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Jarkanoid" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="breakout" type="462c0819:PsiDirectoryNode" />
               <item name="view" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
-              <item name="BreakOut" type="b2602c69:ProjectViewProjectNode" />
-              <item name="BreakOut" type="462c0819:PsiDirectoryNode" />
+              <item name="Jarkanoid" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Jarkanoid" type="462c0819:PsiDirectoryNode" />
               <item name="test" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
-              <item name="BreakOut" type="b2602c69:ProjectViewProjectNode" />
-              <item name="BreakOut" type="462c0819:PsiDirectoryNode" />
+              <item name="Jarkanoid" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Jarkanoid" type="462c0819:PsiDirectoryNode" />
               <item name="test" type="462c0819:PsiDirectoryNode" />
               <item name="model" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="BreakOut" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-            </path>
-            <path>
-              <item name="BreakOut" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="&lt; 1.8 &gt;" type="70bed36:NamedLibraryElementNode" />
-            </path>
-            <path>
-              <item name="BreakOut" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="&lt; 1.8 &gt;" type="70bed36:NamedLibraryElementNode" />
-              <item name="jfxrt.jar" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="BreakOut" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="&lt; 1.8 &gt;" type="70bed36:NamedLibraryElementNode" />
-              <item name="jfxrt.jar" type="462c0819:PsiDirectoryNode" />
-              <item name="javafx" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="BreakOut" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="&lt; 1.8 &gt;" type="70bed36:NamedLibraryElementNode" />
-              <item name="jfxrt.jar" type="462c0819:PsiDirectoryNode" />
-              <item name="javafx" type="462c0819:PsiDirectoryNode" />
-              <item name="scene" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="BreakOut" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="&lt; 1.8 &gt;" type="70bed36:NamedLibraryElementNode" />
-              <item name="jfxrt.jar" type="462c0819:PsiDirectoryNode" />
-              <item name="javafx" type="462c0819:PsiDirectoryNode" />
-              <item name="scene" type="462c0819:PsiDirectoryNode" />
-              <item name="effect" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="BreakOut" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="&lt; 1.8 &gt;" type="70bed36:NamedLibraryElementNode" />
-              <item name="jfxrt.jar" type="462c0819:PsiDirectoryNode" />
-              <item name="javafx" type="462c0819:PsiDirectoryNode" />
-              <item name="scene" type="462c0819:PsiDirectoryNode" />
-              <item name="layout" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="BreakOut" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="&lt; 1.8 &gt;" type="70bed36:NamedLibraryElementNode" />
-              <item name="rt.jar" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="BreakOut" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="&lt; 1.8 &gt;" type="70bed36:NamedLibraryElementNode" />
-              <item name="rt.jar" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="BreakOut" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="&lt; 1.8 &gt;" type="70bed36:NamedLibraryElementNode" />
-              <item name="rt.jar" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="net" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="settings.editor.selected.configurable" value="preferences.sourceCode.Java" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="Downloaded.Files.Path.Enabled" value="false" />
-    <property name="Repository.Attach.JavaDocs" value="false" />
-    <property name="Repository.Attach.Sources" value="false" />
+    <property name="Repository.Attach.JavaDocs" value="true" />
+    <property name="Repository.Attach.Sources" value="true" />
     <property name="project.structure.last.edited" value="Problems" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.2" />
@@ -476,7 +398,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.BreakOut">
+  <component name="RunManager" selected="Application.Jarkanoid">
     <configuration default="true" type="Applet" factoryName="Applet">
       <option name="HTML_USED" value="false" />
       <option name="WIDTH" value="400" />
@@ -484,9 +406,23 @@
       <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
       <module />
     </configuration>
-    <configuration name="BreakOut" type="Application" factoryName="Application">
+    <configuration name="Jarkanoid Xint" type="Application" factoryName="Application">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <option name="MAIN_CLASS_NAME" value="fko.breakout.BreakOut" />
+      <option name="MAIN_CLASS_NAME" value="fko.breakout.Jarkanoid" />
+      <option name="VM_PARAMETERS" value="-Xint" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="Jarkanoid" />
+      <envs />
+    </configuration>
+    <configuration name="Jarkanoid" type="Application" factoryName="Application">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <option name="MAIN_CLASS_NAME" value="fko.breakout.Jarkanoid" />
       <option name="VM_PARAMETERS" value="" />
       <option name="PROGRAM_PARAMETERS" value="" />
       <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
@@ -495,7 +431,7 @@
       <option name="ENABLE_SWING_INSPECTOR" value="false" />
       <option name="ENV_VARIABLES" />
       <option name="PASS_PARENT_ENVS" value="true" />
-      <module name="BreakOut" />
+      <module name="Jarkanoid" />
       <envs />
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -511,131 +447,6 @@
       <option name="PASS_PARENT_ENVS" value="true" />
       <module name="" />
       <envs />
-    </configuration>
-    <configuration name="BrickLayoutTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
-        <pattern>
-          <option name="PATTERN" value="fko.breakout.model.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <module name="BreakOut" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="fko.breakout.model" />
-      <option name="MAIN_CLASS_NAME" value="fko.breakout.model.BrickLayoutTest" />
-      <option name="METHOD_NAME" />
-      <option name="TEST_OBJECT" value="class" />
-      <option name="VM_PARAMETERS" value="-ea" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="singleModule" />
-      </option>
-      <envs />
-      <patterns />
-    </configuration>
-    <configuration name="BrickLayoutTest.getLeftBound" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
-        <pattern>
-          <option name="PATTERN" value="fko.breakout.model.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <module name="BreakOut" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="fko.breakout.model" />
-      <option name="MAIN_CLASS_NAME" value="fko.breakout.model.BrickLayoutTest" />
-      <option name="METHOD_NAME" value="getLeftBound" />
-      <option name="TEST_OBJECT" value="method" />
-      <option name="VM_PARAMETERS" value="-ea" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="singleModule" />
-      </option>
-      <envs />
-      <patterns />
-    </configuration>
-    <configuration name="BrickLayoutTest.getLowerBound" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
-        <pattern>
-          <option name="PATTERN" value="fko.breakout.model.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <module name="BreakOut" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="fko.breakout.model" />
-      <option name="MAIN_CLASS_NAME" value="fko.breakout.model.BrickLayoutTest" />
-      <option name="METHOD_NAME" value="getLowerBound" />
-      <option name="TEST_OBJECT" value="method" />
-      <option name="VM_PARAMETERS" value="-ea" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="singleModule" />
-      </option>
-      <envs />
-      <patterns />
-    </configuration>
-    <configuration name="BrickLayoutTest.getRightBound" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
-        <pattern>
-          <option name="PATTERN" value="fko.breakout.model.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <module name="BreakOut" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="fko.breakout.model" />
-      <option name="MAIN_CLASS_NAME" value="fko.breakout.model.BrickLayoutTest" />
-      <option name="METHOD_NAME" value="getRightBound" />
-      <option name="TEST_OBJECT" value="method" />
-      <option name="VM_PARAMETERS" value="-ea" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="singleModule" />
-      </option>
-      <envs />
-      <patterns />
-    </configuration>
-    <configuration name="BrickLayoutTest.getUpperBound" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
-        <pattern>
-          <option name="PATTERN" value="fko.breakout.model.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <module name="BreakOut" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="fko.breakout.model" />
-      <option name="MAIN_CLASS_NAME" value="fko.breakout.model.BrickLayoutTest" />
-      <option name="METHOD_NAME" value="getUpperBound" />
-      <option name="TEST_OBJECT" value="method" />
-      <option name="VM_PARAMETERS" value="-ea" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="singleModule" />
-      </option>
-      <envs />
-      <patterns />
     </configuration>
     <configuration default="true" type="JUnit" factoryName="JUnit">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
@@ -697,23 +508,10 @@
       <option name="PROGRAM_PARAMETERS" />
       <predefined_log_file id="idea.log" enabled="true" />
     </configuration>
-    <list size="6">
-      <item index="0" class="java.lang.String" itemvalue="Application.BreakOut" />
-      <item index="1" class="java.lang.String" itemvalue="JUnit.BrickLayoutTest.getUpperBound" />
-      <item index="2" class="java.lang.String" itemvalue="JUnit.BrickLayoutTest.getLowerBound" />
-      <item index="3" class="java.lang.String" itemvalue="JUnit.BrickLayoutTest.getLeftBound" />
-      <item index="4" class="java.lang.String" itemvalue="JUnit.BrickLayoutTest.getRightBound" />
-      <item index="5" class="java.lang.String" itemvalue="JUnit.BrickLayoutTest" />
+    <list size="2">
+      <item index="0" class="java.lang.String" itemvalue="Application.Jarkanoid" />
+      <item index="1" class="java.lang.String" itemvalue="Application.Jarkanoid Xint" />
     </list>
-    <recent_temporary>
-      <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="JUnit.BrickLayoutTest" />
-        <item index="1" class="java.lang.String" itemvalue="JUnit.BrickLayoutTest.getRightBound" />
-        <item index="2" class="java.lang.String" itemvalue="JUnit.BrickLayoutTest.getLeftBound" />
-        <item index="3" class="java.lang.String" itemvalue="JUnit.BrickLayoutTest.getLowerBound" />
-        <item index="4" class="java.lang.String" itemvalue="JUnit.BrickLayoutTest.getUpperBound" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="ShelveChangesManager" show_recycled="false">
     <option name="remove_strategy" value="false" />
@@ -781,6 +579,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="83" y="0" width="3028" height="1401" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32927817" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -795,14 +594,15 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32927817" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15345529" sideWeight="0.47597253" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15616532" sideWeight="0.4679634" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Problems" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32927817" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32927817" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Learn" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33299458" sideWeight="0.49067315" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15345529" sideWeight="0.52402747" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15616532" sideWeight="0.5320366" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.29115978" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.29115978" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.114498645" sideWeight="0.5028386" order="6" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -812,7 +612,6 @@
       <window_info id="Inspection Results" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32927817" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Documentation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" x="326" y="451" width="1360" height="837" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32927817" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -895,13 +694,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/fko/breakout/model/Brick.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2992">
-          <caret line="174" column="4" lean-forward="false" selection-start-line="174" selection-start-column="4" selection-end-line="174" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/fko/breakout/model/Ball.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3938">
@@ -935,7 +727,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1782">
           <caret line="119" column="102" lean-forward="false" selection-start-line="119" selection-start-column="102" selection-end-line="119" selection-end-column="102" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -947,29 +738,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/fko/breakout/BreakOut.java">
+    <entry file="file://$PROJECT_DIR$/src/fko/breakout/Jarkanoid.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="874">
           <caret line="46" column="13" lean-forward="false" selection-start-line="46" selection-start-column="13" selection-end-line="46" selection-end-column="13" />
-          <folding>
-            <element signature="e#4347#4348#0" expanded="false" />
-            <element signature="e#4370#4371#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/fko/breakout/model/BreakOutGame.java">
+    <entry file="file://$PROJECT_DIR$/src/fko/breakout/model/GameModel.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="76">
           <caret line="45" column="0" lean-forward="false" selection-start-line="45" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
           <folding>
-            <element signature="e#7377#7392#0" expanded="true" />
-            <element signature="e#9439#9440#0" expanded="true" />
-            <element signature="e#9471#9472#0" expanded="true" />
-            <element signature="e#29229#29230#0" expanded="true" />
-            <element signature="e#29279#29280#0" expanded="true" />
-            <element signature="e#29386#29387#0" expanded="true" />
-            <element signature="e#29454#29455#0" expanded="true" />
+            <element signature="e#7374#7389#0" expanded="false" />
+            <element signature="e#9433#9434#0" expanded="false" />
+            <element signature="e#9465#9466#0" expanded="false" />
+            <element signature="e#29223#29224#0" expanded="false" />
+            <element signature="e#29273#29274#0" expanded="false" />
+            <element signature="e#29380#29381#0" expanded="false" />
+            <element signature="e#29448#29449#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -983,13 +771,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/fko/breakout/controller/SetPropertyTest.java" />
-    <entry file="file://$PROJECT_DIR$/test/fko/breakout/model/LevelLoaderTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="102" column="16" lean-forward="true" selection-start-line="102" selection-start-column="16" selection-end-line="102" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_152/javafx-src.zip!/com/sun/glass/ui/win/WinApplication.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="242">
@@ -1008,7 +789,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-16738">
           <caret line="106" column="13" lean-forward="false" selection-start-line="106" selection-start-column="13" selection-end-line="106" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1019,24 +799,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/fko/breakout/model/BallTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="42" column="2" lean-forward="false" selection-start-line="42" selection-start-column="2" selection-end-line="42" selection-end-column="2" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/jshell/jshell_console.snippet">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="22">
           <caret line="1" column="0" lean-forward="true" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/fko/breakout/model/BrickTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1758">
-          <caret line="142" column="43" lean-forward="false" selection-start-line="142" selection-start-column="43" selection-end-line="142" selection-end-column="43" />
         </state>
       </provider>
     </entry>
@@ -1086,25 +852,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="358">
           <caret line="67" column="20" lean-forward="false" selection-start-line="67" selection-start-column="20" selection-end-line="67" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/fko/breakout/model/BrickLayoutTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="358">
-          <caret line="50" column="0" lean-forward="false" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fko/breakout/BreakOut.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="735">
-          <caret line="68" column="0" lean-forward="false" selection-start-line="68" selection-start-column="0" selection-end-line="68" selection-end-column="0" />
-          <folding>
-            <element signature="e#4347#4348#0" expanded="false" />
-            <element signature="e#4370#4371#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1120,37 +867,37 @@
         <state relative-caret-position="441">
           <caret line="45" column="13" lean-forward="false" selection-start-line="45" selection-start-column="13" selection-end-line="45" selection-end-column="13" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#2167#2168#0" expanded="true" />
-            <element signature="e#2197#2198#0" expanded="true" />
-            <element signature="e#2223#2224#0" expanded="true" />
-            <element signature="e#2247#2248#0" expanded="true" />
-            <element signature="e#2286#2287#0" expanded="true" />
-            <element signature="e#2304#2305#0" expanded="true" />
-            <element signature="e#2336#2337#0" expanded="true" />
-            <element signature="e#2359#2360#0" expanded="true" />
-            <element signature="e#2385#2386#0" expanded="true" />
-            <element signature="e#2409#2410#0" expanded="true" />
-            <element signature="e#2448#2449#0" expanded="true" />
-            <element signature="e#2466#2467#0" expanded="true" />
-            <element signature="e#2498#2499#0" expanded="true" />
-            <element signature="e#2521#2522#0" expanded="true" />
-            <element signature="e#2551#2552#0" expanded="true" />
-            <element signature="e#2579#2580#0" expanded="true" />
-            <element signature="e#2622#2623#0" expanded="true" />
-            <element signature="e#2644#2645#0" expanded="true" />
-            <element signature="e#2684#2685#0" expanded="true" />
-            <element signature="e#2715#2716#0" expanded="true" />
-            <element signature="e#2746#2747#0" expanded="true" />
-            <element signature="e#2775#2776#0" expanded="true" />
-            <element signature="e#2819#2820#0" expanded="true" />
-            <element signature="e#2842#2843#0" expanded="true" />
-            <element signature="e#2884#2885#0" expanded="true" />
-            <element signature="e#2917#2918#0" expanded="true" />
-            <element signature="e#2954#2955#0" expanded="true" />
-            <element signature="e#2983#2984#0" expanded="true" />
-            <element signature="e#3037#3038#0" expanded="true" />
-            <element signature="e#3079#3080#0" expanded="true" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#2167#2168#0" expanded="false" />
+            <element signature="e#2197#2198#0" expanded="false" />
+            <element signature="e#2223#2224#0" expanded="false" />
+            <element signature="e#2247#2248#0" expanded="false" />
+            <element signature="e#2286#2287#0" expanded="false" />
+            <element signature="e#2304#2305#0" expanded="false" />
+            <element signature="e#2336#2337#0" expanded="false" />
+            <element signature="e#2359#2360#0" expanded="false" />
+            <element signature="e#2385#2386#0" expanded="false" />
+            <element signature="e#2409#2410#0" expanded="false" />
+            <element signature="e#2448#2449#0" expanded="false" />
+            <element signature="e#2466#2467#0" expanded="false" />
+            <element signature="e#2498#2499#0" expanded="false" />
+            <element signature="e#2521#2522#0" expanded="false" />
+            <element signature="e#2551#2552#0" expanded="false" />
+            <element signature="e#2579#2580#0" expanded="false" />
+            <element signature="e#2622#2623#0" expanded="false" />
+            <element signature="e#2644#2645#0" expanded="false" />
+            <element signature="e#2684#2685#0" expanded="false" />
+            <element signature="e#2715#2716#0" expanded="false" />
+            <element signature="e#2746#2747#0" expanded="false" />
+            <element signature="e#2775#2776#0" expanded="false" />
+            <element signature="e#2819#2820#0" expanded="false" />
+            <element signature="e#2842#2843#0" expanded="false" />
+            <element signature="e#2884#2885#0" expanded="false" />
+            <element signature="e#2917#2918#0" expanded="false" />
+            <element signature="e#2954#2955#0" expanded="false" />
+            <element signature="e#2983#2984#0" expanded="false" />
+            <element signature="e#3037#3038#0" expanded="false" />
+            <element signature="e#3079#3080#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1181,10 +928,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="92">
           <caret line="5382" column="22" lean-forward="false" selection-start-line="5382" selection-start-column="22" selection-end-line="5382" selection-end-column="22" />
-          <folding>
-            <element signature="e#231424#231425#0" expanded="false" />
-            <element signature="e#231467#231468#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1192,7 +935,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="567">
           <caret line="69" column="34" lean-forward="false" selection-start-line="69" selection-start-column="34" selection-end-line="69" selection-end-column="34" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1200,10 +942,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="407">
           <caret line="213" column="26" lean-forward="false" selection-start-line="213" selection-start-column="26" selection-end-line="213" selection-end-column="26" />
-          <folding>
-            <element signature="e#5298#5299#0" expanded="false" />
-            <element signature="e#5350#5351#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1224,13 +962,13 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/resources/fxml/brick.fxml">
-      <provider editor-type-id="JavaFX-Scene-Builder">
-        <state />
-      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="147">
           <caret line="7" column="11" lean-forward="false" selection-start-line="7" selection-start-column="11" selection-end-line="7" selection-end-column="11" />
         </state>
+      </provider>
+      <provider editor-type-id="JavaFX-Scene-Builder">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/resources/breakout_de.xml" />
@@ -1263,7 +1001,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/fko/breakout/view/PowerPillView.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="21">
+        <state relative-caret-position="252">
           <caret line="35" column="32" lean-forward="false" selection-start-line="35" selection-start-column="32" selection-end-line="35" selection-end-column="32" />
           <folding />
         </state>
@@ -1278,8 +1016,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/fko/breakout/view/MainView.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="776">
-          <caret line="136" column="44" lean-forward="false" selection-start-line="134" selection-start-column="12" selection-end-line="136" selection-end-column="44" />
+        <state relative-caret-position="1974">
+          <caret line="135" column="44" lean-forward="false" selection-start-line="133" selection-start-column="12" selection-end-line="135" selection-end-column="44" />
           <folding />
         </state>
       </provider>
@@ -1287,23 +1025,75 @@
     <entry file="file://$PROJECT_DIR$/src/fko/breakout/controller/MainController.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="651">
-          <caret line="223" column="14" lean-forward="true" selection-start-line="223" selection-start-column="14" selection-end-line="223" selection-end-column="14" />
+          <caret line="223" column="14" lean-forward="false" selection-start-line="223" selection-start-column="14" selection-end-line="223" selection-end-column="14" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/fko/breakout/model/BreakOutGame.java">
+    <entry file="file://$PROJECT_DIR$/Jarkanoid.iml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="209">
-          <caret line="53" column="11" lean-forward="false" selection-start-line="53" selection-start-column="11" selection-end-line="53" selection-end-column="11" />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fko/breakout/Jarkanoid.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="46" column="18" lean-forward="false" selection-start-line="46" selection-start-column="18" selection-end-line="46" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fko/breakout/model/GameModel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="48" column="22" lean-forward="false" selection-start-line="48" selection-start-column="22" selection-end-line="48" selection-end-column="22" />
           <folding>
-            <element signature="e#7377#7392#0" expanded="true" />
-            <element signature="e#9439#9440#0" expanded="true" />
-            <element signature="e#9471#9472#0" expanded="true" />
-            <element signature="e#29229#29230#0" expanded="true" />
-            <element signature="e#29279#29280#0" expanded="true" />
-            <element signature="e#29386#29387#0" expanded="true" />
-            <element signature="e#29454#29455#0" expanded="true" />
+            <element signature="e#7374#7389#0" expanded="false" />
+            <element signature="e#9433#9434#0" expanded="false" />
+            <element signature="e#9465#9466#0" expanded="false" />
+            <element signature="e#29223#29224#0" expanded="false" />
+            <element signature="e#29273#29274#0" expanded="false" />
+            <element signature="e#29380#29381#0" expanded="false" />
+            <element signature="e#29448#29449#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/fko/breakout/model/BrickLayoutTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="358">
+          <caret line="50" column="0" lean-forward="false" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/fko/breakout/model/BrickTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1621">
+          <caret line="142" column="43" lean-forward="false" selection-start-line="142" selection-start-column="43" selection-end-line="142" selection-end-column="43" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/fko/breakout/model/BallTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="630">
+          <caret line="52" column="12" lean-forward="true" selection-start-line="52" selection-start-column="12" selection-end-line="52" selection-end-column="12" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/fko/breakout/model/LevelLoaderTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1174">
+          <caret line="107" column="0" lean-forward="true" selection-start-line="107" selection-start-column="0" selection-end-line="107" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1372,12 +1162,11 @@
       </state>
       <state key="ModuleStructureConfigurable.UI">
         <settings>
-          <last-edited>BreakOut</last-edited>
+          <last-edited>Jarkanoid</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
                 <option value="0.2" />
-                <option value="0.6" />
               </list>
             </option>
           </splitter-proportions>

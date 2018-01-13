@@ -24,7 +24,7 @@ SOFTWARE.
 package fko.breakout.view;
 
 import fko.breakout.model.Ball;
-import fko.breakout.model.BreakOutGame;
+import fko.breakout.model.GameModel;
 import javafx.animation.ParallelTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.StrokeTransition;
@@ -41,7 +41,7 @@ public class BallView extends Circle {
   private StrokeTransition   hitBallStrokeTransition;
   private ParallelTransition ballHitAnimation;
 
-  public BallView(BreakOutGame model, Ball ball) {
+  public BallView(GameModel model, Ball ball) {
     super();
     this.ball = ball;
     

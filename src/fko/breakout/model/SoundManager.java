@@ -28,7 +28,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import fko.breakout.BreakOut;
+import fko.breakout.Jarkanoid;
 import javafx.scene.media.AudioClip;
 
 /**
@@ -89,13 +89,13 @@ public final class SoundManager {
     Arrays.stream(Clips.values())
     .forEach(c -> {
       final String filename = SOUND_FOLDER + c._name+".wav";
-      final URL url = BreakOut.class.getResource(filename);
+      final URL url = Jarkanoid.class.getResource(filename);
       // create AudioInputStream object
       if (url != null) {
         AudioClip clip = new AudioClip(url.toExternalForm());
         _sounds.put(c, clip);
       } else {
-        BreakOut.criticalError("Sound file: "+filename+" cannot be loaded!");
+        Jarkanoid.criticalError("Sound file: "+filename+" cannot be loaded!");
       }
     });
   }
