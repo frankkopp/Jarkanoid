@@ -4,36 +4,7 @@
     <option name="ANALYZE_TEST_SOURCES" value="false" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7addf553-5c04-4a16-899d-8f87f62b1fee" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/Jarkanoid.iml" />
-      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/Frank.xml" afterPath="$PROJECT_DIR$/.idea/dictionaries/Frank.xml" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/BreakOut.iml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/docs/constant-values.html" afterPath="$PROJECT_DIR$/docs/constant-values.html" />
-      <change beforePath="$PROJECT_DIR$/docs/fko/breakout/BreakOut.html" afterPath="$PROJECT_DIR$/docs/fko/breakout/BreakOut.html" />
-      <change beforePath="$PROJECT_DIR$/docs/fko/breakout/class-use/BreakOut.html" afterPath="$PROJECT_DIR$/docs/fko/breakout/class-use/BreakOut.html" />
-      <change beforePath="$PROJECT_DIR$/docs/fko/breakout/controller/MainController.html" afterPath="$PROJECT_DIR$/docs/fko/breakout/controller/MainController.html" />
-      <change beforePath="$PROJECT_DIR$/docs/fko/breakout/controller/class-use/MainController.html" afterPath="$PROJECT_DIR$/docs/fko/breakout/controller/class-use/MainController.html" />
-      <change beforePath="$PROJECT_DIR$/docs/fko/breakout/model/BreakOutGame.html" afterPath="$PROJECT_DIR$/docs/fko/breakout/model/BreakOutGame.html" />
-      <change beforePath="$PROJECT_DIR$/docs/fko/breakout/model/class-use/Ball.html" afterPath="$PROJECT_DIR$/docs/fko/breakout/model/class-use/Ball.html" />
-      <change beforePath="$PROJECT_DIR$/docs/fko/breakout/model/class-use/BreakOutGame.html" afterPath="$PROJECT_DIR$/docs/fko/breakout/model/class-use/BreakOutGame.html" />
-      <change beforePath="$PROJECT_DIR$/docs/fko/breakout/view/BallView.html" afterPath="$PROJECT_DIR$/docs/fko/breakout/view/BallView.html" />
-      <change beforePath="$PROJECT_DIR$/docs/fko/breakout/view/MainView.html" afterPath="$PROJECT_DIR$/docs/fko/breakout/view/MainView.html" />
-      <change beforePath="$PROJECT_DIR$/docs/index-files/index-11.html" afterPath="$PROJECT_DIR$/docs/index-files/index-11.html" />
-      <change beforePath="$PROJECT_DIR$/docs/index-files/index-2.html" afterPath="$PROJECT_DIR$/docs/index-files/index-2.html" />
-      <change beforePath="$PROJECT_DIR$/makejar.xml" afterPath="$PROJECT_DIR$/makejar.xml" />
-      <change beforePath="$PROJECT_DIR$/src/fko/breakout/BreakOut.java" afterPath="$PROJECT_DIR$/src/fko/breakout/Jarkanoid.java" />
-      <change beforePath="$PROJECT_DIR$/src/fko/breakout/controller/MainController.java" afterPath="$PROJECT_DIR$/src/fko/breakout/controller/MainController.java" />
-      <change beforePath="$PROJECT_DIR$/src/fko/breakout/model/BreakOutGame.java" afterPath="$PROJECT_DIR$/src/fko/breakout/model/GameModel.java" />
-      <change beforePath="$PROJECT_DIR$/src/fko/breakout/model/LevelLoader.java" afterPath="$PROJECT_DIR$/src/fko/breakout/model/LevelLoader.java" />
-      <change beforePath="$PROJECT_DIR$/src/fko/breakout/model/SoundManager.java" afterPath="$PROJECT_DIR$/src/fko/breakout/model/SoundManager.java" />
-      <change beforePath="$PROJECT_DIR$/src/fko/breakout/view/BallView.java" afterPath="$PROJECT_DIR$/src/fko/breakout/view/BallView.java" />
-      <change beforePath="$PROJECT_DIR$/src/fko/breakout/view/LaserShotView.java" afterPath="$PROJECT_DIR$/src/fko/breakout/view/LaserShotView.java" />
-      <change beforePath="$PROJECT_DIR$/src/fko/breakout/view/MainView.java" afterPath="$PROJECT_DIR$/src/fko/breakout/view/MainView.java" />
-      <change beforePath="$PROJECT_DIR$/test/fko/breakout/model/BallTest.java" afterPath="$PROJECT_DIR$/test/fko/breakout/model/BallTest.java" />
-      <change beforePath="$PROJECT_DIR$/test/fko/breakout/model/LevelLoaderTest.java" afterPath="$PROJECT_DIR$/test/fko/breakout/model/LevelLoaderTest.java" />
-    </list>
+    <list default="true" id="7addf553-5c04-4a16-899d-8f87f62b1fee" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
