@@ -23,16 +23,18 @@
  */
 package fko.jarkanoid;
 
-import java.net.URL;
-
 import fko.jarkanoid.controller.MainController;
 import fko.jarkanoid.model.GameModel;
+import fko.jarkanoid.recorder.Recorder;
 import fko.jarkanoid.view.MainView;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+
+import java.net.URL;
 
 /**
  * BreakOut / Arkanoid Clone in Java
@@ -47,9 +49,10 @@ import javafx.stage.Stage;
 public class Jarkanoid extends Application {
 
   // VERSION
-  public static final String VERSION = "0.3";
+  public static final String VERSION = "0.4";
 
   private static Stage pStage;
+  private static Recorder recorder;
 
   /**
    * Main
@@ -72,7 +75,7 @@ public class Jarkanoid extends Application {
 
     Scene scene = new Scene(view.asParent());
 
-    primaryStage.setTitle("BreakOut Clone by Frank Kopp");
+    primaryStage.setTitle("Jarkanoid by Frank Kopp");
 
     controller.bindModelToView(view);
 
@@ -82,12 +85,14 @@ public class Jarkanoid extends Application {
 
     // closeAction
     primaryStage.setOnCloseRequest(event -> {
-      Platform.exit();
-      System.exit(0);
-      event.consume();
+      exit();
     });
 
     primaryStage.show();
+
+    recorder = new Recorder(scene);
+    recorder.start();
+
   }
 
   /**
@@ -111,6 +116,7 @@ public class Jarkanoid extends Application {
    * Clean up and exit the application
    */
   public static void exit() {
+    recorder.shutdown();
     exit(0);
   }
 

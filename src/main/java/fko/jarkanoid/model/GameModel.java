@@ -53,15 +53,15 @@ public class GameModel extends Observable {
   // TODO: improve powers / animation etc.
   // TODO: Highscore
   // IDEAS: Powers: multiball (star), Trasher (no bouncing on bricks detroyed), extra wide, smaller paddle, thehered paddle,
-  // IDEAS:         upside down, reverse control, cloaked, power not falling in straight line
-  // IDEAS:   Bricks: moving bricks, zombi bricks - come back to life, shield for bricks
-  // IDEAS:   Special: flying aliens, flying powers, ball catcher, ball beamer, ball warper
+  // IDEAS: Powers: upside down, reverse control, cloaked, power not falling in straight line
+  // IDEAS: Bricks: moving bricks, zombi bricks - come back to life, shield for bricks
+  // IDEAS: Special: flying aliens, flying powers, ball catcher, ball beamer, ball warper
 
   /*
    * Constants for game dimensions and other relevant settings.
    * Need to be aligned with FXML UI Design.
    */
-  private static final int START_LEVEL = 1;
+  private static final int START_LEVEL = 7;
   private static final int START_LIVES = 3;
 
   private static final long SLEEP_BETWEEN_LIVES = 2000; // in ms
