@@ -122,6 +122,16 @@ public final class SoundManager {
   }
 
   /**
+   * Stops the given clip if it is still playing.
+   * @param c enum from Clips
+   */
+  public void stopClip(Clips c) {
+    if (_sounds.get(c) == null || !soundOn) return;
+    AudioClip clip = _sounds.get(c);
+    if (clip.isPlaying()) clip.stop();
+  }
+
+  /**
    * Turn sound playing off. Causes the call to playClip to be ignored.
    */
   public void soundOff() {
