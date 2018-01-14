@@ -63,6 +63,7 @@
                         <manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
                         <manifest>
                             <addClasspath>true</addClasspath>
+                            <mainClass>fko.jarkanoid.Jarkanoid</mainClass>
                             <classpathPrefix>libs/</classpathPrefix>
                         </manifest>
                     </archive>
@@ -106,19 +107,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.1.0</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+
         </plugins>
     </build>
 

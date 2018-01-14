@@ -41,7 +41,13 @@ import java.util.concurrent.atomic.AtomicLong;
 import com.objectplanet.image.PngEncoder;
 import javafx.scene.paint.Color;
 
-/** */
+/**
+ * Recorder
+ *
+ * <p>Records screenshot from node of JavaFX in ficed intervalls</p>
+ *
+ * FIXME: only producing black images
+ */
 public class Recorder implements Runnable {
 
   private final ScheduledThreadPoolExecutor genExecutor = new ScheduledThreadPoolExecutor(4);
