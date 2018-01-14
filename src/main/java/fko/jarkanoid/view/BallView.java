@@ -53,7 +53,7 @@ public class BallView extends Circle {
     // bing this ball to the model's ball
     this.centerXProperty().bind(ball.centerXProperty());
     this.centerYProperty().bind(ball.centerYProperty());
-    this.radiusProperty().bind(ball.radiusProperty());
+    this.radiusProperty().bind(ball.radiusProperty().add(2.0));
     this.visibleProperty().bind(model.isPlayingProperty());
     
     prepareAnimations();
