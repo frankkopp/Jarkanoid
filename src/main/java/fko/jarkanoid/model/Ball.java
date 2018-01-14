@@ -113,11 +113,20 @@ public class Ball {
   /** Creates a clone of the ball and randomly changes direction slightly */
   public Ball split() {
     final Ball newBall = new Ball(this);
-    newBall.setYVelocity(
-        newBall.getYVelocity() + (Math.random() - 0.5) * newBall.getYVelocity() / 10);
-    newBall.setXVelocity(
-        newBall.getXVelocity() + (Math.random() - 0.5) * newBall.getXVelocity() / 10);
+    nudgeBall(newBall);
     return newBall;
+  }
+
+  /** changes the direction of the ball slightly */
+  public void nudgeBall() {
+    nudgeBall(this);
+  }
+
+  private void nudgeBall(final Ball newBall) {
+    newBall.setYVelocity(
+        newBall.getYVelocity() + (Math.random() - 0.5) * newBall.getYVelocity() / 5);
+    newBall.setXVelocity(
+        newBall.getXVelocity() + (Math.random() - 0.5) * newBall.getXVelocity() / 5);
   }
 
   /**
