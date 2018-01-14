@@ -386,7 +386,7 @@ public class MainController implements Initializable, Observer {
       recordingIndicator.setFill(Color.GREEN);
     } else {
       recorder.start(
-          playfieldPane, 64, (int) playfieldPane.getWidth(), (int) playfieldPane.getHeight());
+          playfieldPane, 1000, (int) playfieldPane.getWidth(), (int) playfieldPane.getHeight());
       recordingIndicator.setFill(Color.RED);
     }
   }
