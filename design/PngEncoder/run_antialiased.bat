@@ -1,0 +1,1 @@
+java -cp test.jar com.objectplanet.image.test.ImageEncoderTest antialiased

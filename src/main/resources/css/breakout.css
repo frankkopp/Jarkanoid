@@ -1,0 +1,109 @@
+@font-face {
+    font-family: AstronomicMono;
+    src: url('../fonts/AstronomicMono.otf');
+}
+
+.root  {
+	-fx-background-color: #000000;
+}
+
+.backgroundpane {
+	-fx-background-image: url("../images/background.jpg");
+}
+
+.info {
+	-fx-font-size: 40;
+	-fx-font-family: AstronomicMono;
+}
+
+.score {
+	-fx-fill: #ff0000;
+}
+
+.lives {
+	-fx-fill: #ff0000;
+}
+
+.level {
+	-fx-fill: #ff0000;
+}
+
+.wall {
+	-fx-fill: #2288ff;
+}
+
+.wall.ceiling {
+	
+}
+
+.wall.left {
+	
+}
+
+.wall.right {
+	
+}
+
+.paddle {
+	-fx-fill: #1e90ff;
+	-fx-arc-height: 20px;
+	-fx-arc-width: 20px;
+	-fx-stroke: white;
+	-fx-stroke-type: INSIDE;
+	-fx-stroke-width: 1;
+}
+
+.ball {
+	-fx-fill: #1e90ff;
+	-fx-stroke: #000000;
+}
+
+.lasershot {
+	-fx-fill: yellow;
+	-fx-stroke: red;
+	-fx-arc-height: 5px;
+    -fx-arc-width: 5px;
+}
+
+.brick {
+   -fx-stroke: #000000;
+   -fx-stroke-width: 1;
+   -fx-stroke-type: INSIDE;
+   -fx-effect: innershadow(three-pass-box, white, 2, 0.0, 1, 1);
+}
+
+.powerpill {
+}
+
+.powerpill_rec {
+	-fx-arc-height: 20px;
+	-fx-arc-width: 20px;
+}
+
+.powerpill_text {
+	-fx-fill: #aaaaaa;
+	-fx-font-size: 18;
+	-fx-font-style: normal;
+	-fx-font-weight: bolder;
+
+}
+
+.button {
+	-fx-text-fill: #1e90ff;
+	-fx-background-color: #333333;
+}
+
+.button.play {
+	
+}
+
+.button.sound {
+	
+}
+
+.gameover {
+	-fx-font-size: 80;
+	-fx-fill: #ffd400;
+	-fx-translate-x: 179;
+	-fx-translate-y: 221;
+}

@@ -1,0 +1,19 @@
+# Level 1
+---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+---- ---- ---- ---- ---- YENO YENO PUNO ---- ---- ---- ---- ----
+---- ---- ---- ---- YENO YENO PUNO PUNO BLNO ---- ---- ---- ----
+---- ---- ---- YENO YENO PUNO PUNO BLNO BLNO RENO ---- ---- ----
+---- ---- ---- YENO PUNO PUNO BLNO BLNO RENO RENO ---- ---- ----
+---- ---- YENO PUNO PUNO BLNO BLNO RENO RENO GRNO GRNO ---- ----
+---- ---- PUNO PUNO BLNO BLNO RENO RENO GRNO GRNO CYNO ---- ----
+---- ---- PUNO BLNO BLNO RENO RENO GRNO GRNO CYNO CYNO ---- ----
+---- ---- BLNO BLNO RENO RENO GRNO GRNO CYNO CYNO ORNO ---- ----
+---- ---- BLNO RENO RENO GRNO GRNO CYNO CYNO ORNO ORNO ---- ----
+---- ---- RENO RENO GRNO GRNO CYNO CYNO ORNO ORNO GYNO ---- ----
+---- ---- ---- GRNO GRNO CYNO CYNO ORNO ORNO GYNO ---- ---- ----
+---- ---- ---- GRNO CYNO CYNO ORNO ORNO GYNO GYNO ---- ---- ----
+---- ---- ---- ---- CYNO ORNO ORNO GYNO GYNO ---- ---- ---- ----
+---- ---- ---- ---- ---- ORNO GYNO GYNO ---- ---- ---- ---- ----
