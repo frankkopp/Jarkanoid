@@ -48,11 +48,13 @@ import java.util.concurrent.TimeUnit;
  */
 public class GameModel extends Observable {
 
+  // FIXME: ball can tunnel through brick horizontaly
   // TODO: add acceleration
   // TODO: create all main.resources.levels
   // TODO: improve powers / animation etc.
   // TODO: Highscore
-  // IDEAS: Powers: multiball (star), Trasher (no bouncing on bricks detroyed), extra wide, smaller paddle, thehered paddle,
+  // IDEAS: Powers: multiball (star), Trasher (no bouncing on bricks detroyed), extra wide, smaller
+  // paddle, thehered paddle,
   // IDEAS: Powers: upside down, reverse control, cloaked, power not falling in straight line
   // IDEAS: Bricks: moving bricks, zombi bricks - come back to life, shield for bricks
   // IDEAS: Special: flying aliens, flying powers, ball catcher, ball beamer, ball warper
@@ -61,7 +63,7 @@ public class GameModel extends Observable {
    * Constants for game dimensions and other relevant settings.
    * Need to be aligned with FXML UI Design.
    */
-  private static final int START_LEVEL = 1;
+  private static final int START_LEVEL = 12;
   private static final int START_LIVES = 3;
 
   private static final long SLEEP_BETWEEN_LIVES = 2000; // in ms
@@ -84,9 +86,10 @@ public class GameModel extends Observable {
   private static final double BALL_MAX_ANGLE = 60;
   private static final double BALL_INITIAL_X = 390;
   private static final double BALL_INITIAL_Y = PADDLE_INITIAL_Y - BALL_INITIAL_RADIUS;
-  private static final double BALL_INITIAL_FRAMERATE = 60; // Framerate for ball movements
   // Absolute speed of ball, when vertical equals px in y, when horizontal equals px in x
   private static final double BALL_INITIAL_SPEED = 10.0;
+
+  private static final double INITIAL_FRAMERATE = 60; // Framerate for ball movements
 
   // Laser constants
   private static final double LASER_EDGE_OFFSET = 45;
@@ -180,7 +183,7 @@ public class GameModel extends Observable {
   private long frameLoopCounterTimeStamp = System.nanoTime();
   private long lastloopTime;
   private long commulativeLoopTime;
-  private final DoubleProperty fps = new SimpleDoubleProperty(BALL_INITIAL_FRAMERATE);;
+  private final DoubleProperty fps = new SimpleDoubleProperty(INITIAL_FRAMERATE);;
 
   /** Constructor - prepares the brick layout and the game loops. */
   public GameModel() {
@@ -207,7 +210,7 @@ public class GameModel extends Observable {
     // prepare ball movements (will be start in startGame())
     mainGameLoop.setCycleCount(Timeline.INDEFINITE);
     KeyFrame moveBall =
-        new KeyFrame(Duration.seconds(1.0 / BALL_INITIAL_FRAMERATE), e -> gameLoop());
+        new KeyFrame(Duration.seconds(1.0 / INITIAL_FRAMERATE), e -> gameLoop());
     mainGameLoop.getKeyFrames().add(moveBall);
   }
 
@@ -381,7 +384,7 @@ public class GameModel extends Observable {
       fps.set(1e9f * (frameLoopCounter / timeSinceLastFPS));
 
       double tLoop = ((commulativeLoopTime / frameLoopCounter) / 1e6f);
-      double tFrame = 1000 / BALL_INITIAL_FRAMERATE;
+      double tFrame = 1000 / INITIAL_FRAMERATE;
       // System.out.printf("Avg. Time for loop: %.6f ms (framelimit %.6f ms) %n", tLoop, tFrame);
       if (tLoop > tFrame) {
         System.err.printf("FRAME LIMIT VIOLATION: %.6f ms (framelimit %.6f ms) %n", tLoop, tFrame);
@@ -686,9 +689,46 @@ public class GameModel extends Observable {
 
   private void checkBrickCollision(Ball ball) {
 
+    /*
+     * simulate transient steps
+     * As each fram move the ball several pixels we face a tunnel issue if we do not catch collission early.
+     * ==> similuation single pixel step
+     */
+
+    final double vY = ball.getYVelocity();
+    final double vX = ball.getXVelocity();
+    final double bY = ball.getCenterY();
+    final double bX = ball.getCenterX();
+    final double bpY = ball.getPreviousCenterY();
+    final double bpX = ball.getPreviousCenterX();
+
+    double cbY = bpY; // current Y set up previous Y
+    double cbX = bpX; // current
+
+    System.out.printf(
+        "FULL : vY: %.2f vX: %.2f v: %.2f CURRENT: Y: %.2f X: %.2f PREVIOUS: Y: %.2f X: %.2f %n",
+            vY, vX, ball.getVelocity(),
+            bY, bX,
+            bpY, bpX);
+
+    if (bY-vY != bpY || bX-vX != bpX) {
+      System.err.println("WARP ERROR");
+    }
+
+    for (int i = 1; i <= ball.getVelocity(); i++) {
+      final double stepY = i * vY / 10;
+      final double stepX = i * vX / 10;
+      final double stepV = i * ball.getVelocity() / 10;
+      cbY += stepY;
+      cbX += stepX;
+      System.out.printf("STEP: vY: %.2f vX: %.2f v: %.2f INTERMEDIET: Y: %.2f X: %.2f%n",
+              stepY, stepX, stepV,
+              cbY, cbX);
+    }
+
     // calculate ball center's brick cell
-    final int ballCenterRow = (int) (ball.getCenterY() / (brickLayout.getBrickHeight()));
-    final int ballCenterCol = (int) (ball.getCenterX() / (brickLayout.getBrickWidth()));
+    final int ballCenterRow = (int) (bY / (brickLayout.getBrickHeight()));
+    final int ballCenterCol = (int) (bX / (brickLayout.getBrickWidth()));
     // calculate ball edge's brick cell
     final int ballUpperRow = (int) (ball.getUpperBound() / brickLayout.getBrickHeight());
     final int ballLowerRow = (int) (ball.getLowerBound() / brickLayout.getBrickHeight());
@@ -701,48 +741,94 @@ public class GameModel extends Observable {
      * our movement steps with more than 1 usually.
      */
 
-    // hit above
-    if (ball.getYVelocity() < 0 && brickLayout.getBrick(ballUpperRow, ballCenterCol) != null) {
-      // make sure ball is outside the brick cell
-      ball.setCenterY(
-          1 + ball.getRadius() + brickLayout.getLowerBound(ballUpperRow, ballCenterCol));
-      brickHit(ballUpperRow, ballCenterCol);
-      // bounce ball
-      ball.inverseYdirection();
-      setChanged();
-      notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballUpperRow, ballCenterCol, ball));
-    }
-    // hit below
-    else if (ball.getYVelocity() > 0 && brickLayout.getBrick(ballLowerRow, ballCenterCol) != null) {
-      // make sure ball is outside the brick cell
-      ball.setCenterY(
-          -1 - ball.getRadius() + brickLayout.getUpperBound(ballLowerRow, ballCenterCol));
-      brickHit(ballLowerRow, ballCenterCol);
-      // bounce ball
-      ball.inverseYdirection();
-      setChanged();
-      notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballLowerRow, ballCenterCol, ball));
-    }
-    // hit left
-    else if (ball.getXVelocity() < 0 && brickLayout.getBrick(ballCenterRow, ballLeftCol) != null) {
-      // make sure ball is outside the brick cell
-      ball.setCenterX(1 + ball.getRadius() + brickLayout.getRightBound(ballCenterRow, ballLeftCol));
-      brickHit(ballCenterRow, ballLeftCol);
-      // bounce ball
-      ball.inverseXdirection();
-      setChanged();
-      notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballCenterRow, ballLeftCol, ball));
-    }
-    // hit right
-    else if (ball.getYVelocity() > 0 && brickLayout.getBrick(ballCenterRow, ballRightCol) != null) {
-      // make sure ball is outside the brick cell
-      ball.setCenterX(
-          -1 - ball.getRadius() + brickLayout.getLeftBound(ballCenterRow, ballRightCol));
-      brickHit(ballCenterRow, ballRightCol);
-      // bounce ball
-      ball.inverseXdirection();
-      setChanged();
-      notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballCenterRow, ballRightCol, ball));
+    // flying NE
+    if (vY < 0 && vX >= 0) {
+      // hit above
+      if (brickLayout.getBrick(ballUpperRow, ballCenterCol) != null) {
+        brickHit(ballUpperRow, ballCenterCol);
+        // make sure ball is outside the brick cell
+        ball.setCenterY(
+            1 + ball.getRadius() + brickLayout.getLowerBound(ballUpperRow, ballCenterCol));
+        ball.inverseYdirection();
+        setChanged();
+        notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballUpperRow, ballCenterCol, ball));
+      }
+      // hit right
+      else if (brickLayout.getBrick(ballCenterRow, ballRightCol) != null) {
+        brickHit(ballCenterRow, ballRightCol);
+        // make sure ball is outside the brick cell
+        ball.setCenterX(
+            -1 - ball.getRadius() + brickLayout.getLeftBound(ballCenterRow, ballRightCol));
+        ball.inverseXdirection();
+        setChanged();
+        notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballCenterRow, ballRightCol, ball));
+      }
+    } else // flying SE
+    if (vY > 0 && vX >= 0) {
+      // hit below
+      if (brickLayout.getBrick(ballLowerRow, ballCenterCol) != null) {
+        brickHit(ballLowerRow, ballCenterCol);
+        // make sure ball is outside the brick cell
+        ball.setCenterY(
+            -1 - ball.getRadius() + brickLayout.getLowerBound(ballLowerRow, ballCenterCol));
+        ball.inverseYdirection();
+        setChanged();
+        notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballLowerRow, ballCenterCol, ball));
+      }
+      // hit right
+      else if (brickLayout.getBrick(ballCenterRow, ballRightCol) != null) {
+        brickHit(ballCenterRow, ballRightCol);
+        // make sure ball is outside the brick cell
+        ball.setCenterX(
+            -1 - ball.getRadius() + brickLayout.getLeftBound(ballCenterRow, ballRightCol));
+        ball.inverseXdirection();
+        setChanged();
+        notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballCenterRow, ballRightCol, ball));
+      }
+    } else // flying SW
+    if (vY > 0 && vX <= 0) {
+      // hit below
+      if (brickLayout.getBrick(ballLowerRow, ballCenterCol) != null) {
+        brickHit(ballLowerRow, ballCenterCol);
+        // make sure ball is outside the brick cell
+        ball.setCenterY(
+            -1 - ball.getRadius() + brickLayout.getLowerBound(ballLowerRow, ballCenterCol));
+        ball.inverseYdirection();
+        setChanged();
+        notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballLowerRow, ballCenterCol, ball));
+      }
+      // hit left
+      else if (brickLayout.getBrick(ballCenterRow, ballLeftCol) != null) {
+        brickHit(ballCenterRow, ballLeftCol);
+        // make sure ball is outside the brick cell
+        ball.setCenterX(
+            1 + ball.getRadius() + brickLayout.getLeftBound(ballCenterRow, ballLeftCol));
+        ball.inverseXdirection();
+        setChanged();
+        notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballCenterRow, ballLeftCol, ball));
+      }
+    } else // flying NW
+    if (vY < 0 && vX <= 0) {
+      // hit above
+      if (brickLayout.getBrick(ballUpperRow, ballCenterCol) != null) {
+        brickHit(ballUpperRow, ballCenterCol);
+        // make sure ball is outside the brick cell
+        ball.setCenterY(
+            -1 - ball.getRadius() + brickLayout.getLowerBound(ballUpperRow, ballCenterCol));
+        ball.inverseYdirection();
+        setChanged();
+        notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballUpperRow, ballCenterCol, ball));
+      }
+      // hit left
+      else if (brickLayout.getBrick(ballCenterRow, ballLeftCol) != null) {
+        brickHit(ballCenterRow, ballLeftCol);
+        // make sure ball is outside the brick cell
+        ball.setCenterX(
+            1 + ball.getRadius() + brickLayout.getLeftBound(ballCenterRow, ballLeftCol));
+        ball.inverseXdirection();
+        setChanged();
+        notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballCenterRow, ballLeftCol, ball));
+      }
     }
   }
 
@@ -911,7 +997,6 @@ public class GameModel extends Observable {
 
       setChanged();
       notifyObservers(new GameEvent(GameEventType.LASER_SHOT, ls1, ls2));
-
     }
   }
 
@@ -960,6 +1045,11 @@ public class GameModel extends Observable {
     if (paddleX.get() >= 0.0 && paddleX.get() + paddleWidth.get() <= playfieldWidth.get()) {
       paddleXProperty().set(x - halfPaddleWidth);
     }
+  }
+
+  /** Cheat to skip a level even if it is not finished */
+  public void skipLevelCheat() {
+    brickLayout.resetMatrix();
   }
 
   public DoubleProperty paddleWidthProperty() {
