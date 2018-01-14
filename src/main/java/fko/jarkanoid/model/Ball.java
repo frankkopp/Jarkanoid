@@ -39,14 +39,20 @@ public class Ball {
   private final DoubleProperty centerX;
   private final DoubleProperty centerY;
 
+  // for easier path calculations for collision checks
+
+  private double previousCenterX;
+  private double previousCenterY;
   // ball speeds in each direction
+
   private double vX;
   private double vY;
 
   // current total ball speed and angle - will be calculated whenever vX or vY change
-  private double velocity;
 
+  private double velocity;
   // should this ball be removed
+
   private boolean isMarkedForRemoval = false;
 
   /** Copy constructor for creating a new ball as a deep copy of an existing one.s */
@@ -58,6 +64,8 @@ public class Ball {
         toCopy.vX,
         toCopy.vY);
     this.isMarkedForRemoval = toCopy.isMarkedForRemoval;
+    this.previousCenterX = toCopy.previousCenterX;
+    this.previousCenterY = toCopy.previousCenterY;
   }
 
   /**
@@ -91,8 +99,10 @@ public class Ball {
 
   /** Moves the ball one step further. Expected to be called by the game loop once per frame. */
   public void moveStep() {
-    centerX.set(centerX.get() + vX);
-    centerY.set(centerY.get() + vY);
+    previousCenterX = centerX.get();
+    centerX.set(previousCenterX + vX);
+    previousCenterY = centerY.get();
+    centerY.set(previousCenterY + vY);
   }
 
   public void setVelocity(final double newSpeed) {
@@ -225,6 +235,7 @@ public class Ball {
   }
 
   public void setCenterX(double value) {
+    previousCenterX = centerX.get();
     centerX.set(value);
   }
 
@@ -233,6 +244,7 @@ public class Ball {
   }
 
   public void setCenterY(double value) {
+    previousCenterY = centerY.get();
     centerY.set(value);
   }
 
@@ -247,6 +259,10 @@ public class Ball {
   public double getVelocity() {
     return velocity;
   }
+
+  public double getPreviousCenterX() { return previousCenterX; }
+
+  public double getPreviousCenterY() { return previousCenterY; }
 
   /** @return the isMarkedForRemoval */
   public boolean isMarkedForRemoval() {
