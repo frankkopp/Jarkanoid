@@ -24,17 +24,21 @@ import fko.jarkanoid.Jarkanoid;
 import fko.jarkanoid.events.GameEvent;
 import fko.jarkanoid.model.*;
 import fko.jarkanoid.model.SoundManager.Clips;
+import fko.jarkanoid.recorder.Recorder;
 import fko.jarkanoid.view.MainView;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ListChangeListener.Change;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
@@ -65,6 +69,7 @@ public class MainController implements Initializable, Observer {
   private MainView view;
 
   // FXML injected fields
+  @FXML private Circle recordingIndicator;
   @FXML private Button startStopButton;
   @FXML private Button pauseResumeButton;
   @FXML private Button soundButton;
@@ -292,7 +297,7 @@ public class MainController implements Initializable, Observer {
         view.getBrickLayoutView().draw(model.getBrickLayout());
         break;
       case GAME_START:
-        //sounds.playClip(Clips.INTRO);
+        // sounds.playClip(Clips.INTRO);
         break;
       case GAME_STOPPED:
         view.getBrickLayoutView().draw(model.getBrickLayout());
@@ -355,6 +360,9 @@ public class MainController implements Initializable, Observer {
       case S:
         soundButtonAction(new ActionEvent());
         break;
+      case R:
+        handleRecordingAction();
+        break;
         // paddle control
       case LEFT:
         onPaddleLeftAction(true);
@@ -363,6 +371,23 @@ public class MainController implements Initializable, Observer {
         onPaddleRightAction(true);
         break;
       default:
+    }
+  }
+
+  @FXML
+  void handleRecordingAction(MouseEvent event) {
+    handleRecordingAction();
+  }
+
+  private void handleRecordingAction() {
+    Recorder recorder = Jarkanoid.getRecorder();
+    if (recorder.isRunning()) {
+      recorder.stop();
+      recordingIndicator.setFill(Color.GREEN);
+    } else {
+      recorder.start(
+          playfieldPane, 64, (int) playfieldPane.getWidth(), (int) playfieldPane.getHeight());
+      recordingIndicator.setFill(Color.RED);
     }
   }
 

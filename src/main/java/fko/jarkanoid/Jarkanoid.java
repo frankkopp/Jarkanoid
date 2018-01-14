@@ -52,7 +52,13 @@ public class Jarkanoid extends Application {
   public static final String VERSION = "0.4";
 
   private static Stage pStage;
-  private static Recorder recorder;
+  private Scene scene;
+
+  private static Recorder recorder = new Recorder();
+  public static Recorder getRecorder() {
+    return recorder;
+  }
+
 
   /**
    * Main
@@ -73,7 +79,7 @@ public class Jarkanoid extends Application {
     MainController controller = new MainController(model);
     MainView view = new MainView(model, controller);
 
-    Scene scene = new Scene(view.asParent());
+    scene = new Scene(view.asParent());
 
     primaryStage.setTitle("Jarkanoid by Frank Kopp");
 
@@ -89,9 +95,6 @@ public class Jarkanoid extends Application {
     });
 
     primaryStage.show();
-
-    recorder = new Recorder(scene);
-    recorder.start();
 
   }
 
@@ -116,7 +119,7 @@ public class Jarkanoid extends Application {
    * Clean up and exit the application
    */
   public static void exit() {
-    recorder.shutdown();
+    recorder.stop();
     exit(0);
   }
 

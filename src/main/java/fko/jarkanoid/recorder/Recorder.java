@@ -27,28 +27,30 @@ package fko.jarkanoid.recorder;
 
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.scene.Scene;
+import javafx.scene.Node;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.image.WritableImage;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.time.Duration;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
-/** */
-public class Recorder extends Thread {
+import com.objectplanet.image.PngEncoder;
+import javafx.scene.paint.Color;
 
-  private final Scene recordedScene;
+/** */
+public class Recorder implements Runnable {
 
   private final ScheduledThreadPoolExecutor genExecutor = new ScheduledThreadPoolExecutor(4);
+
   private final ThreadPoolExecutor saveExecutor =
       new ThreadPoolExecutor(
-          4,
-          8,
-          50L,
+          1,
+          1,
+          0L,
           TimeUnit.MILLISECONDS,
           new LinkedBlockingQueue<Runnable>()); // new ScheduledThreadPoolExecutor(1);
 
@@ -61,24 +63,67 @@ public class Recorder extends Thread {
 
   private AtomicBoolean isStopped = new AtomicBoolean(false);
 
-  public Recorder(Scene scene) {
-    super("Screen Recorder Thread");
-    this.recordedScene = scene;
-    this.setDaemon(false);
+  private PngEncoder encoder = new PngEncoder();
+
+  private Thread recorderThread = null;
+
+  private Node recordedNode;
+  private int period;
+  private int width;
+  private int height;
+
+  public Recorder() {}
+
+  /**
+   * @param node the node to be recorded
+   * @param period the intervall of capturing in ms
+   * @param width of the recording area
+   * @param height of the recording area
+   */
+  public void start(Node node, int period, int width, int height) {
+    if (node == null) throw new IllegalArgumentException("May not be null");
+    if (recorderThread != null) throw new IllegalStateException("Thread excists. Not stopped yet.");
+
+    recorderThread = new Thread(this, "Recorder Thread");
+    recorderThread.setDaemon(false);
+
+    this.recordedNode = node;
+    this.period = period;
+    this.width = width;
+    this.height = height;
+
+    recorderThread.start();
+  }
+
+  public void stop() {
+    if (recorderThread == null) return;
+
+    System.out.println("SHUTTING DOWN");
+
+    isStopped.set(true);
+
+    try {
+      System.out.println("Shut down - await termination.");
+      recorderThread.join();
+      genExecutor.awaitTermination(2, TimeUnit.SECONDS);
+      saveExecutor.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+
+    recorderThread = null;
   }
 
   public void run() {
 
     System.out.println("Recorder started!");
 
-    genExecutor.scheduleAtFixedRate(() -> takeScreenShotAndQueue(), 0, 100, TimeUnit.MILLISECONDS);
+    genExecutor.scheduleAtFixedRate(
+        () -> takeScreenShotAndQueue(), 0, period, TimeUnit.MILLISECONDS);
 
     while (!(isStopped.get() && queue.isEmpty())) {
       try {
-        System.out.printf(
-            "Taking screenshot from queue for saving (queued: %d) ... %n", queue.size());
         final WritableImage image = queue.take();
-        //System.out.printf("Saving screenshot  (queued: %d) ... %n", queue.size());
         saveExecutor.execute(() -> saveImage(image));
       } catch (InterruptedException e) {
         e.printStackTrace();
@@ -98,22 +143,32 @@ public class Recorder extends Thread {
 
     saveCounter.getAndIncrement();
 
-    System.out.printf("Saving screenshot #%s (queued: %d) ... %n", saveCounter.toString(), queue.size());
-
-    File file = new File("screenshots/" + startTime + "_Screenshot.png");
+    // write the encoded image to disk
+    final BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
     try {
-      final BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
-      //      synchronized (LOCK) {
-      ImageIO.setUseCache(false);
-      ImageIO.write(bufferedImage, "png", file);
-      //      }
-    } catch (Exception s) {
-      s.printStackTrace();
+      final FileOutputStream fout =
+          new FileOutputStream("screenshots/" + startTime + "_Screenshot.png");
+      synchronized (LOCK) {
+        encoder.encode(bufferedImage, fout);
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
     }
+
+    //    File file = new File("screenshots/" + startTime + "_Screenshot.png");
+    //    try {
+    //      final BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
+    //      //      synchronized (LOCK) {
+    //      ImageIO.setUseCache(false);
+    //      ImageIO.write(bufferedImage, "png", file);
+    //      //      }
+    //    } catch (Exception s) {
+    //      s.printStackTrace();
+    //    }
     long endTime = System.nanoTime();
 
     System.out.printf(
-        "Screenshot saved (#%s) (took %,f ms)%n",
+        "SAVING: Screenshot (#%s) saved (took %,f ms)%n",
         saveCounter.toString(), (endTime - startTime) / 1e6f);
   }
 
@@ -121,8 +176,16 @@ public class Recorder extends Thread {
     long startTime = System.nanoTime();
     genCounter.getAndIncrement();
 
-    WritableImage screenshot = new WritableImage(812, 817);
-    Platform.runLater(() -> recordedScene.snapshot(screenshot));
+    // create new empty image
+    final WritableImage screenshot = new WritableImage(width, height);
+
+    SnapshotParameters snapshotParams = new SnapshotParameters();
+    snapshotParams.setFill(Color.TRANSPARENT);
+
+    // tell JavaFX Thread to take a snapshot aand store it to the created image
+    Platform.runLater(() -> recordedNode.snapshot(snapshotParams, screenshot));
+
+    // wait until the image is done
     while (screenshot.getProgress() < 1) {
       try {
         Thread.sleep(1);
@@ -130,27 +193,20 @@ public class Recorder extends Thread {
         e.printStackTrace();
       }
     }
+
+    // add it to our buffer
     queue.add(screenshot);
 
     long endTime = System.nanoTime();
     System.out.printf(
-        "Screenshot #%s queued - took %,f ms (queued: %d remaining: %d)%n",
+        "CAPTURE: Screenshot #%s queued (took %,f ms)%n",
         genCounter.toString(),
         (endTime - startTime) / 1e6f,
         queue.size(),
         queue.remainingCapacity());
   }
 
-  public void shutdown() {
-    System.out.println("SHUTTING DOWN");
-    isStopped.set(true);
-    try {
-      System.out.printf("Shut down - await termination.%n", queue.size());
-      this.join();
-      genExecutor.awaitTermination(2, TimeUnit.SECONDS);
-      saveExecutor.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
+  public boolean isRunning() {
+    return recorderThread != null;
   }
 }

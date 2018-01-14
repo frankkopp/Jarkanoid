@@ -61,7 +61,7 @@ public class GameModel extends Observable {
    * Constants for game dimensions and other relevant settings.
    * Need to be aligned with FXML UI Design.
    */
-  private static final int START_LEVEL = 7;
+  private static final int START_LEVEL = 1;
   private static final int START_LIVES = 3;
 
   private static final long SLEEP_BETWEEN_LIVES = 2000; // in ms

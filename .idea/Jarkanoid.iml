@@ -30,8 +30,18 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="com.objectplanet.image.PngEncoder" level="project" />
     <orderEntry type="library" name="Maven: org.junit.jupiter:junit-jupiter-api:5.1.0-M1" level="project" />
     <orderEntry type="library" name="Maven: org.opentest4j:opentest4j:1.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.junit.platform:junit-platform-commons:1.1.0-M1" level="project" />
+    <orderEntry type="module-library">
+      <library name="Maven: com.objectplanet.image:PngEncoder:2.0.2">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/src/main/resources/libs/com.objectplanet.image.PngEncoder.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>
