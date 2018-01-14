@@ -37,11 +37,9 @@ import javafx.stage.Stage;
 import java.net.URL;
 
 /**
- * BreakOut / Arkanoid Clone in Java
- * <p>
+ * Arkanoid Clone in Java
  *
- * <p>
- * 02.01.2018
+ *  02.01.2018
  * @author Frank Kopp
  *
  * TODO: use Logger

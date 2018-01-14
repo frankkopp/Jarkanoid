@@ -44,6 +44,7 @@
         <jarDirectory url="file://$MODULE_DIR$/src/main/resources/libs" recursive="false" type="SOURCES" />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="com.objectplanet.image.PngEncoder" level="project" />
     <orderEntry type="library" name="Maven: org.junit.jupiter:junit-jupiter-api:5.1.0-M1" level="project" />
     <orderEntry type="library" name="Maven: org.opentest4j:opentest4j:1.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.junit.platform:junit-platform-commons:1.1.0-M1" level="project" />
@@ -56,6 +57,5 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="com.objectplanet.image.PngEncoder" level="project" />
   </component>
 </module>

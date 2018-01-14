@@ -30,7 +30,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ListChangeListener.Change;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -297,12 +296,14 @@ public class MainController implements Initializable, Observer {
         view.getBrickLayoutView().draw(model.getBrickLayout());
         break;
       case GAME_START:
+        sounds.stopClip(Clips.FINAL); // stops final music in case it was still playing
         // sounds.playClip(Clips.INTRO);
         break;
       case GAME_STOPPED:
         view.getBrickLayoutView().draw(model.getBrickLayout());
         break;
       case GAME_OVER:
+        gameOverSplash.setText("GAME OVER");
         break;
       case LASER_HIT:
         view.getBrickLayoutView().draw(model.getBrickLayout());
@@ -312,6 +313,7 @@ public class MainController implements Initializable, Observer {
         break;
       case GAME_WON:
         sounds.playClip(Clips.FINAL);
+        gameOverSplash.setText("  THE END");
         break;
       case CAUGHT:
         sounds.playClip(Clips.CAUGHT);
@@ -347,7 +349,7 @@ public class MainController implements Initializable, Observer {
    */
   private void keyPressedAction(KeyEvent event) {
     switch (event.getCode()) {
-        // game control
+      // game control
       case N:
         startStopButtonAction(new ActionEvent());
         break;
@@ -361,9 +363,15 @@ public class MainController implements Initializable, Observer {
         soundButtonAction(new ActionEvent());
         break;
       case R:
-        handleRecordingAction();
+        recordingAction();
         break;
-        // paddle control
+      case Q:
+        if (event.isControlDown()) {
+          model.skipLevelCheat();
+        }
+        break;
+
+      // paddle control
       case LEFT:
         onPaddleLeftAction(true);
         break;
@@ -375,11 +383,11 @@ public class MainController implements Initializable, Observer {
   }
 
   @FXML
-  void handleRecordingAction(MouseEvent event) {
-    handleRecordingAction();
+  void recordingAction(MouseEvent event) {
+    recordingAction();
   }
 
-  private void handleRecordingAction() {
+  private void recordingAction() {
     Recorder recorder = Jarkanoid.getRecorder();
     if (recorder.isRunning()) {
       recorder.stop();
@@ -423,7 +431,7 @@ public class MainController implements Initializable, Observer {
 
   /** Toggles Start/Stop game */
   @FXML
-  void startStopButtonAction(ActionEvent event) {
+  private void startStopButtonAction(ActionEvent event) {
     if (model.isPlaying()) {
       model.stopPlaying();
     } else {
@@ -443,7 +451,7 @@ public class MainController implements Initializable, Observer {
    * @param event
    */
   @FXML
-  void pauseResumeButtonAction(ActionEvent event) {
+  private void pauseResumeButtonAction(ActionEvent event) {
     if (model.isPlaying()) {
       if (model.isPaused()) {
         model.resumePlaying();
@@ -459,7 +467,7 @@ public class MainController implements Initializable, Observer {
    * @param event
    */
   @FXML
-  void soundButtonAction(ActionEvent event) {
+  private void soundButtonAction(ActionEvent event) {
     if (sounds.isSoundOn()) {
       soundButton.setText("Sound On");
       sounds.soundOff();
