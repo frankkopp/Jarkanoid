@@ -63,6 +63,7 @@ public final class SoundManager {
     NEW_LIFE    ("NewLife"),
     PADDLE_HIT  ("PaddleHit"),
     POWER_E     ("Power_Enlarge"),
+    POWER_S     ("Power_Enlarge_Shrink"),
     WALL_HIT    ("WallHit");
 
     private final String _name;
@@ -113,6 +114,7 @@ public final class SoundManager {
         LOG.warn("Sound file {} cannot be loaded!", filename);
       }
     });
+    LOG.info("Loaded {} sounds.", _sounds.size());
   }
 
   /**
