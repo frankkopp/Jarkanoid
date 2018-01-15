@@ -27,6 +27,8 @@ import javafx.animation.Timeline;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.util.Duration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.ListIterator;
@@ -35,6 +37,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * BreakOutModel
@@ -48,11 +52,17 @@ import java.util.concurrent.TimeUnit;
  */
 public class GameModel extends Observable {
 
+  private static Logger LOG = LoggerFactory.getLogger(GameModel.class);
+
   // TODO: add acceleration
   // TODO: create all main.resources.levels
   // TODO: improve powers / animation etc.
   // TODO: Highscore
-  // FIXME: ball caught
+  // IDEAS: Powers: multiball (star), Trasher (no bouncing on bricks detroyed), extra wide, smaller
+  // IDEAS :paddle, thehered paddle,
+  // IDEAS: Powers: upside down, reverse control, cloaked, power not falling in straight line
+  // IDEAS: Bricks: moving bricks, zombi bricks - come back to life, shield for bricks
+  // IDEAS: Special: flying aliens, flying powers, ball catcher, ball beamer, ball warper
 
   /*
    * Constants for game dimensions and other relevant settings.
@@ -72,18 +82,19 @@ public class GameModel extends Observable {
   private static final double PADDLE_MOVE_STEPS = 5.0; // steps per animation cycle
   private static final double PADDLE_INITIAL_Y = 670;
   private static final double PADDLE_INITIAL_X = 315;
-  private static final double PADDEL_INITIAL_WIDTH = 150;
+  private static final double PADDEL_INITIAL_WIDTH = 150; // 150;
   private static final double PADDLE_INITIAL_HEIGHT = 20;
   private static final float PADDLE_ENLARGEMENT_FACTOR = 1.4f;
 
   // Ball constants
-  private static final double BALL_INITIAL_RADIUS = 8;
+  private static final double BALL_INITIAL_RADIUS = 6;
   private static final double BALL_MAX_ANGLE = 60;
   private static final double BALL_INITIAL_X = 390;
   private static final double BALL_INITIAL_Y = PADDLE_INITIAL_Y - BALL_INITIAL_RADIUS;
-  private static final double BALL_INITIAL_FRAMERATE = 60; // Framerate for ball movements
   // Absolute speed of ball, when vertical equals px in y, when horizontal equals px in x
   private static final double BALL_INITIAL_SPEED = 10.0;
+
+  private static final double INITIAL_FRAMERATE = 60; // Framerate for ball movements
 
   // Laser constants
   private static final double LASER_EDGE_OFFSET = 45;
@@ -100,6 +111,10 @@ public class GameModel extends Observable {
   private static final int NEXT_POWERUP_OFFSET = 3;
   // power up randomly after 0 to 10 destroyed bricks after offset
   private static final int POWER_UP_FREQUENCY = 10;
+
+  // the maximum number the ball may bounce without hitting the paddle or destroying a brick
+  // after this number the ball gets a random nudge in a different direction
+  public static final int MAX_NUMBER_OF_LOOP_HITS = 25;
 
   /*
    * These values determine the size and dimension of elements in Breakout.
@@ -177,7 +192,10 @@ public class GameModel extends Observable {
   private long frameLoopCounterTimeStamp = System.nanoTime();
   private long lastloopTime;
   private long commulativeLoopTime;
-  private final DoubleProperty fps = new SimpleDoubleProperty(BALL_INITIAL_FRAMERATE);;
+  private final DoubleProperty fps = new SimpleDoubleProperty(INITIAL_FRAMERATE);
+
+  // counter since last paddle or brick hit to detect endless loops with gold bricks
+  private int maxLoopHitsCounter = MAX_NUMBER_OF_LOOP_HITS;
 
   /** Constructor - prepares the brick layout and the game loops. */
   public GameModel() {
@@ -203,14 +221,15 @@ public class GameModel extends Observable {
 
     // prepare ball movements (will be start in startGame())
     mainGameLoop.setCycleCount(Timeline.INDEFINITE);
-    KeyFrame moveBall =
-        new KeyFrame(Duration.seconds(1.0 / BALL_INITIAL_FRAMERATE), e -> gameLoop());
+    KeyFrame moveBall = new KeyFrame(Duration.seconds(1.0 / INITIAL_FRAMERATE), e -> gameLoop());
     mainGameLoop.getKeyFrames().add(moveBall);
   }
 
   /** Starts a new game. */
   public void startPlaying() {
     if (isPlaying()) return;
+
+    LOG.info("Start playing");
 
     isPlaying.set(true);
     isPaused.set(false);
@@ -242,6 +261,8 @@ public class GameModel extends Observable {
    */
   private void loadLevel(int level) {
 
+    LOG.info("Loading level {}", level);
+
     // load next level or game is won if non available
     final Brick[][] newLevel = LevelLoader.getInstance().getLevel(level);
     if (newLevel == null) {
@@ -260,6 +281,8 @@ public class GameModel extends Observable {
 
   /** Called when game is won - last level is cleared */
   private void gameWon() {
+    LOG.info("Game Won");
+
     stopPlaying();
     gameOver.set(true);
     setChanged();
@@ -286,6 +309,8 @@ public class GameModel extends Observable {
     brickLayout.resetMatrix();
     setChanged();
     notifyObservers(new GameEvent(GameEventType.GAME_STOPPED));
+
+    LOG.info("Game stopeed");
   }
 
   /** Cleans up balls and pills */
@@ -295,9 +320,10 @@ public class GameModel extends Observable {
 
     // clear falling power pills
     fallingPowerPills.clear();
+    nextPowerPill = null;
 
     // clear power
-    activePower.set(PowerPillType.NONE);
+    activatePower(PowerPillType.NONE);
 
     // clear lasers
     laserShotManager.clear();
@@ -334,6 +360,8 @@ public class GameModel extends Observable {
             },
             delay,
             TimeUnit.MILLISECONDS);
+
+    LOG.debug("Ball launched");
   }
 
   /** Binds the ball to the paddle movement before start of the game */
@@ -342,6 +370,7 @@ public class GameModel extends Observable {
     ball.centerXProperty()
         .bind(paddleX.add(xLocationOnPaddle)); // slightly to the right of the middle
     ball.centerYProperty().bind(paddleY.subtract(ball.getRadius()).subtract(1.0));
+    LOG.debug("Ball bound to paddle");
   }
 
   /**
@@ -352,6 +381,7 @@ public class GameModel extends Observable {
   private void unbindBallFromPaddle(Ball newBall) {
     newBall.centerXProperty().unbind(); // unbind the ball from the paddle
     newBall.centerYProperty().unbind(); // unbind the ball from the paddle
+    LOG.debug("Ball unbound to paddle");
   }
 
   /**
@@ -378,7 +408,7 @@ public class GameModel extends Observable {
       fps.set(1e9f * (frameLoopCounter / timeSinceLastFPS));
 
       double tLoop = ((commulativeLoopTime / frameLoopCounter) / 1e6f);
-      double tFrame = 1000 / BALL_INITIAL_FRAMERATE;
+      double tFrame = 1000 / INITIAL_FRAMERATE;
       // System.out.printf("Avg. Time for loop: %.6f ms (framelimit %.6f ms) %n", tLoop, tFrame);
       if (tLoop > tFrame) {
         System.err.printf("FRAME LIMIT VIOLATION: %.6f ms (framelimit %.6f ms) %n", tLoop, tFrame);
@@ -394,7 +424,7 @@ public class GameModel extends Observable {
 
     // if no more balls we lost a live
     if (ballManager.isEmpty()) {
-
+      LOG.info("Lost last ball");
       updateLives();
 
     } else { // still at least one ball in play
@@ -408,6 +438,8 @@ public class GameModel extends Observable {
 
   private void updateLives() {
     final int remainingLives = decreaseRemainingLives();
+
+    LOG.info("Decreased number of lives to {}", remainingLives);
 
     // out of lives => game over
     if (remainingLives < 0) {
@@ -487,6 +519,13 @@ public class GameModel extends Observable {
 
       // check collisions from the ball(s) with anything else
       checkBallCollisions(ball);
+
+      // ball cought in loop?
+      if (maxLoopHitsCounter <= 0) {
+        ball.nudgeBall();
+        maxLoopHitsCounter = MAX_NUMBER_OF_LOOP_HITS;
+        LOG.info("Possible loop -> nudge ball");
+      }
     }
   }
 
@@ -516,26 +555,35 @@ public class GameModel extends Observable {
 
         powerPillListIterator.remove();
 
-        activatePower(pill);
+        activatePowerPill(pill);
       }
     }
   }
 
-  /** Activates the current power */
-  private void activatePower(PowerPill pill) {
-
+  /** Activates the current power pill */
+  private void activatePowerPill(PowerPill pill) {
     if (activePower == null) {
       activePower.set(PowerPillType.NONE);
     }
-
-    PowerPillType oldType = activePower.get();
     PowerPillType newType = pill.getPowerPillType();
+    activatePower(newType);
+  }
+
+  /** Activates the current power */
+  private void activatePower(final PowerPillType newType) {
+    PowerPillType oldType = activePower.get();
+
+    LOG.info("Activiating power with {} from {}", newType, oldType);
 
     // deactivate old power if necessary
     switch (oldType) {
       case NONE:
         break;
       case LASER:
+        if (!newType.equals(PowerPillType.LASER)) {
+          setChanged();
+          notifyObservers(new GameEvent(GameEventType.LASER_OFF));
+        }
         break;
       case ENLARGE:
         // only shrink it if the next pill is something else
@@ -576,6 +624,8 @@ public class GameModel extends Observable {
       case NONE:
         break;
       case LASER:
+        setChanged();
+        notifyObservers(new GameEvent(GameEventType.LASER_ON));
         break;
       case ENLARGE:
         // if we are not already large we growing big
@@ -590,6 +640,8 @@ public class GameModel extends Observable {
           } else if (paddleX.get() <= 0) {
             paddleX.set(0);
           }
+          setChanged();
+          notifyObservers(new GameEvent(GameEventType.ENLARGE));
         }
         break;
       case CATCH:
@@ -610,6 +662,7 @@ public class GameModel extends Observable {
         switch (ballManager.size()) {
           case 1:
             ballManager.add(ballManager.get(0).split());
+            // fall through
           case 2:
             ballManager.add(ballManager.get(0).split());
             break;
@@ -633,6 +686,7 @@ public class GameModel extends Observable {
       notifyObservers(new GameEvent(GameEventType.LEVEL_COMPLETE));
       // load new level or game over WON
       increaseLevel();
+      LOG.info("increased level to {}", currentLevel.get());
       loadLevel(currentLevel.get());
       launchBall(SLEEP_BETWEEN_LEVELS);
     }
@@ -644,156 +698,250 @@ public class GameModel extends Observable {
    * <code>ballLost()</code> when ball has left through bottom.
    */
   private void checkBallCollisions(Ball ball) {
-    // hit wall left or right
-    checkSideWallCollision(ball);
-    // hit wall top
-    checkTopWallCollision(ball);
-    // hit brick
-    checkBrickCollision(ball);
-    // hit paddle
-    checkPaddleCollision(ball);
-    // lost through bottom
-    checkBallLostThroughBottom(ball);
-  }
-
-  private void checkSideWallCollision(Ball ball) {
-    if (ball.getLeftBound() <= 0) { // left
-      ball.setCenterX(ball.getRadius()); // in case it was <0
-      ball.inverseXdirection();
-      setChanged();
-    } else if (ball.getRightBound() >= playfieldWidth.get()) { // right
-      ball.setCenterX(playfieldWidth.get() - ball.getRadius()); // in case it was >playFieldWidth
-      ball.inverseXdirection();
-      setChanged();
-    }
-    notifyObservers(new GameEvent(GameEventType.HIT_WALL, ball));
-  }
-
-  private void checkTopWallCollision(Ball ball) {
-    if (ball.getUpperBound() <= 0) {
-      ball.setCenterY(ball.getRadius()); // in case it was <0
-      ball.inverseYdirection();
-      setChanged();
-    }
-    notifyObservers(new GameEvent(GameEventType.HIT_WALL, ball));
-  }
-
-  private void checkBrickCollision(Ball ball) {
-
-    // calculate ball center's brick cell
-    final int ballCenterRow = (int) (ball.getCenterY() / (brickLayout.getBrickHeight()));
-    final int ballCenterCol = (int) (ball.getCenterX() / (brickLayout.getBrickWidth()));
-    // calculate ball edge's brick cell
-    final int ballUpperRow = (int) (ball.getUpperBound() / brickLayout.getBrickHeight());
-    final int ballLowerRow = (int) (ball.getLowerBound() / brickLayout.getBrickHeight());
-    final int ballLeftCol = (int) (ball.getLeftBound() / brickLayout.getBrickWidth());
-    final int ballRightCol = (int) (ball.getRightBound() / brickLayout.getBrickWidth());
 
     /*
-     * We allow only one hit detection per frame. After each hit the ball will be placed out side the cell
-     * against the direction it was coming from. This prevents the ball to end up inside the cell as we do increase
-     * our movement steps with more than 1 usually.
+     * We us intermediate discrete (<1) steps to avoid "tunneling" through objects.
+     * We use the last know ball position and we devide the the path from the last know position to the
+     * current position (after the moveBall() step) into x parts (x=velocity of ball). With this we should get
+     * setps in X and Y direction which are smaller than 1 and therefore should detect collissions very
+     * accurately.
      */
 
-    // hit above
-    if (ball.getYVelocity() < 0 && brickLayout.getBrick(ballUpperRow, ballCenterCol) != null) {
-      // make sure ball is outside the brick cell
-      ball.setCenterY(
-          1 + ball.getRadius() + brickLayout.getLowerBound(ballUpperRow, ballCenterCol));
-      brickHit(ballUpperRow, ballCenterCol);
-      // bounce ball
-      ball.inverseYdirection();
-      setChanged();
-      notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballUpperRow, ballCenterCol, ball));
+    // convenience variables
+    final double radius = ball.getRadius();
+    final double vY = ball.getYVelocity();
+    final double vX = ball.getXVelocity();
+    final double bY = ball.getCenterY();
+    final double bX = ball.getCenterX();
+    final double bpY = ball.getPreviousCenterY();
+    final double bpX = ball.getPreviousCenterX();
+
+    double cbY = bpY; // current Y set up previous Y
+    double cbX = bpX; // current
+
+    // step sizes
+    final double stepY = vY / 10;
+    final double stepX = vX / 10;
+    final double stepV = ball.getVelocity() / 10;
+
+    if (LOG.isDebugEnabled()) { // to not even create the string when not logging
+      LOG.debug(String.format(
+          "FULL: vY: %6.2f  vX: %6.2f  v: %6.2f  CURRENT     : Y: %8.2f X: %8.2f PREVIOUS: Y: %8.2f X: %8.2f *** loop=%d",
+          vY, vX, ball.getVelocity(), bY, bX, bpY, bpX, maxLoopHitsCounter));
+      // DEBUG - because of floating numbers round this needs to be a fuzzy
+      if (bY - vY - bpY > 0.01 && bY - vY - bpY < -0.01
+              || bX - vX - bpX > 0.01
+              || bX - vX - bpX < -0.01) {
+        LOG.warn("WARP ERROR");
+      }
     }
-    // hit below
-    else if (ball.getYVelocity() > 0 && brickLayout.getBrick(ballLowerRow, ballCenterCol) != null) {
-      // make sure ball is outside the brick cell
-      ball.setCenterY(
-          -1 - ball.getRadius() + brickLayout.getUpperBound(ballLowerRow, ballCenterCol));
-      brickHit(ballLowerRow, ballCenterCol);
-      // bounce ball
-      ball.inverseYdirection();
-      setChanged();
-      notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballLowerRow, ballCenterCol, ball));
-    }
-    // hit left
-    else if (ball.getXVelocity() < 0 && brickLayout.getBrick(ballCenterRow, ballLeftCol) != null) {
-      // make sure ball is outside the brick cell
-      ball.setCenterX(1 + ball.getRadius() + brickLayout.getRightBound(ballCenterRow, ballLeftCol));
-      brickHit(ballCenterRow, ballLeftCol);
-      // bounce ball
-      ball.inverseXdirection();
-      setChanged();
-      notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballCenterRow, ballLeftCol, ball));
-    }
-    // hit right
-    else if (ball.getYVelocity() > 0 && brickLayout.getBrick(ballCenterRow, ballRightCol) != null) {
-      // make sure ball is outside the brick cell
-      ball.setCenterX(
-          -1 - ball.getRadius() + brickLayout.getLeftBound(ballCenterRow, ballRightCol));
-      brickHit(ballCenterRow, ballRightCol);
-      // bounce ball
-      ball.inverseXdirection();
-      setChanged();
-      notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballCenterRow, ballRightCol, ball));
-    }
-  }
 
-  /**
-   * Checks if ball touches paddle and if so reverses the ball
-   *
-   * @return true if ball touches paddle
-   */
-  private void checkPaddleCollision(Ball ball) {
+    // do discrete intermediate steps
+    for (int t = 1; t <= ball.getVelocity(); t++) {
 
-    if (ball.intersects(paddleX.get(), paddleY.get(), paddleWidth.get(), paddleHeight.get())) {
-      //    if ((ball.getLowerBound() >= paddleUpperBound && ball.getLowerBound() <=
-      // paddleLowerBound) // ball on correct height
-      //        && (ball.getRightBound() > paddleLeftBound && ball.getLeftBound() <
-      // paddleRightBound)) { // ball touches the paddle
+      // advance current ball center position by 1 step
+      cbY += stepY;
+      cbX += stepX;
 
-      // determine where the ball hit the paddle
-      final double hitPointAbsolute = ball.getCenterX() - paddleX.get();
-      // normalize value to -1 (left), 0 (center), +1 (right)
-      final double hitPointRelative = 2 * ((hitPointAbsolute / paddleWidth.get()) - 0.5);
-      // determine new angle
-      final double newAngle = hitPointRelative * BALL_MAX_ANGLE;
-
-      // give the ball the new angle always upwards
-      ball.bounceFromPaddle(newAngle);
-
-      // check if we should
-      if (activePower.get().equals(PowerPillType.CATCH)
-          && !ballCatchedFlag // not already catched
-          && ballManager.size() == 1) { // only when only one ball in play
-        ballCatchedFlag = true;
-        bindBallToPaddle(ball, hitPointAbsolute);
+      if (LOG.isDebugEnabled()) { // to not even create the string when not logging
+        LOG.debug(String.format(
+                "STEP: vY: %6.2f  vX: %6.2f  v: %6.2f  INTERMEDIATE: Y: %8.2f X: %8.2f",
+                stepY, stepX, stepV, cbY, cbX));
       }
 
-      setChanged();
-      notifyObservers(new GameEvent(GameEventType.HIT_PADDLE, ball));
-    }
-  }
+      // ************************
+      //  Collossion Check Bricks
+      // ************************
 
-  /**
-   * Checks if the ball went through the bottom. If so marks the ball for removal in the next game
-   * loop.
-   *
-   * @param ball
-   */
-  private void checkBallLostThroughBottom(Ball ball) {
-    if (ball.getUpperBound() >= playfieldHeight.get()) {
-      ball.markForRemoval();
-    }
-  }
+      /*
+       * Instead of having an list of all bricks to check against we use the fact that bricks
+       * or poistion in a regular matrix of 13 columns and 18 rows. Collission could therefore
+       * be reduced to calculate the position of the ball within in this matrix. When the cell
+       * the ball is in has a brick then there is a collision.
+       * Problem is "tunneling" and multiple collissions at the same time. They could lead to
+       * a false bouncing angle.
+       * This will be prevented be also checking where the ball is coming from a only allowing
+       * one collission at a time. Usually multiple collissions within the same step should be
+       * rare as we have very small intermediate steps (<1 in each direction). In case they do
+       * happen there should be no harm in ignoring one of them.
+       */
 
-  /** Called when out of lives or after last level */
-  private void gameOver() {
-    stopPlaying();
-    gameOver.set(true);
-    setChanged();
-    notifyObservers(new GameEvent(GameEventType.GAME_OVER));
+      // calculate ball center's brick cell
+      final int ballCenterRow = (int) (cbY / (brickLayout.getBrickHeight()));
+      final int ballCenterCol = (int) (cbX / (brickLayout.getBrickWidth()));
+
+      // calculate ball edge's brick cell
+      final int ballUpperRow = (int) ((cbY - radius) / brickLayout.getBrickHeight());
+      final int ballLowerRow = (int) ((cbY + radius) / brickLayout.getBrickHeight());
+      final int ballLeftCol = (int) ((cbX - radius) / brickLayout.getBrickWidth());
+      final int ballRightCol = (int) ((cbX + radius) / brickLayout.getBrickWidth());
+
+      int hitCounter = 0;
+      if (vY < 0 && brickLayout.getBrick(ballUpperRow, ballCenterCol) != null) {
+        hitCounter |= 1; // top
+      }
+      if (vX >= 0 && brickLayout.getBrick(ballCenterRow, ballRightCol) != null) {
+        hitCounter |= 2; // right
+      }
+      if (vX < 0 && brickLayout.getBrick(ballCenterRow, ballLeftCol) != null) {
+        hitCounter |= 4; // left
+      }
+      if (vY > 0 && brickLayout.getBrick(ballLowerRow, ballCenterCol) != null) {
+        hitCounter |= 8; // bottom
+      }
+      if (Integer.bitCount(hitCounter) > 1) {
+        LOG.info("MULTIPLE HIT trlb={}", Integer.toBinaryString(hitCounter));
+      }
+
+      // hit above
+      if (vY < 0 && brickLayout.getBrick(ballUpperRow, ballCenterCol) != null) {
+        brickHit(ballUpperRow, ballCenterCol);
+        setChanged();
+        notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballUpperRow, ballCenterCol, ball));
+        ball.inverseYdirection();
+        // actually set the ball exactly onto the intermediate location and return for the next step
+        ball.setCenterX(cbX - stepX);
+        ball.setCenterY(cbY - stepY);
+        // relevant Hit?
+        maxLoopHitsCounter--;
+        return;
+      }
+
+      // hit right
+      if (vX >= 0 && brickLayout.getBrick(ballCenterRow, ballRightCol) != null) {
+        brickHit(ballCenterRow, ballRightCol);
+        setChanged();
+        notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballCenterRow, ballRightCol, ball));
+        ball.inverseXdirection();
+        // actually set the ball exactly onto the intermediate location and return for the next step
+        ball.setCenterX(cbX - stepX);
+        ball.setCenterY(cbY - stepY);
+        // relevant Hit?
+        maxLoopHitsCounter--;
+        return;
+      }
+
+      // hit left
+      if (vX < 0 && brickLayout.getBrick(ballCenterRow, ballLeftCol) != null) {
+        brickHit(ballCenterRow, ballLeftCol);
+        setChanged();
+        notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballCenterRow, ballLeftCol, ball));
+        ball.inverseXdirection();
+        // actually set the ball exactly onto the intermediate location and return for the next step
+        ball.setCenterX(cbX - stepX);
+        ball.setCenterY(cbY - stepY);
+        // relevant Hit?
+        maxLoopHitsCounter--;
+        return;
+      }
+
+      // hit below
+      if (vY > 0 && brickLayout.getBrick(ballLowerRow, ballCenterCol) != null) {
+        brickHit(ballLowerRow, ballCenterCol);
+        setChanged();
+        notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballLowerRow, ballCenterCol, ball));
+        ball.inverseYdirection();
+        // actually set the ball exactly onto the intermediate location and return for the next step
+        ball.setCenterX(cbX - stepX);
+        ball.setCenterY(cbY - stepY);
+        // relevant Hit?
+        maxLoopHitsCounter--;
+        return;
+      }
+
+      // ************************
+      //  Collossion Check Paddle
+      // ************************
+
+      if (ball.intersects(paddleX.get(), paddleY.get(), paddleWidth.get(), paddleHeight.get())) {
+
+        // relevant Hit - yes - reset
+        maxLoopHitsCounter = MAX_NUMBER_OF_LOOP_HITS;
+
+        // determine where the ball hit the paddle
+        final double hitPointAbsolute = ball.getCenterX() - paddleX.get();
+        // normalize value to -1 (left), 0 (center), +1 (right)
+        final double hitPointRelative = 2 * ((hitPointAbsolute / paddleWidth.get()) - 0.5);
+        // determine new angle
+        final double newAngle = hitPointRelative * BALL_MAX_ANGLE;
+
+        // give the ball the new angle always upwards
+        ball.bounceFromPaddle(newAngle);
+
+        // check if we should catch the ball
+        if (activePower.get().equals(PowerPillType.CATCH)
+            && !ballCatchedFlag // not already catched
+            && ballManager.size() == 1) { // only when only one ball in play
+          ballCatchedFlag = true;
+          bindBallToPaddle(ball, hitPointAbsolute);
+          setChanged();
+          notifyObservers(new GameEvent(GameEventType.CAUGHT));
+        } else {
+          setChanged();
+          notifyObservers(new GameEvent(GameEventType.HIT_PADDLE, ball));
+          // actually set the ball exactly onto the intermediate location and return for the next
+          // step
+          ball.setCenterX(cbX);
+          ball.setCenterY(cbY);
+          return;
+        }
+      }
+
+      // ****************************
+      //  Collossion Check Side Walls
+      // ****************************
+
+      if (ball.getLeftBound() <= 0) { // left
+        setChanged();
+        notifyObservers(new GameEvent(GameEventType.HIT_WALL, ball));
+        ball.inverseXdirection();
+        // actually set the ball exactly onto the intermediate location and return for the next step
+        ball.setCenterX(cbX);
+        ball.setCenterY(cbY);
+        // relevant Hit?
+        maxLoopHitsCounter--;
+        return;
+      } else if (ball.getRightBound() >= playfieldWidth.get()) { // right
+        setChanged();
+        notifyObservers(new GameEvent(GameEventType.HIT_WALL, ball));
+        ball.inverseXdirection();
+        // actually set the ball exactly onto the intermediate location and return for the next step
+        ball.setCenterX(cbX);
+        ball.setCenterY(cbY);
+        // relevant Hit?
+        maxLoopHitsCounter--;
+        return;
+      }
+
+      // **************************
+      //  Collossion Check TOP WALL
+      // **************************
+      if (ball.getUpperBound() <= 0) {
+        setChanged();
+        notifyObservers(new GameEvent(GameEventType.HIT_WALL, ball));
+        ball.inverseYdirection();
+        // actually set the ball exactly onto the intermediate location and return for the next step
+        ball.setCenterX(cbX);
+        ball.setCenterY(cbY);
+        // relevant Hit?
+        maxLoopHitsCounter--;
+        return;
+      }
+
+      // ************************
+      //  Collossion Check Bottom
+      // ************************
+
+      if (ball.getUpperBound() >= playfieldHeight.get()) {
+        ball.markForRemoval();
+        // actually set the ball exactly onto the intermediate location and return for the next step
+        ball.setCenterX(cbX);
+        ball.setCenterY(cbY);
+        // relevant Hit?
+        maxLoopHitsCounter = MAX_NUMBER_OF_LOOP_HITS;
+        return;
+      }
+    } // end for intermediate step
   }
 
   /**
@@ -810,19 +958,32 @@ public class GameModel extends Observable {
     increaseScore(brickType, hitBrickScore);
     // count destroyed bricks
     if (hitBrickScore > 0) {
+      // relevant Hit?
+      maxLoopHitsCounter = MAX_NUMBER_OF_LOOP_HITS;
       destroyedBricksCounter++;
       nextPowerUp--;
       if (nextPowerUp == 0) {
         nextPowerPill =
             new PowerPill(
+                //PowerPillType.LASER,
                 PowerPillType.getRandom(),
                 brickLayout.getLeftBound(row, col),
                 brickLayout.getUpperBound(row, col),
                 brickLayout.getBrickWidth(),
                 brickLayout.getBrickHeight());
         nextPowerUp = getNextPowerUp();
+        LOG.info("PowerPill generated: {}",nextPowerPill);
       }
     }
+  }
+
+  /** Called when out of lives or after last level */
+  private void gameOver() {
+    stopPlaying();
+    gameOver.set(true);
+    LOG.info("Game Over");
+    setChanged();
+    notifyObservers(new GameEvent(GameEventType.GAME_OVER));
   }
 
   /**
@@ -857,6 +1018,7 @@ public class GameModel extends Observable {
   /** adds a lives after score thresholds or Player PowerType */
   private void increaeRemainingLives() {
     currentRemainingLives.set(currentRemainingLives.get() + 1);
+    LOG.info("Increased number of lives to {}", currentRemainingLives.get());
   }
 
   /**
@@ -900,6 +1062,9 @@ public class GameModel extends Observable {
               LASER_SPEED);
 
       laserShotManager.addAll(ls1, ls2);
+
+      setChanged();
+      notifyObservers(new GameEvent(GameEventType.LASER_SHOT, ls1, ls2));
     }
   }
 
@@ -915,6 +1080,7 @@ public class GameModel extends Observable {
     if (!isPlaying()) return; // ignore if not playing
     isPaused.set(true);
     mainGameLoop.pause();
+    LOG.info("Game paused");
   }
 
   /** @return true if game is paused */
@@ -927,6 +1093,7 @@ public class GameModel extends Observable {
     if (!isPlaying() && !isPaused()) return; // ignore if not playing
     isPaused.set(false);
     mainGameLoop.play();
+    LOG.info("Game resumed");
   }
 
   /**
@@ -948,6 +1115,12 @@ public class GameModel extends Observable {
     if (paddleX.get() >= 0.0 && paddleX.get() + paddleWidth.get() <= playfieldWidth.get()) {
       paddleXProperty().set(x - halfPaddleWidth);
     }
+  }
+
+  /** Cheat to skip a level even if it is not finished */
+  public void skipLevelCheat() {
+    brickLayout.resetMatrix();
+    LOG.info("Cheat: Skip Level");
   }
 
   public DoubleProperty paddleWidthProperty() {

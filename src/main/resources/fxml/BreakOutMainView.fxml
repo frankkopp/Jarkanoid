@@ -3,6 +3,7 @@
 <?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.effect.InnerShadow?>
 <?import javafx.scene.effect.Reflection?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
@@ -11,6 +12,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Text?>
 
@@ -18,20 +20,28 @@
    <children>
       <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <center>
-            <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" styleClass="backgroundpane">
+            <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="805.0" prefWidth="800.0" styleClass="backgroundpane">
                <children>
-                  <GridPane maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" prefWidth="800.0">
+                  <GridPane maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="800.0">
                     <columnConstraints>
                       <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                       <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
                     <rowConstraints>
                       <RowConstraints />
                     </rowConstraints>
                      <children>
+                        <Circle fx:id="recordingIndicator" fill="#22cd1c" onMouseClicked="#recordingAction" radius="10.0" stroke="BLACK" strokeType="INSIDE" GridPane.columnIndex="4">
+                           <GridPane.margin>
+                              <Insets right="20.0" />
+                           </GridPane.margin>
+                           <effect>
+                              <InnerShadow />
+                           </effect>
+                        </Circle>
                         <Button fx:id="startStopButton" defaultButton="true" focusTraversable="false" mnemonicParsing="false" onAction="#startStopButtonAction" text="Play" GridPane.columnIndex="1">
                            <GridPane.margin>
                               <Insets />
@@ -61,17 +71,17 @@
                         <Insets top="5.0" />
                      </VBox.margin>
                   </GridPane>
-                  <GridPane alignment="BOTTOM_CENTER" prefHeight="55.0" prefWidth="800.0">
+                  <GridPane alignment="BOTTOM_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="55.0" prefWidth="800.0">
                     <columnConstraints>
-                      <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                      <ColumnConstraints halignment="LEFT" percentWidth="40.0" />
+                      <ColumnConstraints halignment="CENTER" percentWidth="20.0" />
+                        <ColumnConstraints halignment="RIGHT" percentWidth="40.0" />
                     </columnConstraints>
                     <rowConstraints>
                       <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="BOTTOM" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Text fx:id="levelLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="Level 1" wrappingWidth="223.1171875">
+                        <Text fx:id="levelLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="Level 10" wrappingWidth="342.1171875">
                            <styleClass>
                               <String fx:value="info" />
                               <String fx:value="level" />
@@ -80,13 +90,13 @@
                               <Insets />
                            </GridPane.margin>
                         </Text>
-                        <Text fx:id="livesLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="5" textAlignment="CENTER" wrappingWidth="274.74609375" GridPane.columnIndex="1">
+                        <Text fx:id="livesLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="5" textAlignment="CENTER" wrappingWidth="127.74609375" GridPane.columnIndex="1">
                            <styleClass>
                               <String fx:value="info" />
                               <String fx:value="lives" />
                            </styleClass>
                         </Text>
-                        <Text fx:id="pointsLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="000000" textAlignment="RIGHT" wrappingWidth="211.9765625" GridPane.columnIndex="2">
+                        <Text fx:id="pointsLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="000000" textAlignment="RIGHT" wrappingWidth="230.9765625" GridPane.columnIndex="2">
                            <styleClass>
                               <String fx:value="info" />
                               <String fx:value="score" />

@@ -24,6 +24,7 @@ import fko.jarkanoid.Jarkanoid;
 import fko.jarkanoid.events.GameEvent;
 import fko.jarkanoid.model.*;
 import fko.jarkanoid.model.SoundManager.Clips;
+import fko.jarkanoid.recorder.Recorder;
 import fko.jarkanoid.view.MainView;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ListChangeListener;
@@ -35,8 +36,12 @@ import javafx.scene.control.Button;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URL;
 import java.util.Observable;
@@ -58,6 +63,8 @@ import java.util.ResourceBundle;
  */
 public class MainController implements Initializable, Observer {
 
+  private static final Logger LOG = LoggerFactory.getLogger(MainController.class);
+
   // handles to model and view
   private final GameModel model;
   // main.resources.sounds
@@ -65,6 +72,7 @@ public class MainController implements Initializable, Observer {
   private MainView view;
 
   // FXML injected fields
+  @FXML private Circle recordingIndicator;
   @FXML private Button startStopButton;
   @FXML private Button pauseResumeButton;
   @FXML private Button soundButton;
@@ -105,6 +113,9 @@ public class MainController implements Initializable, Observer {
    * @param view
    */
   public void bindModelToView(MainView view) {
+
+    LOG.info("Binding view to model");
+
     this.view = view;
 
     // add controller as listener of model for GameEvents
@@ -255,7 +266,8 @@ public class MainController implements Initializable, Observer {
   @Override
   public void update(Observable o, Object e) {
     if (!(e instanceof GameEvent)) {
-      Jarkanoid.fatalError("Unknown event type. Event is not of type GameEvent");
+      LOG.error("Unknown event type. Event is not of type GameEvent");
+      throw new RuntimeException("Unknown event type. Event is not of type GameEvent");
     }
 
     GameEvent gameEvent = (GameEvent) e;
@@ -288,19 +300,40 @@ public class MainController implements Initializable, Observer {
       case LEVEL_COMPLETE:
         break;
       case LEVEL_START:
+        sounds.playClip(Clips.NEW_LEVEL);
         view.getBrickLayoutView().draw(model.getBrickLayout());
         break;
       case GAME_START:
+        sounds.stopClip(Clips.FINAL); // stops final music in case it was still playing
+        // sounds.playClip(Clips.INTRO);
         break;
       case GAME_STOPPED:
         view.getBrickLayoutView().draw(model.getBrickLayout());
         break;
       case GAME_OVER:
+        gameOverSplash.setText("GAME OVER");
+        break;
+      case LASER_ON:
+        view.laserPaddle(true);
+        break;
+      case LASER_OFF:
+        view.laserPaddle(false);
         break;
       case LASER_HIT:
         view.getBrickLayoutView().draw(model.getBrickLayout());
         break;
+      case LASER_SHOT:
+        sounds.playClip(Clips.LASER);
+        break;
       case GAME_WON:
+        sounds.playClip(Clips.FINAL);
+        gameOverSplash.setText("  THE END");
+      break;
+      case CAUGHT:
+        sounds.playClip(Clips.CAUGHT);
+        break;
+      case ENLARGE:
+        sounds.playClip(Clips.POWER_E);
         break;
       default:
     }
@@ -330,7 +363,7 @@ public class MainController implements Initializable, Observer {
    */
   private void keyPressedAction(KeyEvent event) {
     switch (event.getCode()) {
-        // game control
+      // game control
       case N:
         startStopButtonAction(new ActionEvent());
         break;
@@ -343,7 +376,16 @@ public class MainController implements Initializable, Observer {
       case S:
         soundButtonAction(new ActionEvent());
         break;
-        // paddle control
+      case R:
+        recordingAction();
+        break;
+      case Q:
+        if (event.isControlDown()) {
+          model.skipLevelCheat();
+        }
+        break;
+
+      // paddle control
       case LEFT:
         onPaddleLeftAction(true);
         break;
@@ -351,6 +393,25 @@ public class MainController implements Initializable, Observer {
         onPaddleRightAction(true);
         break;
       default:
+    }
+  }
+
+  @FXML
+  void recordingAction(MouseEvent event) {
+    recordingAction();
+  }
+
+  private void recordingAction() {
+    Recorder recorder = Jarkanoid.getRecorder();
+    if (recorder.isRunning()) {
+      LOG.info("User requested stop recording");
+      recorder.stop();
+      recordingIndicator.setFill(Color.GREEN);
+    } else {
+      LOG.info("User requested start Recording");
+      recorder.start(
+          playfieldPane, 1000, (int) playfieldPane.getWidth(), (int) playfieldPane.getHeight());
+      recordingIndicator.setFill(Color.RED);
     }
   }
 
@@ -386,10 +447,12 @@ public class MainController implements Initializable, Observer {
 
   /** Toggles Start/Stop game */
   @FXML
-  void startStopButtonAction(ActionEvent event) {
+  private void startStopButtonAction(ActionEvent event) {
     if (model.isPlaying()) {
+      LOG.info("User requested stop playing");
       model.stopPlaying();
     } else {
+      LOG.info("User requested start playing");
       model.startPlaying();
     }
   }
@@ -406,11 +469,13 @@ public class MainController implements Initializable, Observer {
    * @param event
    */
   @FXML
-  void pauseResumeButtonAction(ActionEvent event) {
+  private void pauseResumeButtonAction(ActionEvent event) {
     if (model.isPlaying()) {
       if (model.isPaused()) {
+        LOG.info("User requested resume playing");
         model.resumePlaying();
       } else {
+        LOG.info("User requested pause playing");
         model.pausePlaying();
       }
     }
@@ -422,11 +487,13 @@ public class MainController implements Initializable, Observer {
    * @param event
    */
   @FXML
-  void soundButtonAction(ActionEvent event) {
+  private void soundButtonAction(ActionEvent event) {
     if (sounds.isSoundOn()) {
+      LOG.info("User requested sound off");
       soundButton.setText("Sound On");
       sounds.soundOff();
     } else {
+      LOG.info("User requested sound on");
       soundButton.setText("Sound Off");
       sounds.soundOn();
     }

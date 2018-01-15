@@ -30,6 +30,8 @@ import java.util.Map;
 
 import fko.jarkanoid.Jarkanoid;
 import javafx.scene.media.AudioClip;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Sounds
@@ -39,16 +41,29 @@ import javafx.scene.media.AudioClip;
  */
 public final class SoundManager {
 
+  private static final Logger LOG = LoggerFactory.getLogger(SoundManager.class);
+
   /**
    * All available audio clips of this class
    */
   public enum Clips {
     // ENUM		Filename w/o .wav
-    WALL 		("WallHit"),
     PADDLE 		("PaddleHit"),
-    BRICK_S 		("BrickHit_Special"),
-    BRICK		("BrickHit_Normal"),
-    BALL_LOST	("Ball_Lost");
+    BRICK		("BrickHit"),
+    BRICK_S 	("BrickHitSolid"),
+    BALL_LOST	("Ball_Lost"),
+    CAUGHT      ("Caught"),
+    FINAL       ("FinalMusic"),
+    HIT_ALIEN   ("HitAlien"),
+    HIT_BOSS    ("HitBoss"),
+    INTRO       ("Intro"),
+    KILL_BOSS   ("KillBoss"),
+    LASER       ("Laser"),
+    NEW_LEVEL   ("NewLevel"),
+    NEW_LIFE    ("NewLife"),
+    PADDLE_HIT  ("PaddleHit"),
+    POWER_E     ("Power_Enlarge"),
+    WALL_HIT    ("WallHit");
 
     private final String _name;
 
@@ -95,7 +110,7 @@ public final class SoundManager {
         AudioClip clip = new AudioClip(url.toExternalForm());
         _sounds.put(c, clip);
       } else {
-        Jarkanoid.criticalError("Sound file: "+filename+" cannot be loaded!");
+        LOG.warn("Sound file {} cannot be loaded!", filename);
       }
     });
   }
@@ -108,6 +123,16 @@ public final class SoundManager {
     if (_sounds.get(c) == null || !soundOn) return;
     AudioClip clip = _sounds.get(c);
     clip.play();
+  }
+
+  /**
+   * Stops the given clip if it is still playing.
+   * @param c enum from Clips
+   */
+  public void stopClip(Clips c) {
+    if (_sounds.get(c) == null || !soundOn) return;
+    AudioClip clip = _sounds.get(c);
+    if (clip.isPlaying()) clip.stop();
   }
 
   /**

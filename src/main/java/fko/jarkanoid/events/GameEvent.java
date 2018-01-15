@@ -89,6 +89,13 @@ public class GameEvent {
     GAME_START,
     GAME_STOPPED,
     GAME_OVER,
-    LASER_HIT, GAME_WON
+    GAME_WON,
+    LASER_HIT,
+    LASER_SHOT,
+    CAUGHT,
+    LASER_ON,
+    LASER_OFF,
+    ENLARGE
+
   }
 }

@@ -1,4 +1,4 @@
-# BreakOut
+# Jarkanoid
 A Java/JavaFX based Arkanoid version
 
 ## Motivation and thoughts

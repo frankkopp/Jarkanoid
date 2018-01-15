@@ -110,7 +110,8 @@ public enum PowerPillType {
   @Override
   public String toString() {
     return "PowerPillType{" +
-            "color=" + color +
+            "name=" + this.name() +
+            ", color=" + color +
             ", token=" + token +
             '}';
   }
