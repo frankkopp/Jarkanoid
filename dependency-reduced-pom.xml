@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>Jarkanoid</groupId>
   <artifactId>Jarkanoid</artifactId>
-  <version>0.4-SNAPSHOT</version>
+  <version>0.5-SNAPSHOT</version>
   <build>
     <plugins>
       <plugin>
@@ -13,6 +13,7 @@
             <manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
             <manifest>
               <addClasspath>true</addClasspath>
+              <mainClass>fko.jarkanoid.Jarkanoid</mainClass>
               <classpathPrefix>libs/</classpathPrefix>
             </manifest>
           </archive>

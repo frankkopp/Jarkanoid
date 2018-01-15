@@ -50,7 +50,7 @@ public class Jarkanoid extends Application {
   private static final Logger LOG = LoggerFactory.getLogger(Jarkanoid.class);
 
   // VERSION
-  public static final String VERSION = "0.4";
+  public static final String VERSION = "prototype0.5";
 
   private static Stage pStage;
   private Scene scene;
