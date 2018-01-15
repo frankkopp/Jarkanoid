@@ -113,6 +113,9 @@ public class MainController implements Initializable, Observer {
    * @param view
    */
   public void bindModelToView(MainView view) {
+
+    LOG.info("Binding view to model");
+
     this.view = view;
 
     // add controller as listener of model for GameEvents
@@ -395,9 +398,11 @@ public class MainController implements Initializable, Observer {
   private void recordingAction() {
     Recorder recorder = Jarkanoid.getRecorder();
     if (recorder.isRunning()) {
+      LOG.info("User requested stop recording");
       recorder.stop();
       recordingIndicator.setFill(Color.GREEN);
     } else {
+      LOG.info("User requested start Recording");
       recorder.start(
           playfieldPane, 1000, (int) playfieldPane.getWidth(), (int) playfieldPane.getHeight());
       recordingIndicator.setFill(Color.RED);
@@ -438,8 +443,10 @@ public class MainController implements Initializable, Observer {
   @FXML
   private void startStopButtonAction(ActionEvent event) {
     if (model.isPlaying()) {
+      LOG.info("User requested stop playing");
       model.stopPlaying();
     } else {
+      LOG.info("User requested start playing");
       model.startPlaying();
     }
   }
@@ -459,8 +466,10 @@ public class MainController implements Initializable, Observer {
   private void pauseResumeButtonAction(ActionEvent event) {
     if (model.isPlaying()) {
       if (model.isPaused()) {
+        LOG.info("User requested resume playing");
         model.resumePlaying();
       } else {
+        LOG.info("User requested pause playing");
         model.pausePlaying();
       }
     }
@@ -474,9 +483,11 @@ public class MainController implements Initializable, Observer {
   @FXML
   private void soundButtonAction(ActionEvent event) {
     if (sounds.isSoundOn()) {
+      LOG.info("User requested sound off");
       soundButton.setText("Sound On");
       sounds.soundOff();
     } else {
+      LOG.info("User requested sound on");
       soundButton.setText("Sound Off");
       sounds.soundOn();
     }

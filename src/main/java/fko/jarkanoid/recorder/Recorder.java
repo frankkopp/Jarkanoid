@@ -40,6 +40,8 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import com.objectplanet.image.PngEncoder;
 import javafx.scene.paint.Color;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Recorder
@@ -49,6 +51,10 @@ import javafx.scene.paint.Color;
  * FIXME: only producing black images
  */
 public class Recorder implements Runnable {
+
+  private static Logger LOG = LoggerFactory.getLogger(Recorder.class);
+
+  public static final String SCREENSHOTS_FOLDER = "screenshots/";
 
   private final ScheduledThreadPoolExecutor genExecutor = new ScheduledThreadPoolExecutor(4);
 
@@ -104,25 +110,27 @@ public class Recorder implements Runnable {
   public void stop() {
     if (recorderThread == null) return;
 
-    System.out.println("SHUTTING DOWN");
+    LOG.debug("Recorder shutting down...");
 
     isStopped.set(true);
 
     try {
-      System.out.println("Shut down - await termination.");
+      LOG.debug("Shut down - await termination.");
       recorderThread.join();
       genExecutor.awaitTermination(2, TimeUnit.SECONDS);
       saveExecutor.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
     } catch (InterruptedException e) {
-      e.printStackTrace();
+      LOG.warn("While stopping recording",(e));
     }
 
     recorderThread = null;
+
+    LOG.info("Recording stopped");
   }
 
   public void run() {
 
-    System.out.println("Recorder started!");
+    LOG.info("Recording started - storing screenshots in \"{}\" every {} ms", SCREENSHOTS_FOLDER, period);
 
     genExecutor.scheduleAtFixedRate(
         () -> takeScreenShotAndQueue(), 0, period, TimeUnit.MILLISECONDS);
@@ -135,11 +143,11 @@ public class Recorder implements Runnable {
         e.printStackTrace();
       }
       if (isStopped.get() && !genExecutor.isShutdown()) {
-        System.out.println("Shutdown taking snapshots...");
+        LOG.debug("Shutdown taking snapshots...");
         genExecutor.shutdown();
       }
     }
-    System.out.println("Shutdown saving snapshots...");
+    LOG.debug("Shutdown saving snapshots...");
     saveExecutor.shutdown();
   }
 
@@ -153,8 +161,9 @@ public class Recorder implements Runnable {
     final BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
     try {
       final FileOutputStream fout =
-          new FileOutputStream("screenshots/" + startTime + "_Screenshot.png");
+          new FileOutputStream(SCREENSHOTS_FOLDER + startTime + "_Screenshot.png");
       synchronized (LOCK) {
+        // DEPENDENCY: PnGEncoder
         encoder.encode(bufferedImage, fout);
       }
     } catch (IOException e) {
@@ -171,9 +180,10 @@ public class Recorder implements Runnable {
     //    } catch (Exception s) {
     //      s.printStackTrace();
     //    }
+
     long endTime = System.nanoTime();
 
-    System.out.printf(
+    LOG.debug(
         "SAVING: Screenshot (#%s) saved (took %,f ms)%n",
         saveCounter.toString(), (endTime - startTime) / 1e6f);
   }
@@ -204,7 +214,7 @@ public class Recorder implements Runnable {
     queue.add(screenshot);
 
     long endTime = System.nanoTime();
-    System.out.printf(
+    LOG.debug(
         "CAPTURE: Screenshot #%s queued (took %,f ms)%n",
         genCounter.toString(),
         (endTime - startTime) / 1e6f,

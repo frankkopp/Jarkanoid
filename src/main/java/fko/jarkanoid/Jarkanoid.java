@@ -67,8 +67,7 @@ public class Jarkanoid extends Application {
   public static void main(String[] args) {
 
     // setting up logging
-    Logger logger = LoggerFactory.getLogger("fko.jarkanoid");
-    logger.info("Launching Application starting with args: {}", args);
+    LOG.info("Launching Application starting with args: {}", args);
 
     launch(args);
   }
@@ -129,7 +128,9 @@ public class Jarkanoid extends Application {
    * Clean up and exit the application
    */
   public static void exit() {
+    LOG.info("Application shutting down...");
     recorder.stop();
+    LOG.info("Application shut down");
     exit(0);
   }
 
