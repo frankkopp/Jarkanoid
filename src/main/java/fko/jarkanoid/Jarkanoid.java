@@ -27,12 +27,13 @@ import fko.jarkanoid.controller.MainController;
 import fko.jarkanoid.model.GameModel;
 import fko.jarkanoid.recorder.Recorder;
 import fko.jarkanoid.view.MainView;
-
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URL;
 
@@ -45,6 +46,8 @@ import java.net.URL;
  * TODO: use Logger
  */
 public class Jarkanoid extends Application {
+
+  private static final Logger LOG = LoggerFactory.getLogger(Jarkanoid.class);
 
   // VERSION
   public static final String VERSION = "0.4";
@@ -62,6 +65,11 @@ public class Jarkanoid extends Application {
    * Main
    */
   public static void main(String[] args) {
+
+    // setting up logging
+    Logger logger = LoggerFactory.getLogger("fko.jarkanoid");
+    logger.info("Launching Application starting with args: {}", args);
+
     launch(args);
   }
 
@@ -70,6 +78,8 @@ public class Jarkanoid extends Application {
    */
   @Override
   public void start(Stage primaryStage) throws Exception {
+
+    LOG.info("Starting Application");
 
     pStage = primaryStage;
 
@@ -94,6 +104,7 @@ public class Jarkanoid extends Application {
 
     primaryStage.show();
 
+    LOG.info("Application started");
   }
 
   /**
@@ -102,13 +113,14 @@ public class Jarkanoid extends Application {
   @Override
   public void init() throws Exception {
     super.init();
-    final URL urlResource = Jarkanoid.class.getResource("/fonts/AstronomicMono.otf");
+    String fontName = "/fonts/AstronomicMono.otf";
+    final URL urlResource = Jarkanoid.class.getResource(fontName);
     if (urlResource == null) {
-      criticalError("Font could not be found!");
+      LOG.warn("Font could not be found: {}", fontName );
     } else {
       final String url = urlResource.toExternalForm();
       if (Font.loadFont(url, 40) == null) {
-        criticalError("Font could not be loaded!");
+        LOG.warn("Font could not be loaded: {}", url );
       }
     }
   }
@@ -129,40 +141,74 @@ public class Jarkanoid extends Application {
     System.exit(returnCode);
   }
 
-  /**
-   * Called when there is an unexpected unrecoverable error.<br>
-   * Prints a stack trace together with a provided message.<br>
-   * Terminates with <tt>exit(1)</tt>.
-   * @param message to be displayed with the exception message
-   */
-  public static void fatalError(String message, Object... args) {
-    Exception e = new Exception(String.format(message, args));
-    e.printStackTrace();
-    exit(1);
-  }
-
-  /**
-   * Called when there is an unexpected but recoverable error.<br>
-   * Prints a stack trace together with a provided message.<br>
-   * @param message to be displayed with the exception message
-   */
-  public static void criticalError(String message, Object... args) {
-    Exception e = new Exception(String.format(message, args));
-    e.printStackTrace();
-  }
-
-  /**
-   * Called when there is an unexpected minor error.<br>
-   * Prints a provided message.<br>
-   * @param message to be displayed
-   */
-  public static void minorError(String message,  Object... args) {
-    System.err.println(String.format(message, args));
-  }
+//  /**
+//   * Called when there is an unexpected unrecoverable error.<br>
+//   * Prints a stack trace together with a provided message.<br>
+//   * Terminates with <tt>exit(1)</tt>.
+//   * @param message to be displayed with the exception message
+//   */
+//  public static void fatalError(String message, Object... args) {
+//    Exception e = new Exception(String.format(message, args));
+//
+//    e.printStackTrace();
+//    exit(1);
+//  }
+//
+//  /**
+//   * Called when there is an unexpected but recoverable error.<br>
+//   * Prints a stack trace together with a provided message.<br>
+//   * @param message to be displayed with the exception message
+//   */
+//  public static void criticalError(String message, Object... args) {
+//    Exception e = new Exception(String.format(message, args));
+//    e.printStackTrace();
+//  }
+//
+//  /**
+//   * Called when there is an unexpected minor error.<br>
+//   * Prints a provided message.<br>
+//   * @param message to be displayed
+//   */
+//  public static void minorError(String message,  Object... args) {
+//    System.err.println(String.format(message, args));
+//  }
 
   public static Stage getPrimaryStage() {
     return pStage;
   }
 
-
 }
+/*** NOTES ***
+
+ private static final Logger logger = Logger.getLogger(Things.class)
+
+ public void bla() {
+ logger.debug("Starting " + ...)
+ // Do stuff
+ ...
+ logger.debug("Situational")
+
+ // Algorithms
+ for(Thing t : things) {
+ logger.trace(...)
+ }
+
+ // Breaking happy things
+ if(things.isEmpty){
+ logger.warn("Things shouldn't be empty!")
+ }
+
+ // Catching things
+ try {
+ ...
+ } catch(Exception e) {
+ logger.error("Something bad happened")
+ }
+
+ logger.info("Completed "+...)
+ }
+
+
+
+
+ */

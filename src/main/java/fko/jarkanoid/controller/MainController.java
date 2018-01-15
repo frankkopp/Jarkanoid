@@ -40,6 +40,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URL;
 import java.util.Observable;
@@ -60,6 +62,8 @@ import java.util.ResourceBundle;
  * @author Frank Kopp
  */
 public class MainController implements Initializable, Observer {
+
+  private static final Logger LOG = LoggerFactory.getLogger(MainController.class);
 
   // handles to model and view
   private final GameModel model;
@@ -259,7 +263,8 @@ public class MainController implements Initializable, Observer {
   @Override
   public void update(Observable o, Object e) {
     if (!(e instanceof GameEvent)) {
-      Jarkanoid.fatalError("Unknown event type. Event is not of type GameEvent");
+      LOG.error("Unknown event type. Event is not of type GameEvent");
+      throw new RuntimeException("Unknown event type. Event is not of type GameEvent");
     }
 
     GameEvent gameEvent = (GameEvent) e;

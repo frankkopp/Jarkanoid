@@ -30,6 +30,8 @@ import java.util.Map;
 
 import fko.jarkanoid.Jarkanoid;
 import javafx.scene.media.AudioClip;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Sounds
@@ -38,6 +40,8 @@ import javafx.scene.media.AudioClip;
  * <p>
  */
 public final class SoundManager {
+
+  private static final Logger LOG = LoggerFactory.getLogger(SoundManager.class);
 
   /**
    * All available audio clips of this class
@@ -78,7 +82,7 @@ public final class SoundManager {
   private final Map<Clips, AudioClip> _sounds;
 
   // sound on/off
-  private boolean soundOn = true;
+  private boolean soundOn = false;
 
   /**
    * Get theSounds instance with all main.resources.sounds available
@@ -106,7 +110,7 @@ public final class SoundManager {
         AudioClip clip = new AudioClip(url.toExternalForm());
         _sounds.put(c, clip);
       } else {
-        Jarkanoid.criticalError("Sound file: "+filename+" cannot be loaded!");
+        LOG.warn("Sound file {} cannot be loaded!", filename);
       }
     });
   }
