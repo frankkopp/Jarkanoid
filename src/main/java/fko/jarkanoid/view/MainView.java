@@ -43,6 +43,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * MainView
@@ -54,6 +56,8 @@ import javafx.util.Duration;
  * @author Frank Kopp
  */
 public class MainView {
+
+  private static Logger LOG = LoggerFactory.getLogger(MainView.class);
 
   @SuppressWarnings("unused")
   private GameModel model;
@@ -80,6 +84,7 @@ public class MainView {
   private ScaleTransition    hitPaddleScaleTransition;
   private StrokeTransition   hitPaddleStrokeTransition;
   private ParallelTransition paddleHitAnimation;
+  private final Rectangle paddle;
 
   /**
    * @param model
@@ -104,7 +109,7 @@ public class MainView {
     gameoverText.toFront();
 
     // Paddle
-    final Rectangle paddle = (Rectangle) fxmlLoader.getNamespace().get("paddle");
+    paddle = (Rectangle) fxmlLoader.getNamespace().get("paddle");
 
     prepareAnimations(paddle);
   }
@@ -241,7 +246,7 @@ public class MainView {
    * Plays hit animation
    */
   public void paddleHit(Ball ball) {
-    paddleHitAnimation.play(); 
+    paddleHitAnimation.play();
     ballViewMap.get(ball).hit();
   }
 
@@ -259,6 +264,15 @@ public class MainView {
    */
   public void brickHit(int row, int col) {
     brickLayoutView.getBrickView(row, col).hit();
+  }
+
+  public void laserPaddle(final boolean b) {
+    if (b) {
+      paddle.getStyleClass().add("laser");
+    } else {
+      paddle.getStyleClass().removeAll("laser");
+    }
+    LOG.debug("CSS for paddle is now {}", paddle.getStyleClass());
   }
 
 }

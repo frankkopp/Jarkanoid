@@ -93,6 +93,8 @@ public class GameEvent {
     LASER_HIT,
     LASER_SHOT,
     CAUGHT,
+    LASER_ON,
+    LASER_OFF,
     ENLARGE
 
   }

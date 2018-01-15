@@ -30,7 +30,6 @@ import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.sound.sampled.Line;
 import java.util.ArrayList;
 import java.util.ListIterator;
 import java.util.Observable;
@@ -324,7 +323,7 @@ public class GameModel extends Observable {
     nextPowerPill = null;
 
     // clear power
-    activePower.set(PowerPillType.NONE);
+    activatePower(PowerPillType.NONE);
 
     // clear lasers
     laserShotManager.clear();
@@ -556,28 +555,35 @@ public class GameModel extends Observable {
 
         powerPillListIterator.remove();
 
-        activatePower(pill);
+        activatePowerPill(pill);
       }
     }
   }
 
-  /** Activates the current power */
-  private void activatePower(PowerPill pill) {
-
+  /** Activates the current power pill */
+  private void activatePowerPill(PowerPill pill) {
     if (activePower == null) {
       activePower.set(PowerPillType.NONE);
     }
-
-    PowerPillType oldType = activePower.get();
     PowerPillType newType = pill.getPowerPillType();
+    activatePower(newType);
+  }
 
-    LOG.info("Activiating power pill with {} from {}", newType, oldType);
+  /** Activates the current power */
+  private void activatePower(final PowerPillType newType) {
+    PowerPillType oldType = activePower.get();
+
+    LOG.info("Activiating power with {} from {}", newType, oldType);
 
     // deactivate old power if necessary
     switch (oldType) {
       case NONE:
         break;
       case LASER:
+        if (!newType.equals(PowerPillType.LASER)) {
+          setChanged();
+          notifyObservers(new GameEvent(GameEventType.LASER_OFF));
+        }
         break;
       case ENLARGE:
         // only shrink it if the next pill is something else
@@ -618,6 +624,8 @@ public class GameModel extends Observable {
       case NONE:
         break;
       case LASER:
+        setChanged();
+        notifyObservers(new GameEvent(GameEventType.LASER_ON));
         break;
       case ENLARGE:
         // if we are not already large we growing big
@@ -957,6 +965,7 @@ public class GameModel extends Observable {
       if (nextPowerUp == 0) {
         nextPowerPill =
             new PowerPill(
+                //PowerPillType.LASER,
                 PowerPillType.getRandom(),
                 brickLayout.getLeftBound(row, col),
                 brickLayout.getUpperBound(row, col),
