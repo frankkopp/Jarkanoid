@@ -57,13 +57,11 @@ import org.slf4j.LoggerFactory;
  */
 public class MainView {
 
-  private static Logger LOG = LoggerFactory.getLogger(MainView.class);
+  private static final Logger LOG = LoggerFactory.getLogger(MainView.class);
 
-  @SuppressWarnings("unused")
-  private GameModel model;
+  private final GameModel model;
 
-  @SuppressWarnings("unused")
-  private MainController controller;
+  private final MainController controller;
 
   private final AnchorPane root;
   private final BrickLayoutView brickLayoutView = new BrickLayoutView();
@@ -173,7 +171,7 @@ public class MainView {
   }
 
   /**
-   * Called when model updates the Set of balls
+   * Called when model updates the list of laser shots
    * @param change
    */
   public void updateLaserShotList(ListChangeListener.Change<LaserShot> change) {
