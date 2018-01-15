@@ -22,7 +22,9 @@ package fko.jarkanoid.model;
 
 import fko.jarkanoid.events.GameEvent;
 import fko.jarkanoid.events.GameEvent.GameEventType;
+import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -38,8 +40,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import static org.slf4j.LoggerFactory.getLogger;
-
 /**
  * BreakOutModel
  *
@@ -52,7 +52,7 @@ import static org.slf4j.LoggerFactory.getLogger;
  */
 public class GameModel extends Observable {
 
-  private static Logger LOG = LoggerFactory.getLogger(GameModel.class);
+  private static final Logger LOG = LoggerFactory.getLogger(GameModel.class);
 
   // TODO: add acceleration
   // TODO: create all main.resources.levels
@@ -91,10 +91,12 @@ public class GameModel extends Observable {
   private static final double BALL_MAX_ANGLE = 60;
   private static final double BALL_INITIAL_X = 390;
   private static final double BALL_INITIAL_Y = PADDLE_INITIAL_Y - BALL_INITIAL_RADIUS;
+
   // Absolute speed of ball, when vertical equals px in y, when horizontal equals px in x
   private static final double BALL_INITIAL_SPEED = 10.0;
 
-  private static final double INITIAL_FRAMERATE = 60; // Framerate for ball movements
+  // Framerate for game loop
+  private static final double INITIAL_FRAMERATE = 60;
 
   // Laser constants
   private static final double LASER_EDGE_OFFSET = 45;
@@ -110,11 +112,11 @@ public class GameModel extends Observable {
   // how many destroyed bricks between power ups (needs to be >0)
   private static final int NEXT_POWERUP_OFFSET = 3;
   // power up randomly after 0 to 10 destroyed bricks after offset
-  private static final int POWER_UP_FREQUENCY = 10;
+  private static final int POWER_UP_FREQUENCY = 8;
 
   // the maximum number the ball may bounce without hitting the paddle or destroying a brick
-  // after this number the ball gets a random nudge in a different direction
-  public static final int MAX_NUMBER_OF_LOOP_HITS = 25;
+  // After this number the ball gets a random nudge in a different direction
+  private static final int MAX_NUMBER_OF_LOOP_HITS = 25;
 
   /*
    * These values determine the size and dimension of elements in Breakout.
@@ -172,9 +174,6 @@ public class GameModel extends Observable {
   private boolean paddleRight;;
   private ScheduledFuture scheduledStart;
 
-  // signals the game loop to split the ball into multiple balls
-  private boolean splitBallFlag = false;;
-
   // count all destroyed bricks
   private int destroyedBricksCounter = 0;
 
@@ -194,8 +193,13 @@ public class GameModel extends Observable {
   private long commulativeLoopTime;
   private final DoubleProperty fps = new SimpleDoubleProperty(INITIAL_FRAMERATE);
 
+  // grower and skrinker timeline of paddles
+  private final Timeline paddleGrower = new Timeline();
+  private final Timeline paddleShrinker = new Timeline();
+
   // counter since last paddle or brick hit to detect endless loops with gold bricks
   private int maxLoopHitsCounter = MAX_NUMBER_OF_LOOP_HITS;
+
 
   /** Constructor - prepares the brick layout and the game loops. */
   public GameModel() {
@@ -223,6 +227,28 @@ public class GameModel extends Observable {
     mainGameLoop.setCycleCount(Timeline.INDEFINITE);
     KeyFrame moveBall = new KeyFrame(Duration.seconds(1.0 / INITIAL_FRAMERATE), e -> gameLoop());
     mainGameLoop.getKeyFrames().add(moveBall);
+
+    // grow the paddle slowly
+    int steps = 25;
+    paddleGrower.setCycleCount(steps);
+    // larger
+    double lSteps = (PADDLE_ENLARGEMENT_FACTOR-1) / steps;
+    // move to the left to make it look as if it grew from the middle
+    double xSteps = (((PADDLE_ENLARGEMENT_FACTOR - 1) / 2) * PADDEL_INITIAL_WIDTH) / steps;
+    KeyFrame grow =
+            new KeyFrame(
+                    Duration.millis(10),
+                    (event) -> {
+                      paddleWidth.set(paddleWidth.get() * (1.0+lSteps));
+                      paddleX.set(paddleX.get() - xSteps);
+                      // push the paddle betweem the walls in case it was outside
+                      if (paddleX.get() + paddleWidth.get() >= playfieldWidth.get()) {
+                        paddleX.set(playfieldWidth.get() - paddleWidth.get());
+                      } else if (paddleX.get() <= 0) {
+                        paddleX.set(0);
+                      }
+                    });
+    paddleGrower.getKeyFrames().addAll(grow);
   }
 
   /** Starts a new game. */
@@ -588,9 +614,8 @@ public class GameModel extends Observable {
       case ENLARGE:
         // only shrink it if the next pill is something else
         if (!newType.equals(PowerPillType.ENLARGE)) {
-          paddleWidth.set(PADDEL_INITIAL_WIDTH);
-          // move to the right to make it look as if it grew from the middle
-          paddleX.set(paddleX.get() + ((PADDLE_ENLARGEMENT_FACTOR - 1) / 2) * PADDEL_INITIAL_WIDTH);
+          shrinkPaddle();
+
         }
         break;
       case CATCH:
@@ -630,18 +655,7 @@ public class GameModel extends Observable {
       case ENLARGE:
         // if we are not already large we growing big
         if (!oldType.equals(PowerPillType.ENLARGE)) {
-          // bigger
-          paddleWidth.set(PADDLE_ENLARGEMENT_FACTOR * PADDEL_INITIAL_WIDTH);
-          // move to the left to make it look as if it grew from the middle
-          paddleX.set(paddleX.get() - ((PADDLE_ENLARGEMENT_FACTOR - 1) / 2) * PADDEL_INITIAL_WIDTH);
-          // push the paddle betweem the walls in case it was outside
-          if (paddleX.get() + paddleWidth.get() >= playfieldWidth.get()) {
-            paddleX.set(playfieldWidth.get() - paddleWidth.get());
-          } else if (paddleX.get() <= 0) {
-            paddleX.set(0);
-          }
-          setChanged();
-          notifyObservers(new GameEvent(GameEventType.ENLARGE));
+          growPaddle();
         }
         break;
       case CATCH:
@@ -674,6 +688,25 @@ public class GameModel extends Observable {
         increaeRemainingLives();
         break;
     }
+  }
+
+  /** Grwos paddle over time */
+  private void growPaddle() {
+    paddleGrower.playFromStart();
+  }
+
+  /** shrink paddle over time */
+  private void shrinkPaddle() {
+    // shrink the paddle slowly
+    paddleShrinker.setCycleCount(1);
+    // smaller
+    double smallerSize = PADDEL_INITIAL_WIDTH;
+    // move to the left to make it look as if it grew from the middle
+    double newLeftX = paddleX.get() + ((PADDLE_ENLARGEMENT_FACTOR - 1) / 2) * PADDEL_INITIAL_WIDTH;
+    KeyFrame shrinkR = new KeyFrame(Duration.millis(250), new KeyValue(paddleWidth, smallerSize));
+    KeyFrame shrinkL = new KeyFrame(Duration.millis(250), new KeyValue(paddleX, newLeftX));
+    paddleShrinker.getKeyFrames().addAll(shrinkL, shrinkR);
+    paddleShrinker.playFromStart();
   }
 
   /** Checks if all bricks are gone and if so icreases level and launches new ball. */
@@ -965,7 +998,7 @@ public class GameModel extends Observable {
       if (nextPowerUp == 0) {
         nextPowerPill =
             new PowerPill(
-                //PowerPillType.LASER,
+//                PowerPillType.ENLARGE,
                 PowerPillType.getRandom(),
                 brickLayout.getLeftBound(row, col),
                 brickLayout.getUpperBound(row, col),
@@ -1018,6 +1051,8 @@ public class GameModel extends Observable {
   /** adds a lives after score thresholds or Player PowerType */
   private void increaeRemainingLives() {
     currentRemainingLives.set(currentRemainingLives.get() + 1);
+    setChanged();
+    notifyObservers(new GameEvent(GameEventType.NEW_LIFE));
     LOG.info("Increased number of lives to {}", currentRemainingLives.get());
   }
 
@@ -1114,6 +1149,10 @@ public class GameModel extends Observable {
     }
     if (paddleX.get() >= 0.0 && paddleX.get() + paddleWidth.get() <= playfieldWidth.get()) {
       paddleXProperty().set(x - halfPaddleWidth);
+    } else if (paddleX.get() < 0.0) {
+      paddleX.set(0);
+    } else if (paddleX.get() + paddleWidth.get() > playfieldWidth.get()) {
+      paddleX.set(playfieldWidth.get() - paddleWidth.get());
     }
   }
 
