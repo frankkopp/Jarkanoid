@@ -31,7 +31,7 @@
 
     <groupId>Jarkanoid</groupId>
     <artifactId>Jarkanoid</artifactId>
-    <version>0.5-SNAPSHOT</version>
+    <version>0.6-SNAPSHOT</version>
 
     <dependencies>
         <!-- JUNIT -->
