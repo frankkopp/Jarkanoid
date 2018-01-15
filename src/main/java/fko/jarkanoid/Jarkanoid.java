@@ -42,15 +42,13 @@ import java.net.URL;
  *
  *  02.01.2018
  * @author Frank Kopp
- *
- * TODO: use Logger
  */
 public class Jarkanoid extends Application {
 
   private static final Logger LOG = LoggerFactory.getLogger(Jarkanoid.class);
 
   // VERSION
-  public static final String VERSION = "prototype0.5";
+  public static final String VERSION = "prototype0.6";
 
   private static Stage pStage;
   private Scene scene;
@@ -67,7 +65,7 @@ public class Jarkanoid extends Application {
   public static void main(String[] args) {
 
     // setting up logging
-    LOG.info("Launching Application starting with args: {}", args);
+    LOG.info("Launching Application starting with args: {}", (Object) args);
 
     launch(args);
   }
