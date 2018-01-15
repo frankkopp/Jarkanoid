@@ -95,6 +95,7 @@ public class GameEvent {
     CAUGHT,
     LASER_ON,
     LASER_OFF,
+    NEW_LIFE,
     ENLARGE
 
   }
