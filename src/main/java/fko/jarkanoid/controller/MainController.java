@@ -87,7 +87,7 @@ public class MainController implements Initializable, Observer {
   @FXML private Text gameOverSplash;
 
   /**
-   * Creates the MainController
+   * Constructor the MainController
    *
    * @param model
    */
@@ -215,6 +215,14 @@ public class MainController implements Initializable, Observer {
     gameOverSplash.visibleProperty().bind(model.gameOverProperty());
   }
 
+  /**
+   * Called by a property binding to the active power property.
+   * Is used to accomodate animations when a new power gets acitve and
+   * the old power gets inactive. Not all powers have or need animations.
+   *
+   * @param oldPowerType
+   * @param newPowerType
+   */
   private void updateActivePower(
       final PowerPillType oldPowerType, final PowerPillType newPowerType) {
 
@@ -222,8 +230,14 @@ public class MainController implements Initializable, Observer {
       case NONE:
         break;
       case LASER:
+        if (newPowerType != PowerPillType.LASER) {
+          view.laserPaddle(false);
+        }
         break;
       case ENLARGE:
+        if (newPowerType != PowerPillType.ENLARGE) {
+          sounds.playClip(Clips.POWER_S);
+        }
         break;
       case CATCH:
         break;
@@ -241,8 +255,10 @@ public class MainController implements Initializable, Observer {
       case NONE:
         break;
       case LASER:
+        view.laserPaddle(true);
         break;
       case ENLARGE:
+        sounds.playClip(Clips.POWER_E);
         break;
       case CATCH:
         break;
@@ -313,12 +329,6 @@ public class MainController implements Initializable, Observer {
       case GAME_OVER:
         gameOverSplash.setText("GAME OVER");
         break;
-      case LASER_ON:
-        view.laserPaddle(true);
-        break;
-      case LASER_OFF:
-        view.laserPaddle(false);
-        break;
       case LASER_HIT:
         view.getBrickLayoutView().draw(model.getBrickLayout());
         break;
@@ -332,8 +342,8 @@ public class MainController implements Initializable, Observer {
       case CAUGHT:
         sounds.playClip(Clips.CAUGHT);
         break;
-      case ENLARGE:
-        sounds.playClip(Clips.POWER_E);
+      case NEW_LIFE:
+        sounds.playClip(Clips.NEW_LIFE);
         break;
       default:
     }
