@@ -313,6 +313,12 @@ public class MainController implements Initializable, Observer {
       case GAME_OVER:
         gameOverSplash.setText("GAME OVER");
         break;
+      case LASER_ON:
+        view.laserPaddle(true);
+        break;
+      case LASER_OFF:
+        view.laserPaddle(false);
+        break;
       case LASER_HIT:
         view.getBrickLayoutView().draw(model.getBrickLayout());
         break;
@@ -322,7 +328,7 @@ public class MainController implements Initializable, Observer {
       case GAME_WON:
         sounds.playClip(Clips.FINAL);
         gameOverSplash.setText("  THE END");
-        break;
+      break;
       case CAUGHT:
         sounds.playClip(Clips.CAUGHT);
         break;
