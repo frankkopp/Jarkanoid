@@ -30,6 +30,8 @@ import fko.jarkanoid.model.*;
 import fko.jarkanoid.model.SoundManager.Clips;
 import fko.jarkanoid.recorder.Recorder;
 import fko.jarkanoid.view.MainView;
+import javafx.animation.FillTransition;
+import javafx.animation.Transition;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ListChangeListener.Change;
@@ -44,6 +46,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -423,8 +426,7 @@ public class MainController implements Initializable, Observer {
       recordingIndicator.setFill(Color.GREEN);
     } else {
       LOG.info("User requested start Recording");
-      recorder.start(
-          playfieldPane, 1000, (int) playfieldPane.getWidth(), (int) playfieldPane.getHeight());
+      recorder.start(32);
       recordingIndicator.setFill(Color.RED);
     }
   }

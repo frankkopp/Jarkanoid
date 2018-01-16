@@ -25,30 +25,30 @@
 
 package fko.jarkanoid.recorder;
 
-import javafx.application.Platform;
+import fko.jarkanoid.Jarkanoid;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Node;
-import javafx.scene.SnapshotParameters;
-import javafx.scene.image.WritableImage;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.File;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
 import com.objectplanet.image.PngEncoder;
-import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.imageio.ImageIO;
 
 /**
  * Recorder
  *
- * <p>Records screenshot from node of JavaFX in ficed intervalls</p>
+ * <p>Records screenshot from node of JavaFX in ficed intervalls
  *
- * FIXME: only producing black images
+ * @author Frank Kopp
  */
 public class Recorder implements Runnable {
 
@@ -60,13 +60,13 @@ public class Recorder implements Runnable {
 
   private final ThreadPoolExecutor saveExecutor =
       new ThreadPoolExecutor(
-          1,
-          1,
+          16,
+          16,
           0L,
           TimeUnit.MILLISECONDS,
           new LinkedBlockingQueue<Runnable>()); // new ScheduledThreadPoolExecutor(1);
 
-  private final BlockingQueue<WritableImage> queue = new LinkedBlockingQueue<WritableImage>();
+  private final BlockingQueue<BufferedImage> queue = new LinkedBlockingQueue<BufferedImage>();
 
   private static final Object LOCK = new Object();
 
@@ -84,22 +84,24 @@ public class Recorder implements Runnable {
   private int width;
   private int height;
 
-  public Recorder() {}
+  private Robot robot = null;
 
-  /**
-   * @param node the node to be recorded
-   * @param period the intervall of capturing in ms
-   * @param width of the recording area
-   * @param height of the recording area
-   */
-  public void start(Node node, int period, int width, int height) {
-    if (node == null) throw new IllegalArgumentException("May not be null");
+  public Recorder() {
+    try {
+      robot = new Robot();
+    } catch (AWTException e) {
+      LOG.error("" + e);
+    }
+  }
+
+  /** @param period the intervall of capturing in ms */
+  public void start(int period) {
     if (recorderThread != null) throw new IllegalStateException("Thread excists. Not stopped yet.");
+    if (robot == null) throw new RuntimeException("Robot is not initialized.");
 
     recorderThread = new Thread(this, "Recorder Thread");
     recorderThread.setDaemon(false);
 
-    this.recordedNode = node;
     this.period = period;
     this.width = width;
     this.height = height;
@@ -120,7 +122,7 @@ public class Recorder implements Runnable {
       genExecutor.awaitTermination(2, TimeUnit.SECONDS);
       saveExecutor.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
     } catch (InterruptedException e) {
-      LOG.warn("While stopping recording",(e));
+      LOG.warn("While stopping recording", (e));
     }
 
     recorderThread = null;
@@ -130,14 +132,15 @@ public class Recorder implements Runnable {
 
   public void run() {
 
-    LOG.info("Recording started - storing screenshots in \"{}\" every {} ms", SCREENSHOTS_FOLDER, period);
+    LOG.info(
+        "Recording started - storing screenshots in {} every {} ms", SCREENSHOTS_FOLDER, period);
 
     genExecutor.scheduleAtFixedRate(
         () -> takeScreenShotAndQueue(), 0, period, TimeUnit.MILLISECONDS);
 
     while (!(isStopped.get() && queue.isEmpty())) {
       try {
-        final WritableImage image = queue.take();
+        final BufferedImage image = queue.take();
         saveExecutor.execute(() -> saveImage(image));
       } catch (InterruptedException e) {
         e.printStackTrace();
@@ -151,75 +154,65 @@ public class Recorder implements Runnable {
     saveExecutor.shutdown();
   }
 
-  private void saveImage(final WritableImage image) {
+  private void takeScreenShotAndQueue() {
+    long startTime = System.nanoTime();
+    genCounter.getAndIncrement();
+
+    final Stage primaryStage = Jarkanoid.getPrimaryStage();
+
+    Rectangle stageRect =
+        new Rectangle(
+            (int) (primaryStage.getX()),
+            (int) primaryStage.getY(),
+            (int) primaryStage.getWidth(),
+            (int) primaryStage.getHeight());
+
+    final BufferedImage screenshotBI = robot.createScreenCapture(stageRect);
+
+    // add it to our buffer
+    queue.add(screenshotBI);
+
+    long endTime = System.nanoTime();
+    LOG.debug(
+        "CAPTURE: Screenshot #{} queued (took {} ms - queue size:{})",
+        genCounter.toString(),
+        (endTime - startTime) / 1e6f,
+        saveExecutor.getQueue().size());
+  }
+
+  private void saveImage(final BufferedImage image) {
 
     long startTime = System.nanoTime();
 
     saveCounter.getAndIncrement();
 
-    // write the encoded image to disk
-    final BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
-    try {
-      final FileOutputStream fout =
-          new FileOutputStream(SCREENSHOTS_FOLDER + startTime + "_Screenshot.png");
-      synchronized (LOCK) {
-        // DEPENDENCY: PnGEncoder
-        encoder.encode(bufferedImage, fout);
-      }
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    String format = "jpg";
 
-    //    File file = new File("screenshots/" + startTime + "_Screenshot.png");
+    // write the encoded image to disk
+
+    // DEPENDENCY: PnGEncoder
     //    try {
-    //      final BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
-    //      //      synchronized (LOCK) {
-    //      ImageIO.setUseCache(false);
-    //      ImageIO.write(bufferedImage, "png", file);
-    //      //      }
-    //    } catch (Exception s) {
-    //      s.printStackTrace();
+    //      final FileOutputStream fout =
+    //          new FileOutputStream(SCREENSHOTS_FOLDER + startTime + "_Screenshot.png");
+    //        encoder.encode(image, fout);
+    //    } catch (IOException e) {
+    //      e.printStackTrace();
     //    }
 
-    long endTime = System.nanoTime();
-
-    LOG.debug(
-        "SAVING: Screenshot (#%s) saved (took %,f ms)%n",
-        saveCounter.toString(), (endTime - startTime) / 1e6f);
-  }
-
-  private void takeScreenShotAndQueue() {
-    long startTime = System.nanoTime();
-    genCounter.getAndIncrement();
-
-    // create new empty image
-    final WritableImage screenshot = new WritableImage(width, height);
-
-    SnapshotParameters snapshotParams = new SnapshotParameters();
-    snapshotParams.setFill(Color.TRANSPARENT);
-
-    // tell JavaFX Thread to take a snapshot aand store it to the created image
-    Platform.runLater(() -> recordedNode.snapshot(snapshotParams, screenshot));
-
-    // wait until the image is done
-    while (screenshot.getProgress() < 1) {
-      try {
-        Thread.sleep(1);
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-      }
+    File file = new File("screenshots/" + startTime + "_Screenshot." + format);
+    try {
+      ImageIO.write(image, format, file);
+    } catch (Exception s) {
+      s.printStackTrace();
     }
 
-    // add it to our buffer
-    queue.add(screenshot);
-
     long endTime = System.nanoTime();
+
     LOG.debug(
-        "CAPTURE: Screenshot #%s queued (took %,f ms)%n",
-        genCounter.toString(),
+        "SAVING: Screenshot (#{}) saved (took {} ms queue size: {})",
+        saveCounter.toString(),
         (endTime - startTime) / 1e6f,
-        queue.size(),
-        queue.remainingCapacity());
+        saveExecutor.getQueue().size());
   }
 
   public boolean isRunning() {
