@@ -1,22 +1,26 @@
-/**
+/*
  * MIT License
  *
- * <p>Copyright (c) 2018 Frank Kopp
+ * Copyright (c) 2018 Frank Kopp
  *
- * <p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software
- * and associated documentation files (the "Software"), to deal in the Software without restriction,
- * including without limitation the rights to use, copy, modify, merge, publish, distribute,
- * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * <p>The above copyright notice and this permission notice shall be included in all copies or
- * substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
  *
- * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
- * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
  */
 package fko.jarkanoid.model;
 
@@ -172,6 +176,8 @@ public class GameModel extends Observable {
   // called when key is pressed/released to indicate paddle movement to movement animation
   private boolean paddleLeft;
   private boolean paddleRight;;
+
+  // to delay the start of the ball and to be able to stop a game before this timer delay runs out
   private ScheduledFuture scheduledStart;
 
   // count all destroyed bricks
@@ -186,7 +192,7 @@ public class GameModel extends Observable {
       new SimpleObjectProperty<PowerPillType>(PowerPillType.NONE);
   private boolean ballCatchedFlag = false;
 
-  // count each time hte game loop is called
+  // count each time tte game loop is called and some statistics
   private long frameLoopCounter = 0;
   private long frameLoopCounterTimeStamp = System.nanoTime();
   private long lastloopTime;
@@ -228,13 +234,15 @@ public class GameModel extends Observable {
     KeyFrame moveBall = new KeyFrame(Duration.seconds(1.0 / INITIAL_FRAMERATE), e -> gameLoop());
     mainGameLoop.getKeyFrames().add(moveBall);
 
-    // grow the paddle slowly
-    int steps = 25;
+    // animation to grow the paddle slowly when we get an ENLARGE power
+    // As we want to be able to move the paddle during the animation and also check if the
+    // paddle grows out of the playing field we can't use normal property value timelines.
+    final int steps = 25; // do 25 intermediate steps - when at 10ms per step this is a 250ms animation
     paddleGrower.setCycleCount(steps);
     // larger
-    double lSteps = (PADDLE_ENLARGEMENT_FACTOR-1) / steps;
+    final double lSteps = (PADDLE_ENLARGEMENT_FACTOR-1) / steps;
     // move to the left to make it look as if it grew from the middle
-    double xSteps = (((PADDLE_ENLARGEMENT_FACTOR - 1) / 2) * PADDEL_INITIAL_WIDTH) / steps;
+    final double xSteps = (((PADDLE_ENLARGEMENT_FACTOR - 1) / 2) * PADDEL_INITIAL_WIDTH) / steps;
     KeyFrame grow =
             new KeyFrame(
                     Duration.millis(10),
@@ -295,7 +303,6 @@ public class GameModel extends Observable {
       gameWon();
       return;
     }
-    ;
 
     // set the received level into the brickLayout
     brickLayout.setMatrix(newLevel);
@@ -450,6 +457,7 @@ public class GameModel extends Observable {
 
     // if no more balls we lost a live
     if (ballManager.isEmpty()) {
+
       LOG.info("Lost last ball");
       updateLives();
 
@@ -459,6 +467,7 @@ public class GameModel extends Observable {
       updateLaser();
       updateBalls();
       updateLevel();
+
     }
   }
 

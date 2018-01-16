@@ -1,25 +1,26 @@
-/**
- MIT License
-
- Copyright (c) 2018 Frank Kopp
-
- Permission is hereby granted, free of charge, to any person obtaining a copy
- of this software and associated documentation files (the "Software"), to deal
- in the Software without restriction, including without limitation the rights
- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- copies of the Software, and to permit persons to whom the Software is
- furnished to do so, subject to the following conditions:
-
- The above copyright notice and this permission notice shall be included in all
- copies or substantial portions of the Software.
-
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- SOFTWARE.
+/*
+ * MIT License
+ *
+ * Copyright (c) 2018 Frank Kopp
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
  */
 package fko.jarkanoid;
 
@@ -48,16 +49,13 @@ public class Jarkanoid extends Application {
   private static final Logger LOG = LoggerFactory.getLogger(Jarkanoid.class);
 
   // VERSION
+  @SuppressWarnings("unused")
   public static final String VERSION = "prototype0.6";
 
   private static Stage pStage;
   private Scene scene;
 
   private static Recorder recorder = new Recorder();
-  public static Recorder getRecorder() {
-    return recorder;
-  }
-
 
   /**
    * Main
@@ -76,7 +74,7 @@ public class Jarkanoid extends Application {
   @Override
   public void start(Stage primaryStage) throws Exception {
 
-    LOG.info("Starting Application");
+    LOG.info("Starting JavaFX Application");
 
     pStage = primaryStage;
 
@@ -101,7 +99,7 @@ public class Jarkanoid extends Application {
 
     primaryStage.show();
 
-    LOG.info("Application started");
+    LOG.info("JavaFX Application started");
   }
 
   /**
@@ -140,74 +138,12 @@ public class Jarkanoid extends Application {
     System.exit(returnCode);
   }
 
-//  /**
-//   * Called when there is an unexpected unrecoverable error.<br>
-//   * Prints a stack trace together with a provided message.<br>
-//   * Terminates with <tt>exit(1)</tt>.
-//   * @param message to be displayed with the exception message
-//   */
-//  public static void fatalError(String message, Object... args) {
-//    Exception e = new Exception(String.format(message, args));
-//
-//    e.printStackTrace();
-//    exit(1);
-//  }
-//
-//  /**
-//   * Called when there is an unexpected but recoverable error.<br>
-//   * Prints a stack trace together with a provided message.<br>
-//   * @param message to be displayed with the exception message
-//   */
-//  public static void criticalError(String message, Object... args) {
-//    Exception e = new Exception(String.format(message, args));
-//    e.printStackTrace();
-//  }
-//
-//  /**
-//   * Called when there is an unexpected minor error.<br>
-//   * Prints a provided message.<br>
-//   * @param message to be displayed
-//   */
-//  public static void minorError(String message,  Object... args) {
-//    System.err.println(String.format(message, args));
-//  }
-
   public static Stage getPrimaryStage() {
     return pStage;
   }
 
+  public static Recorder getRecorder() {
+    return recorder;
+  }
+
 }
-/*** NOTES ***
-
- private static final Logger logger = Logger.getLogger(Things.class)
-
- public void bla() {
- logger.debug("Starting " + ...)
- // Do stuff
- ...
- logger.debug("Situational")
-
- // Algorithms
- for(Thing t : things) {
- logger.trace(...)
- }
-
- // Breaking happy things
- if(things.isEmpty){
- logger.warn("Things shouldn't be empty!")
- }
-
- // Catching things
- try {
- ...
- } catch(Exception e) {
- logger.error("Something bad happened")
- }
-
- logger.info("Completed "+...)
- }
-
-
-
-
- */

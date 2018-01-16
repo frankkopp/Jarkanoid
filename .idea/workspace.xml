@@ -1,19 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="AnalysisUIOptions">
-    <option name="SCOPE_TYPE" value="3" />
-  </component>
   <component name="ChangeListManager">
     <list default="true" id="7addf553-5c04-4a16-899d-8f87f62b1fee" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/dependency-reduced-pom.xml" afterPath="$PROJECT_DIR$/dependency-reduced-pom.xml" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
       <change beforePath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/Jarkanoid.java" afterPath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/Jarkanoid.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/controller/AnimationTest.java" afterPath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/controller/AnimationTest.java" />
       <change beforePath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/controller/MainController.java" afterPath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/controller/MainController.java" />
       <change beforePath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/events/GameEvent.java" afterPath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/events/GameEvent.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/Ball.java" afterPath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/Ball.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/Brick.java" afterPath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/Brick.java" />
       <change beforePath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/BrickLayout.java" afterPath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/BrickLayout.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/BrickType.java" afterPath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/BrickType.java" />
       <change beforePath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/GameModel.java" afterPath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/GameModel.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/LevelLoader.java" afterPath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/LevelLoader.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/PowerPillType.java" afterPath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/PowerPillType.java" />
       <change beforePath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/SoundManager.java" afterPath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/SoundManager.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/exceptions/LevelLoaderFormatException.java" afterPath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/exceptions/LevelLoaderFormatException.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/exceptions/LevelLoaderIOException.java" afterPath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/exceptions/LevelLoaderIOException.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/exceptions/LevelLoaderNoLevelFilesException.java" afterPath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/exceptions/LevelLoaderNoLevelFilesException.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/exceptions/NotSupportedException.java" afterPath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/exceptions/NotSupportedException.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/BallView.java" afterPath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/BallView.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/BrickLayoutView.java" afterPath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/BrickLayoutView.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/BrickLayoutViewPERFT.java" afterPath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/BrickLayoutViewPERFT.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/BrickView.java" afterPath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/BrickView.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/LaserShotView.java" afterPath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/LaserShotView.java" />
       <change beforePath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/MainView.java" afterPath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/MainView.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/PowerPillView.java" afterPath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/PowerPillView.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/BreakOutMainView.fxml" afterPath="$PROJECT_DIR$/src/main/resources/fxml/BreakOutMainView.fxml" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/brick.fxml" afterPath="$PROJECT_DIR$/src/main/resources/fxml/brick.fxml" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/logback.xml" afterPath="$PROJECT_DIR$/src/main/resources/logback.xml" />
+      <change beforePath="$PROJECT_DIR$/test/fko/jarkanoid/model/BallTest.java" afterPath="$PROJECT_DIR$/test/fko/jarkanoid/model/BallTest.java" />
+      <change beforePath="$PROJECT_DIR$/test/fko/jarkanoid/model/BrickLayoutTest.java" afterPath="$PROJECT_DIR$/test/fko/jarkanoid/model/BrickLayoutTest.java" />
+      <change beforePath="$PROJECT_DIR$/test/fko/jarkanoid/model/BrickTest.java" afterPath="$PROJECT_DIR$/test/fko/jarkanoid/model/BrickTest.java" />
+      <change beforePath="$PROJECT_DIR$/test/fko/jarkanoid/model/GameModelTest.java" afterPath="$PROJECT_DIR$/test/fko/jarkanoid/model/GameModelTest.java" />
+      <change beforePath="$PROJECT_DIR$/test/fko/jarkanoid/model/LevelLoaderTest.java" afterPath="$PROJECT_DIR$/test/fko/jarkanoid/model/LevelLoaderTest.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -36,8 +58,8 @@
           <file leaf-file-name="pom.xml" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/pom.xml">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="210">
-                  <caret line="33" column="16" lean-forward="false" selection-start-line="33" selection-start-column="16" selection-end-line="33" selection-end-column="16" />
+                <state relative-caret-position="336">
+                  <caret line="39" column="54" lean-forward="true" selection-start-line="39" selection-start-column="54" selection-end-line="39" selection-end-column="54" />
                   <folding>
                     <element signature="e#39#1200#0" expanded="false" />
                   </folding>
@@ -49,7 +71,7 @@
             <entry file="file://$PROJECT_DIR$/src/main/resources/logback.xml">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="441">
-                  <caret line="44" column="50" lean-forward="false" selection-start-line="44" selection-start-column="50" selection-end-line="44" selection-end-column="50" />
+                  <caret line="44" column="69" lean-forward="false" selection-start-line="44" selection-start-column="69" selection-end-line="44" selection-end-column="69" />
                   <folding>
                     <element signature="e#40#1201#0" expanded="false" />
                   </folding>
@@ -57,143 +79,17 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="Jarkanoid.java" pinned="false" current-in-tab="false">
+          <file leaf-file-name="Jarkanoid.java" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/Jarkanoid.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="483">
-                  <caret line="45" column="44" lean-forward="false" selection-start-line="45" selection-start-column="44" selection-end-line="45" selection-end-column="44" />
+                <state relative-caret-position="189">
+                  <caret line="46" column="19" lean-forward="false" selection-start-line="46" selection-start-column="19" selection-end-line="46" selection-end-column="19" />
                   <folding>
-                    <element signature="imports" expanded="true" />
-                    <element signature="e#1933#1934#0" expanded="true" />
-                    <element signature="e#1958#1959#0" expanded="true" />
-                    <element signature="e#4957#4958#0" expanded="true" />
-                    <element signature="e#4980#4981#0" expanded="true" />
+                    <element signature="e#3865#3866#0" expanded="true" />
+                    <element signature="e#3888#3889#0" expanded="true" />
+                    <element signature="e#3930#3931#0" expanded="true" />
+                    <element signature="e#3955#3956#0" expanded="true" />
                   </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="GameModel.java" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/GameModel.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="441">
-                  <caret line="65" column="0" lean-forward="true" selection-start-line="65" selection-start-column="0" selection-end-line="65" selection-end-column="0" />
-                  <folding>
-                    <element signature="e#8105#8120#0" expanded="true" />
-                    <element signature="e#11498#11499#0" expanded="true" />
-                    <element signature="e#11530#11531#0" expanded="true" />
-                    <element signature="e#23093#23094#0" expanded="true" />
-                    <element signature="e#23131#23132#0" expanded="true" />
-                    <element signature="e#36791#36792#0" expanded="true" />
-                    <element signature="e#36841#36842#0" expanded="true" />
-                    <element signature="e#39076#39077#0" expanded="true" />
-                    <element signature="e#39107#39108#0" expanded="true" />
-                    <element signature="e#40474#40475#0" expanded="true" />
-                    <element signature="e#40502#40503#0" expanded="true" />
-                    <element signature="e#40547#40548#0" expanded="true" />
-                    <element signature="e#40571#40572#0" expanded="true" />
-                    <element signature="e#40623#40624#0" expanded="true" />
-                    <element signature="e#40654#40655#0" expanded="true" />
-                    <element signature="e#40707#40708#0" expanded="true" />
-                    <element signature="e#40739#40740#0" expanded="true" />
-                    <element signature="e#40789#40790#0" expanded="true" />
-                    <element signature="e#40818#40819#0" expanded="true" />
-                    <element signature="e#40863#40864#0" expanded="true" />
-                    <element signature="e#40887#40888#0" expanded="true" />
-                    <element signature="e#40943#40944#0" expanded="true" />
-                    <element signature="e#40991#40992#0" expanded="true" />
-                    <element signature="e#41046#41047#0" expanded="true" />
-                    <element signature="e#41093#41094#0" expanded="true" />
-                    <element signature="e#41148#41149#0" expanded="true" />
-                    <element signature="e#41195#41196#0" expanded="true" />
-                    <element signature="e#41254#41255#0" expanded="true" />
-                    <element signature="e#41305#41306#0" expanded="true" />
-                    <element signature="e#41373#41374#0" expanded="true" />
-                    <element signature="e#41433#41434#0" expanded="true" />
-                    <element signature="e#41492#41493#0" expanded="true" />
-                    <element signature="e#41543#41544#0" expanded="true" />
-                    <element signature="e#41585#41586#0" expanded="true" />
-                    <element signature="e#41609#41610#0" expanded="true" />
-                    <element signature="e#41652#41653#0" expanded="true" />
-                    <element signature="e#41677#41678#0" expanded="true" />
-                    <element signature="e#41741#41742#0" expanded="true" />
-                    <element signature="e#41775#41776#0" expanded="true" />
-                    <element signature="e#41839#41840#0" expanded="true" />
-                    <element signature="e#41867#41868#0" expanded="true" />
-                    <element signature="e#41908#41909#0" expanded="true" />
-                    <element signature="e#41928#41929#0" expanded="true" />
-                    <element signature="e#41976#41977#0" expanded="true" />
-                    <element signature="e#42004#42005#0" expanded="true" />
-                    <element signature="e#42062#42063#0" expanded="true" />
-                    <element signature="e#42095#42096#0" expanded="true" />
-                    <element signature="e#42178#42179#0" expanded="true" />
-                    <element signature="e#42206#42207#0" expanded="true" />
-                    <element signature="e#42267#42268#0" expanded="true" />
-                    <element signature="e#42293#42294#0" expanded="true" />
-                    <element signature="e#42397#42398#0" expanded="true" />
-                    <element signature="e#42478#42479#0" expanded="true" />
-                    <element signature="e#42521#42522#0" expanded="true" />
-                    <element signature="e#42555#42556#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="BrickLayout.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/BrickLayout.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="420">
-                  <caret line="42" column="0" lean-forward="false" selection-start-line="42" selection-start-column="0" selection-end-line="42" selection-end-column="0" />
-                  <folding>
-                    <element signature="e#3152#3153#0" expanded="true" />
-                    <element signature="e#3180#3181#0" expanded="true" />
-                    <element signature="e#3386#3387#0" expanded="true" />
-                    <element signature="e#3431#3432#0" expanded="true" />
-                    <element signature="e#3945#3946#0" expanded="true" />
-                    <element signature="e#3978#3979#0" expanded="true" />
-                    <element signature="e#4401#4402#0" expanded="true" />
-                    <element signature="e#4441#4442#0" expanded="true" />
-                    <element signature="e#4583#4584#0" expanded="true" />
-                    <element signature="e#4629#4630#0" expanded="true" />
-                    <element signature="e#4770#4771#0" expanded="true" />
-                    <element signature="e#4809#4810#0" expanded="true" />
-                    <element signature="e#4951#4952#0" expanded="true" />
-                    <element signature="e#4996#4997#0" expanded="true" />
-                    <element signature="e#5115#5116#0" expanded="true" />
-                    <element signature="e#5154#5155#0" expanded="true" />
-                    <element signature="e#5225#5226#0" expanded="true" />
-                    <element signature="e#5262#5263#0" expanded="true" />
-                    <element signature="e#5335#5336#0" expanded="true" />
-                    <element signature="e#5373#5374#0" expanded="true" />
-                    <element signature="e#5436#5437#0" expanded="true" />
-                    <element signature="e#5469#5470#0" expanded="true" />
-                    <element signature="e#5534#5535#0" expanded="true" />
-                    <element signature="e#5568#5569#0" expanded="true" />
-                    <element signature="e#5643#5644#0" expanded="true" />
-                    <element signature="e#5674#5675#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="SoundManager.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/SoundManager.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="547">
-                  <caret line="62" column="28" lean-forward="true" selection-start-line="62" selection-start-column="4" selection-end-line="62" selection-end-column="28" />
-                  <folding>
-                    <element signature="imports" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="GameEvent.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/events/GameEvent.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="624">
-                  <caret line="98" column="4" lean-forward="false" selection-start-line="98" selection-start-column="4" selection-end-line="98" selection-end-column="4" />
-                  <folding />
                 </state>
               </provider>
             </entry>
@@ -201,20 +97,19 @@
         </leaf>
       </split-first>
       <split-second>
-        <leaf>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
           <file leaf-file-name="MainController.java" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/controller/MainController.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="298">
-                  <caret line="531" column="20" lean-forward="true" selection-start-line="531" selection-start-column="20" selection-end-line="531" selection-end-column="20" />
+                <state relative-caret-position="0">
+                  <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
                   <folding>
-                    <element signature="n#!!doc" expanded="true" />
-                    <element signature="e#3667#3668#0" expanded="true" />
-                    <element signature="e#3695#3696#0" expanded="true" />
-                    <element signature="e#12530#12531#0" expanded="true" />
-                    <element signature="e#12557#12558#0" expanded="true" />
-                    <element signature="e#15294#15295#0" expanded="true" />
-                    <element signature="e#15341#15342#0" expanded="true" />
+                    <element signature="e#3666#3667#0" expanded="true" />
+                    <element signature="e#3694#3695#0" expanded="true" />
+                    <element signature="e#12529#12530#0" expanded="true" />
+                    <element signature="e#12556#12557#0" expanded="true" />
+                    <element signature="e#15293#15294#0" expanded="true" />
+                    <element signature="e#15340#15341#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
@@ -223,31 +118,18 @@
           <file leaf-file-name="MainView.java" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/MainView.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="651">
-                  <caret line="173" column="38" lean-forward="false" selection-start-line="173" selection-start-column="38" selection-end-line="173" selection-end-column="38" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="BrickLayoutView.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/BrickLayoutView.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="0">
-                  <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+                <state relative-caret-position="-1407">
+                  <caret line="115" column="0" lean-forward="false" selection-start-line="115" selection-start-column="0" selection-end-line="115" selection-end-column="0" />
                   <folding>
-                    <element signature="n#!!doc" expanded="true" />
+                    <element signature="e#8535#8536#0" expanded="true" />
+                    <element signature="e#8556#8557#0" expanded="true" />
+                    <element signature="e#8642#8643#0" expanded="true" />
+                    <element signature="e#8674#8675#0" expanded="true" />
+                    <element signature="e#8874#8875#0" expanded="true" />
+                    <element signature="e#8911#8912#0" expanded="true" />
+                    <element signature="e#9132#9133#0" expanded="true" />
+                    <element signature="e#9186#9187#0" expanded="true" />
                   </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="PowerPillView.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/PowerPillView.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="546">
-                  <caret line="80" column="100" lean-forward="true" selection-start-line="80" selection-start-column="59" selection-end-line="80" selection-end-column="100" />
-                  <folding />
                 </state>
               </provider>
             </entry>
@@ -278,10 +160,10 @@
     </option>
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/MainView.java" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/MainView.java" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/controller/MainController.java" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/pom.xml" root0="SKIP_INSPECTION" />
-    <setting file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/BrickLayout.java" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/BrickLayout.java" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/recorder/Recorder.java" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/GameModel.java" root0="SKIP_INSPECTION" />
   </component>
@@ -292,7 +174,6 @@
         <option value="$PROJECT_DIR$/src/main/resources/levels/Level-7.txt" />
         <option value="$PROJECT_DIR$/test/fko/jarkanoid/Recorder.java" />
         <option value="$PROJECT_DIR$/src/main/resources/META-INF/MANIFEST.MF" />
-        <option value="$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/BallView.java" />
         <option value="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/Ball.java" />
         <option value="$PROJECT_DIR$/src/main/resources/levels/Level-12.txt" />
         <option value="$PROJECT_DIR$/test/fko/jarkanoid/model/GameModelTest.java" />
@@ -303,17 +184,29 @@
         <option value="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/LevelLoader.java" />
         <option value="$PROJECT_DIR$/target/classes/META-INF/MANIFEST.MF" />
         <option value="$PROJECT_DIR$/src/main/resources/css/breakout.css" />
+        <option value="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/SoundManager.java" />
+        <option value="$PROJECT_DIR$/src/main/java/fko/jarkanoid/events/GameEvent.java" />
+        <option value="$PROJECT_DIR$/src/main/java/fko/jarkanoid/Jarkanoid.java" />
+        <option value="$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/BrickLayoutView.java" />
+        <option value="$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/BallView.java" />
+        <option value="$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/BrickView.java" />
+        <option value="$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/PowerPillView.java" />
+        <option value="$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/LaserShotView.java" />
+        <option value="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/Brick.java" />
+        <option value="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/BrickLayout.java" />
+        <option value="$PROJECT_DIR$/src/main/java/fko/jarkanoid/controller/MainController.java" />
+        <option value="$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/MainView.java" />
+        <option value="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/GameModel.java" />
         <option value="$PROJECT_DIR$/src/main/resources/logback.xml" />
         <option value="$PROJECT_DIR$/pom.xml" />
-        <option value="$PROJECT_DIR$/src/main/java/fko/jarkanoid/Jarkanoid.java" />
-        <option value="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/BrickLayout.java" />
-        <option value="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/SoundManager.java" />
-        <option value="$PROJECT_DIR$/src/main/java/fko/jarkanoid/controller/MainController.java" />
-        <option value="$PROJECT_DIR$/src/main/java/fko/jarkanoid/events/GameEvent.java" />
-        <option value="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/GameModel.java" />
-        <option value="$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/MainView.java" />
       </list>
     </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="MavenImportPreferences">
     <option name="importingSettings">
@@ -368,10 +261,253 @@
           <State>
             <id />
           </State>
+          <State>
+            <id>Abstraction issuesJava</id>
+          </State>
+          <State>
+            <id>Android</id>
+          </State>
+          <State>
+            <id>Android &gt; Lint &gt; Correctness</id>
+          </State>
+          <State>
+            <id>Android &gt; Lint &gt; Internationalization &gt; Bidirectional Text</id>
+          </State>
+          <State>
+            <id>Android &gt; Lint &gt; Performance</id>
+          </State>
+          <State>
+            <id>Android &gt; Lint &gt; Security</id>
+          </State>
+          <State>
+            <id>Android &gt; Lint &gt; Usability</id>
+          </State>
+          <State>
+            <id>Android &gt; Lint &gt; Usability &gt; Typography</id>
+          </State>
+          <State>
+            <id>Android Lint for Kotlin</id>
+          </State>
+          <State>
+            <id>Annotations verifyingGroovy</id>
+          </State>
+          <State>
+            <id>Ant inspections</id>
+          </State>
+          <State>
+            <id>Assignment issuesJava</id>
+          </State>
+          <State>
+            <id>Bitwise operation issuesJava</id>
+          </State>
+          <State>
+            <id>Class metricsJava</id>
+          </State>
+          <State>
+            <id>Class structureJava</id>
+          </State>
+          <State>
+            <id>Cloning issuesJava</id>
+          </State>
+          <State>
+            <id>Code maturity issuesJava</id>
+          </State>
+          <State>
+            <id>Code style issuesJava</id>
+          </State>
+          <State>
+            <id>Concurrency annotation issuesJava</id>
+          </State>
+          <State>
+            <id>Control flow issuesGroovy</id>
+          </State>
+          <State>
+            <id>Control flow issuesJava</id>
+          </State>
+          <State>
+            <id>CorrectnessLintAndroid</id>
+          </State>
+          <State>
+            <id>Data flow issuesGroovy</id>
+          </State>
+          <State>
+            <id>Data flow issuesJava</id>
+          </State>
+          <State>
+            <id>Declaration redundancyJava</id>
+          </State>
+          <State>
+            <id>DeclarationGroovy</id>
+          </State>
+          <State>
+            <id>Encapsulation issuesJava</id>
+          </State>
+          <State>
+            <id>Error handlingJava</id>
+          </State>
+          <State>
+            <id>General</id>
+          </State>
+          <State>
+            <id>Groovy</id>
+          </State>
+          <State>
+            <id>HTML</id>
+          </State>
+          <State>
+            <id>ImportsJava</id>
+          </State>
+          <State>
+            <id>Inheritance issuesJava</id>
+          </State>
+          <State>
+            <id>Initialization issuesJava</id>
+          </State>
+          <State>
+            <id>Internationalization issuesJava</id>
+          </State>
+          <State>
+            <id>J2ME issuesJava</id>
+          </State>
+          <State>
+            <id>JSON</id>
+          </State>
+          <State>
+            <id>JUnit issuesJava</id>
+          </State>
+          <State>
+            <id>Java</id>
+          </State>
+          <State>
+            <id>Java 5Java language level migration aidsJava</id>
+          </State>
+          <State>
+            <id>Java 7Java language level migration aidsJava</id>
+          </State>
+          <State>
+            <id>Java 8Java language level migration aidsJava</id>
+          </State>
+          <State>
+            <id>Java 9Java language level migration aidsJava</id>
+          </State>
+          <State>
+            <id>Java interop issuesKotlin</id>
+          </State>
+          <State>
+            <id>Java language level issuesJava</id>
+          </State>
+          <State>
+            <id>Java language level migration aidsJava</id>
+          </State>
+          <State>
+            <id>JavaFX</id>
+          </State>
+          <State>
+            <id>Javadoc issuesJava</id>
+          </State>
+          <State>
+            <id>Kotlin</id>
+          </State>
+          <State>
+            <id>Language Injection</id>
+          </State>
+          <State>
+            <id>LintAndroid</id>
+          </State>
+          <State>
+            <id>Logging issuesJava</id>
+          </State>
+          <State>
+            <id>Memory issuesJava</id>
+          </State>
+          <State>
+            <id>Naming conventionsGroovy</id>
+          </State>
+          <State>
+            <id>Naming conventionsJava</id>
+          </State>
+          <State>
+            <id>Numeric issuesJava</id>
+          </State>
+          <State>
+            <id>Other problemsKotlin</id>
+          </State>
+          <State>
+            <id>Pattern Validation</id>
+          </State>
+          <State>
+            <id>Performance issuesJava</id>
+          </State>
+          <State>
+            <id>Plugin DevKit</id>
+          </State>
+          <State>
+            <id>Portability issuesJava</id>
+          </State>
+          <State>
+            <id>Potentially confusing code constructsGroovy</id>
+          </State>
+          <State>
+            <id>Probable bugsGroovy</id>
+          </State>
+          <State>
+            <id>Probable bugsJava</id>
+          </State>
+          <State>
+            <id>Probable bugsKotlin</id>
+          </State>
+          <State>
+            <id>RELAX NG</id>
+          </State>
+          <State>
+            <id>Redundant constructsKotlin</id>
+          </State>
+          <State>
+            <id>Reflective access issuesJava</id>
+          </State>
+          <State>
+            <id>RegExp</id>
+          </State>
+          <State>
+            <id>Resource management issuesJava</id>
+          </State>
+          <State>
+            <id>Security issuesJava</id>
+          </State>
+          <State>
+            <id>Serialization issuesJava</id>
+          </State>
+          <State>
+            <id>Style issuesKotlin</id>
+          </State>
+          <State>
+            <id>TestNGJava</id>
+          </State>
+          <State>
+            <id>Threading issuesGroovy</id>
+          </State>
+          <State>
+            <id>Threading issuesJava</id>
+          </State>
+          <State>
+            <id>Validity issuesGroovy</id>
+          </State>
+          <State>
+            <id>Visibility issuesJava</id>
+          </State>
+          <State>
+            <id>XML</id>
+          </State>
+          <State>
+            <id>XPath</id>
+          </State>
+          <State>
+            <id>XSLT</id>
+          </State>
         </expanded-state>
         <selected-state>
           <State>
-            <id>Java</id>
+            <id>JavaDoc</id>
           </State>
         </selected-state>
       </profile-state>
@@ -395,7 +531,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
+      <pane id="AndroidView" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -502,6 +638,27 @@
               <item name="Jarkanoid" type="b2602c69:ProjectViewProjectNode" />
               <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
               <item name="&lt; 1.8 &gt;" type="70bed36:NamedLibraryElementNode" />
+              <item name="jfxrt.jar" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Jarkanoid" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="&lt; 1.8 &gt;" type="70bed36:NamedLibraryElementNode" />
+              <item name="jfxrt.jar" type="462c0819:PsiDirectoryNode" />
+              <item name="javafx" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Jarkanoid" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="&lt; 1.8 &gt;" type="70bed36:NamedLibraryElementNode" />
+              <item name="jfxrt.jar" type="462c0819:PsiDirectoryNode" />
+              <item name="javafx" type="462c0819:PsiDirectoryNode" />
+              <item name="application" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Jarkanoid" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="&lt; 1.8 &gt;" type="70bed36:NamedLibraryElementNode" />
               <item name="rt.jar" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -541,9 +698,9 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scratches" />
       <pane id="Scope" />
       <pane id="PackagesPane" />
-      <pane id="AndroidView" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -556,6 +713,8 @@
     <property name="extract.method.default.visibility" value="public" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/resources/libs/com.objectplanet.image.PngEncoder.jar!/" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="CreateTestDialog.RecentsKey">
@@ -840,6 +999,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1515623274777</updated>
+      <workItem from="1516105680408" duration="1224000" />
     </task>
     <task id="LOCAL-00001" summary="Experimenting on a Scene Capture Recorder">
       <created>1515886868809</created>
@@ -890,6 +1050,9 @@
       <configuration name="GameModelTest.someTest" configurationId="JUnit" />
     </history-entry>
   </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="1224000" />
+  </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
       <is-autoscroll-to-source value="true" />
@@ -903,34 +1066,35 @@
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.35766423" sideWeight="0.23920266" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.12657808" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.46553123" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
-      <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Module Dependencies" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32990032" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection Results" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32927817" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.12259136" sideWeight="0.510101" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.35766423" sideWeight="0.7607973" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32927817" sideWeight="0.49867108" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24087591" sideWeight="0.49729" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27169505" sideWeight="0.6704319" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32927817" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.35766423" sideWeight="0.23920266" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.12657808" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27159467" sideWeight="0.6704319" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32890365" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32927817" sideWeight="0.49867108" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.12259136" sideWeight="0.48989898" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.12458472" sideWeight="0.4858804" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32927817" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Learn" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.12458472" sideWeight="0.5141196" order="1" side_tool="true" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.35766423" sideWeight="0.7607973" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.120598" sideWeight="0.50473934" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.46553123" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Module Dependencies" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32990032" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection Results" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32927817" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24087591" sideWeight="0.49729" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Documentation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" x="326" y="451" width="1360" height="837" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Problems" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32927817" sideWeight="0.49864498" order="10" side_tool="false" content_ui="tabs" />
@@ -967,6 +1131,9 @@
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.114498645" sideWeight="0.5028386" order="6" side_tool="true" content_ui="tabs" />
     </layout-to-restore>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -1012,41 +1179,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/site/index.html" />
-    <entry file="file://$PROJECT_DIR$/test/fko/jarkanoid/model/LevelLoaderTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="840">
-          <caret line="40" column="46" lean-forward="false" selection-start-line="40" selection-start-column="46" selection-end-line="40" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/LaserShot.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="273">
-          <caret line="37" column="24" lean-forward="false" selection-start-line="37" selection-start-column="24" selection-end-line="37" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="5" column="0" lean-forward="true" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fko/breakout/BreakOut.java" />
-    <entry file="file://$PROJECT_DIR$/test/fko/jarkanoid/model/SoundManagerTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="35" column="59" lean-forward="true" selection-start-line="35" selection-start-column="59" selection-end-line="35" selection-end-column="59" />
-          <folding>
-            <element signature="e#1309#1310#0" expanded="false" />
-            <element signature="e#1373#1374#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/levels/Level-6.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -1058,7 +1190,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="378">
           <caret line="18" column="64" lean-forward="false" selection-start-line="18" selection-start-column="64" selection-end-line="18" selection-end-column="64" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1066,7 +1197,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="82">
           <caret line="698" column="29" lean-forward="false" selection-start-line="698" selection-start-column="29" selection-end-line="698" selection-end-column="29" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1081,10 +1211,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2814">
           <caret line="201" column="42" lean-forward="true" selection-start-line="201" selection-start-column="42" selection-end-line="201" selection-end-column="42" />
-          <folding>
-            <element signature="e#6260#6261#0" expanded="false" />
-            <element signature="e#6322#6323#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1107,7 +1233,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="292">
           <caret line="614" column="11" lean-forward="false" selection-start-line="614" selection-start-column="11" selection-end-line="614" selection-end-column="11" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1115,7 +1240,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="494">
           <caret line="1611" column="21" lean-forward="true" selection-start-line="1611" selection-start-column="21" selection-end-line="1611" selection-end-column="21" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1123,7 +1247,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="647">
           <caret line="139" column="9" lean-forward="false" selection-start-line="139" selection-start-column="9" selection-end-line="139" selection-end-column="9" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1131,7 +1254,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="262">
           <caret line="1808" column="15" lean-forward="false" selection-start-line="1808" selection-start-column="15" selection-end-line="1808" selection-end-column="15" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1139,7 +1261,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="815">
           <caret line="564" column="23" lean-forward="false" selection-start-line="564" selection-start-column="23" selection-end-line="564" selection-end-column="23" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1147,7 +1268,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="355">
           <caret line="173" column="73" lean-forward="false" selection-start-line="171" selection-start-column="17" selection-end-line="173" selection-end-column="73" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1155,7 +1275,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-693">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1163,7 +1282,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="231">
           <caret line="17" column="8" lean-forward="false" selection-start-line="17" selection-start-column="8" selection-end-line="17" selection-end-column="8" />
-          <folding />
         </state>
       </provider>
       <provider editor-type-id="JavaFX-Scene-Builder">
@@ -1174,10 +1292,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-2">
           <caret line="415" column="40" lean-forward="false" selection-start-line="415" selection-start-column="40" selection-end-line="415" selection-end-column="40" />
-          <folding>
-            <element signature="e#23406#23407#0" expanded="false" />
-            <element signature="e#23455#23456#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1193,7 +1307,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="42">
           <caret line="2" column="37" lean-forward="false" selection-start-line="2" selection-start-column="37" selection-end-line="2" selection-end-column="37" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1201,7 +1314,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-420">
           <caret line="746" column="19" lean-forward="true" selection-start-line="746" selection-start-column="19" selection-end-line="746" selection-end-column="19" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1222,7 +1334,6 @@
           <caret line="16" column="9" lean-forward="false" selection-start-line="16" selection-start-column="5" selection-end-line="16" selection-end-column="9" />
           <caret line="17" column="9" lean-forward="false" selection-start-line="17" selection-start-column="5" selection-end-line="17" selection-end-column="9" />
           <caret line="18" column="9" lean-forward="false" selection-start-line="18" selection-start-column="5" selection-end-line="18" selection-end-column="9" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1230,10 +1341,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="275">
           <caret line="302" column="23" lean-forward="true" selection-start-line="302" selection-start-column="23" selection-end-line="302" selection-end-column="23" />
-          <folding>
-            <element signature="e#10902#10903#0" expanded="false" />
-            <element signature="e#10948#10949#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1241,7 +1348,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="254">
           <caret line="381" column="25" lean-forward="false" selection-start-line="381" selection-start-column="25" selection-end-line="381" selection-end-column="25" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1249,15 +1355,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="334">
           <caret line="23" column="0" lean-forward="false" selection-start-line="23" selection-start-column="2" selection-end-line="25" selection-end-column="52" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/BallView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="189">
-          <caret line="38" column="2" lean-forward="true" selection-start-line="38" selection-start-column="2" selection-end-line="38" selection-end-column="2" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1290,19 +1387,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/levels/Test_Level-1.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/levels/Test_Level-1.txt" />
     <entry file="file://$PROJECT_DIR$/src/main/resources/levels/Level-13.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1310,7 +1399,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1318,7 +1406,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="21">
           <caret line="1" column="29" lean-forward="false" selection-start-line="1" selection-start-column="29" selection-end-line="1" selection-end-column="29" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1326,17 +1413,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="63">
           <caret line="3" column="0" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/logback.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="441">
-          <caret line="44" column="50" lean-forward="false" selection-start-line="44" selection-start-column="50" selection-end-line="44" selection-end-column="50" />
-          <folding>
-            <element signature="e#40#1201#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1352,14 +1428,265 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="546">
           <caret line="56" column="22" lean-forward="false" selection-start-line="56" selection-start-column="22" selection-end-line="56" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/events/GameEvent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1470">
+          <caret line="99" column="4" lean-forward="false" selection-start-line="99" selection-start-column="4" selection-end-line="99" selection-end-column="4" />
+          <folding>
+            <marker date="1516112011246" expanded="false" signature="0:1135" ph="/**...*/" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/SoundManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="672">
+          <caret line="63" column="28" lean-forward="false" selection-start-line="63" selection-start-column="4" selection-end-line="63" selection-end-column="28" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <marker date="1516112010911" expanded="false" signature="0:1135" ph="/**...*/" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/BrickLayoutView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="462">
+          <caret line="46" column="2" lean-forward="false" selection-start-line="46" selection-start-column="2" selection-end-line="46" selection-end-column="2" />
+          <folding>
+            <marker date="1516112011186" expanded="false" signature="0:1135" ph="/**...*/" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/BallView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="47" column="2" lean-forward="false" selection-start-line="47" selection-start-column="2" selection-end-line="47" selection-end-column="2" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#2590#2591#0" expanded="false" />
+            <element signature="e#2623#2624#0" expanded="false" />
+            <marker date="1516112011170" expanded="false" signature="0:1135" ph="/**...*/" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/PowerPillView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="378">
+          <caret line="51" column="12" lean-forward="true" selection-start-line="51" selection-start-column="12" selection-end-line="51" selection-end-column="12" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/LaserShotView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="903">
+          <caret line="71" column="3" lean-forward="true" selection-start-line="71" selection-start-column="3" selection-end-line="71" selection-end-column="3" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/BrickView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="546">
+          <caret line="53" column="4" lean-forward="false" selection-start-line="53" selection-start-column="4" selection-end-line="53" selection-end-column="4" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#2849#2850#0" expanded="false" />
+            <element signature="e#2896#2897#0" expanded="false" />
+            <element signature="e#2952#2953#0" expanded="false" />
+            <element signature="e#2974#2975#0" expanded="false" />
+            <marker date="1516112011144" expanded="false" signature="0:1135" ph="/**...*/" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/Brick.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2394">
+          <caret line="153" column="4" lean-forward="false" selection-start-line="153" selection-start-column="4" selection-end-line="153" selection-end-column="4" />
+          <folding>
+            <element signature="e#2871#2872#0" expanded="false" />
+            <element signature="e#2896#2897#0" expanded="false" />
+            <element signature="e#3019#3020#0" expanded="false" />
+            <element signature="e#3093#3094#0" expanded="false" />
+            <element signature="e#3176#3177#0" expanded="false" />
+            <element signature="e#3218#3219#0" expanded="false" />
+            <element signature="e#3276#3277#0" expanded="false" />
+            <element signature="e#3302#3303#0" expanded="false" />
+            <element signature="e#3374#3375#0" expanded="false" />
+            <element signature="e#3400#3401#0" expanded="false" />
+            <element signature="e#3475#3476#0" expanded="false" />
+            <element signature="e#3508#3509#0" expanded="false" />
+            <element signature="e#3574#3575#0" expanded="false" />
+            <element signature="e#3606#3607#0" expanded="false" />
+            <element signature="e#3962#3963#0" expanded="false" />
+            <element signature="e#4040#4041#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/BrickLayout.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2016">
+          <caret line="128" column="14" lean-forward="false" selection-start-line="128" selection-start-column="14" selection-end-line="128" selection-end-column="14" />
+          <folding>
+            <element signature="e#3190#3191#0" expanded="false" />
+            <element signature="e#3218#3219#0" expanded="false" />
+            <element signature="e#3450#3451#0" expanded="false" />
+            <element signature="e#3495#3496#0" expanded="false" />
+            <element signature="e#4009#4010#0" expanded="false" />
+            <element signature="e#4042#4043#0" expanded="false" />
+            <element signature="e#4465#4466#0" expanded="false" />
+            <element signature="e#4505#4506#0" expanded="false" />
+            <element signature="e#4647#4648#0" expanded="false" />
+            <element signature="e#4693#4694#0" expanded="false" />
+            <element signature="e#4834#4835#0" expanded="false" />
+            <element signature="e#4873#4874#0" expanded="false" />
+            <element signature="e#5015#5016#0" expanded="false" />
+            <element signature="e#5060#5061#0" expanded="false" />
+            <element signature="e#5179#5180#0" expanded="false" />
+            <element signature="e#5218#5219#0" expanded="false" />
+            <element signature="e#5289#5290#0" expanded="false" />
+            <element signature="e#5326#5327#0" expanded="false" />
+            <element signature="e#5399#5400#0" expanded="false" />
+            <element signature="e#5437#5438#0" expanded="false" />
+            <element signature="e#5500#5501#0" expanded="false" />
+            <element signature="e#5533#5534#0" expanded="false" />
+            <element signature="e#5598#5599#0" expanded="false" />
+            <element signature="e#5632#5633#0" expanded="false" />
+            <element signature="e#5707#5708#0" expanded="false" />
+            <element signature="e#5738#5739#0" expanded="false" />
+            <marker date="1516112011094" expanded="false" signature="0:1135" ph="/**...*/" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="uml://JAVA/fko.jarkanoid.controller.MainController" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/controller/MainController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#3666#3667#0" expanded="true" />
+            <element signature="e#3694#3695#0" expanded="true" />
+            <element signature="e#12529#12530#0" expanded="true" />
+            <element signature="e#12556#12557#0" expanded="true" />
+            <element signature="e#15293#15294#0" expanded="true" />
+            <element signature="e#15340#15341#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_152/javafx-src.zip!/javafx/application/Application.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="307">
+          <caret line="140" column="55" lean-forward="true" selection-start-line="140" selection-start-column="55" selection-end-line="140" selection-end-column="55" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="uml://JAVA/fko.jarkanoid.model.GameModel" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/GameModel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="903">
+          <caret line="249" column="68" lean-forward="false" selection-start-line="249" selection-start-column="68" selection-end-line="249" selection-end-column="68" />
+          <folding>
+            <element signature="e#8204#8219#0" expanded="false" />
+            <element signature="e#11937#11938#0" expanded="false" />
+            <element signature="e#11969#11970#0" expanded="false" />
+            <element signature="e#23528#23529#0" expanded="false" />
+            <element signature="e#23566#23567#0" expanded="false" />
+            <element signature="e#37226#37227#0" expanded="false" />
+            <element signature="e#37276#37277#0" expanded="false" />
+            <element signature="e#39511#39512#0" expanded="false" />
+            <element signature="e#39542#39543#0" expanded="false" />
+            <element signature="e#40909#40910#0" expanded="false" />
+            <element signature="e#40937#40938#0" expanded="false" />
+            <element signature="e#40982#40983#0" expanded="false" />
+            <element signature="e#41006#41007#0" expanded="false" />
+            <element signature="e#41058#41059#0" expanded="false" />
+            <element signature="e#41089#41090#0" expanded="false" />
+            <element signature="e#41142#41143#0" expanded="false" />
+            <element signature="e#41174#41175#0" expanded="false" />
+            <element signature="e#41224#41225#0" expanded="false" />
+            <element signature="e#41253#41254#0" expanded="false" />
+            <element signature="e#41298#41299#0" expanded="false" />
+            <element signature="e#41322#41323#0" expanded="false" />
+            <element signature="e#41378#41379#0" expanded="false" />
+            <element signature="e#41426#41427#0" expanded="false" />
+            <element signature="e#41481#41482#0" expanded="false" />
+            <element signature="e#41528#41529#0" expanded="false" />
+            <element signature="e#41583#41584#0" expanded="false" />
+            <element signature="e#41630#41631#0" expanded="false" />
+            <element signature="e#41689#41690#0" expanded="false" />
+            <element signature="e#41740#41741#0" expanded="false" />
+            <element signature="e#41808#41809#0" expanded="false" />
+            <element signature="e#41868#41869#0" expanded="false" />
+            <element signature="e#41927#41928#0" expanded="false" />
+            <element signature="e#41978#41979#0" expanded="false" />
+            <element signature="e#42020#42021#0" expanded="false" />
+            <element signature="e#42044#42045#0" expanded="false" />
+            <element signature="e#42087#42088#0" expanded="false" />
+            <element signature="e#42112#42113#0" expanded="false" />
+            <element signature="e#42176#42177#0" expanded="false" />
+            <element signature="e#42210#42211#0" expanded="false" />
+            <element signature="e#42274#42275#0" expanded="false" />
+            <element signature="e#42302#42303#0" expanded="false" />
+            <element signature="e#42343#42344#0" expanded="false" />
+            <element signature="e#42363#42364#0" expanded="false" />
+            <element signature="e#42411#42412#0" expanded="false" />
+            <element signature="e#42439#42440#0" expanded="false" />
+            <element signature="e#42497#42498#0" expanded="false" />
+            <element signature="e#42530#42531#0" expanded="false" />
+            <element signature="e#42613#42614#0" expanded="false" />
+            <element signature="e#42641#42642#0" expanded="false" />
+            <element signature="e#42702#42703#0" expanded="false" />
+            <element signature="e#42728#42729#0" expanded="false" />
+            <element signature="e#42832#42833#0" expanded="false" />
+            <element signature="e#42913#42914#0" expanded="false" />
+            <element signature="e#42956#42957#0" expanded="false" />
+            <element signature="e#42990#42991#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/logback.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="441">
+          <caret line="44" column="69" lean-forward="false" selection-start-line="44" selection-start-column="69" selection-end-line="44" selection-end-column="69" />
+          <folding>
+            <element signature="e#40#1201#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/MainView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1407">
+          <caret line="115" column="0" lean-forward="false" selection-start-line="115" selection-start-column="0" selection-end-line="115" selection-end-column="0" />
+          <folding>
+            <element signature="e#8535#8536#0" expanded="true" />
+            <element signature="e#8556#8557#0" expanded="true" />
+            <element signature="e#8642#8643#0" expanded="true" />
+            <element signature="e#8674#8675#0" expanded="true" />
+            <element signature="e#8874#8875#0" expanded="true" />
+            <element signature="e#8911#8912#0" expanded="true" />
+            <element signature="e#9132#9133#0" expanded="true" />
+            <element signature="e#9186#9187#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="33" column="16" lean-forward="false" selection-start-line="33" selection-start-column="16" selection-end-line="33" selection-end-column="16" />
+        <state relative-caret-position="336">
+          <caret line="39" column="54" lean-forward="true" selection-start-line="39" selection-start-column="54" selection-end-line="39" selection-end-column="54" />
           <folding>
             <element signature="e#39#1200#0" expanded="false" />
           </folding>
@@ -1368,174 +1695,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/Jarkanoid.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="483">
-          <caret line="45" column="44" lean-forward="false" selection-start-line="45" selection-start-column="44" selection-end-line="45" selection-end-column="44" />
+        <state relative-caret-position="189">
+          <caret line="46" column="19" lean-forward="false" selection-start-line="46" selection-start-column="19" selection-end-line="46" selection-end-column="19" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1933#1934#0" expanded="true" />
-            <element signature="e#1958#1959#0" expanded="true" />
-            <element signature="e#4957#4958#0" expanded="true" />
-            <element signature="e#4980#4981#0" expanded="true" />
+            <element signature="e#3865#3866#0" expanded="true" />
+            <element signature="e#3888#3889#0" expanded="true" />
+            <element signature="e#3930#3931#0" expanded="true" />
+            <element signature="e#3955#3956#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/BrickLayoutView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/BrickLayout.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="420">
-          <caret line="42" column="0" lean-forward="false" selection-start-line="42" selection-start-column="0" selection-end-line="42" selection-end-column="0" />
-          <folding>
-            <element signature="e#3152#3153#0" expanded="true" />
-            <element signature="e#3180#3181#0" expanded="true" />
-            <element signature="e#3386#3387#0" expanded="true" />
-            <element signature="e#3431#3432#0" expanded="true" />
-            <element signature="e#3945#3946#0" expanded="true" />
-            <element signature="e#3978#3979#0" expanded="true" />
-            <element signature="e#4401#4402#0" expanded="true" />
-            <element signature="e#4441#4442#0" expanded="true" />
-            <element signature="e#4583#4584#0" expanded="true" />
-            <element signature="e#4629#4630#0" expanded="true" />
-            <element signature="e#4770#4771#0" expanded="true" />
-            <element signature="e#4809#4810#0" expanded="true" />
-            <element signature="e#4951#4952#0" expanded="true" />
-            <element signature="e#4996#4997#0" expanded="true" />
-            <element signature="e#5115#5116#0" expanded="true" />
-            <element signature="e#5154#5155#0" expanded="true" />
-            <element signature="e#5225#5226#0" expanded="true" />
-            <element signature="e#5262#5263#0" expanded="true" />
-            <element signature="e#5335#5336#0" expanded="true" />
-            <element signature="e#5373#5374#0" expanded="true" />
-            <element signature="e#5436#5437#0" expanded="true" />
-            <element signature="e#5469#5470#0" expanded="true" />
-            <element signature="e#5534#5535#0" expanded="true" />
-            <element signature="e#5568#5569#0" expanded="true" />
-            <element signature="e#5643#5644#0" expanded="true" />
-            <element signature="e#5674#5675#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/events/GameEvent.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="624">
-          <caret line="98" column="4" lean-forward="false" selection-start-line="98" selection-start-column="4" selection-end-line="98" selection-end-column="4" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/SoundManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="547">
-          <caret line="62" column="28" lean-forward="true" selection-start-line="62" selection-start-column="4" selection-end-line="62" selection-end-column="28" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/PowerPillView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="546">
-          <caret line="80" column="100" lean-forward="true" selection-start-line="80" selection-start-column="59" selection-end-line="80" selection-end-column="100" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/controller/MainController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="298">
-          <caret line="531" column="20" lean-forward="true" selection-start-line="531" selection-start-column="20" selection-end-line="531" selection-end-column="20" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-            <element signature="e#3667#3668#0" expanded="true" />
-            <element signature="e#3695#3696#0" expanded="true" />
-            <element signature="e#12530#12531#0" expanded="true" />
-            <element signature="e#12557#12558#0" expanded="true" />
-            <element signature="e#15294#15295#0" expanded="true" />
-            <element signature="e#15341#15342#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/GameModel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="441">
-          <caret line="65" column="0" lean-forward="true" selection-start-line="65" selection-start-column="0" selection-end-line="65" selection-end-column="0" />
-          <folding>
-            <element signature="e#8105#8120#0" expanded="true" />
-            <element signature="e#11498#11499#0" expanded="true" />
-            <element signature="e#11530#11531#0" expanded="true" />
-            <element signature="e#23093#23094#0" expanded="true" />
-            <element signature="e#23131#23132#0" expanded="true" />
-            <element signature="e#36791#36792#0" expanded="true" />
-            <element signature="e#36841#36842#0" expanded="true" />
-            <element signature="e#39076#39077#0" expanded="true" />
-            <element signature="e#39107#39108#0" expanded="true" />
-            <element signature="e#40474#40475#0" expanded="true" />
-            <element signature="e#40502#40503#0" expanded="true" />
-            <element signature="e#40547#40548#0" expanded="true" />
-            <element signature="e#40571#40572#0" expanded="true" />
-            <element signature="e#40623#40624#0" expanded="true" />
-            <element signature="e#40654#40655#0" expanded="true" />
-            <element signature="e#40707#40708#0" expanded="true" />
-            <element signature="e#40739#40740#0" expanded="true" />
-            <element signature="e#40789#40790#0" expanded="true" />
-            <element signature="e#40818#40819#0" expanded="true" />
-            <element signature="e#40863#40864#0" expanded="true" />
-            <element signature="e#40887#40888#0" expanded="true" />
-            <element signature="e#40943#40944#0" expanded="true" />
-            <element signature="e#40991#40992#0" expanded="true" />
-            <element signature="e#41046#41047#0" expanded="true" />
-            <element signature="e#41093#41094#0" expanded="true" />
-            <element signature="e#41148#41149#0" expanded="true" />
-            <element signature="e#41195#41196#0" expanded="true" />
-            <element signature="e#41254#41255#0" expanded="true" />
-            <element signature="e#41305#41306#0" expanded="true" />
-            <element signature="e#41373#41374#0" expanded="true" />
-            <element signature="e#41433#41434#0" expanded="true" />
-            <element signature="e#41492#41493#0" expanded="true" />
-            <element signature="e#41543#41544#0" expanded="true" />
-            <element signature="e#41585#41586#0" expanded="true" />
-            <element signature="e#41609#41610#0" expanded="true" />
-            <element signature="e#41652#41653#0" expanded="true" />
-            <element signature="e#41677#41678#0" expanded="true" />
-            <element signature="e#41741#41742#0" expanded="true" />
-            <element signature="e#41775#41776#0" expanded="true" />
-            <element signature="e#41839#41840#0" expanded="true" />
-            <element signature="e#41867#41868#0" expanded="true" />
-            <element signature="e#41908#41909#0" expanded="true" />
-            <element signature="e#41928#41929#0" expanded="true" />
-            <element signature="e#41976#41977#0" expanded="true" />
-            <element signature="e#42004#42005#0" expanded="true" />
-            <element signature="e#42062#42063#0" expanded="true" />
-            <element signature="e#42095#42096#0" expanded="true" />
-            <element signature="e#42178#42179#0" expanded="true" />
-            <element signature="e#42206#42207#0" expanded="true" />
-            <element signature="e#42267#42268#0" expanded="true" />
-            <element signature="e#42293#42294#0" expanded="true" />
-            <element signature="e#42397#42398#0" expanded="true" />
-            <element signature="e#42478#42479#0" expanded="true" />
-            <element signature="e#42521#42522#0" expanded="true" />
-            <element signature="e#42555#42556#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/MainView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="651">
-          <caret line="173" column="38" lean-forward="false" selection-start-line="173" selection-start-column="38" selection-end-line="173" selection-end-column="38" />
-          <folding />
         </state>
       </provider>
     </entry>

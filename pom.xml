@@ -50,14 +50,6 @@
             <systemPath>${project.basedir}/src/main/resources/libs/com.objectplanet.image.PngEncoder.jar</systemPath>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.perf4j/perf4j -->
-        <dependency>
-            <groupId>org.perf4j</groupId>
-            <artifactId>perf4j</artifactId>
-            <version>0.9.16</version>
-            <scope>compile</scope>
-        </dependency>
-
         <!-- LOGGING -->
         <!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
         <dependency>

@@ -46,9 +46,9 @@ public class PowerPillView extends StackPane {
 //  private static final Font newFont = Font.font(null, FontWeight.EXTRA_BOLD, FontPosture.REGULAR, 18);
 
   /**
-   * @param powerPill
+   * @param powerPill the model power pill this view shall be based on
    */
-  public PowerPillView(PowerPill powerPill) {
+  PowerPillView(PowerPill powerPill) {
     super();
     this.powerPill = powerPill;
 //    System.out.println("VIEW: Added PowerPill: "+powerPill);
@@ -76,6 +76,7 @@ public class PowerPillView extends StackPane {
 //    label.setFill(Color.DARKGRAY);
 //    label.setFont(newFont);
 
+    // animation for power pills while falling
     pillAnimationTimer.setCycleCount(Animation.INDEFINITE);
     pillAnimationTimer.setAutoReverse(false);
     final KeyFrame kf = new KeyFrame(Duration.millis(1000), new KeyValue(label.rotateProperty(), 360));
