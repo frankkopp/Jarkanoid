@@ -26,22 +26,18 @@
 package fko.jarkanoid.recorder;
 
 import fko.jarkanoid.Jarkanoid;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Node;
+import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
-
-import com.objectplanet.image.PngEncoder;
-import javafx.stage.Stage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.imageio.ImageIO;
 
 /**
  * Recorder
@@ -60,11 +56,11 @@ public class Recorder implements Runnable {
 
   private final ThreadPoolExecutor saveExecutor =
       new ThreadPoolExecutor(
-          16,
-          16,
+          8,
+          8,
           0L,
           TimeUnit.MILLISECONDS,
-          new LinkedBlockingQueue<Runnable>()); // new ScheduledThreadPoolExecutor(1);
+          new LinkedBlockingQueue<Runnable>());
 
   private final BlockingQueue<BufferedImage> queue = new LinkedBlockingQueue<BufferedImage>();
 
@@ -74,8 +70,6 @@ public class Recorder implements Runnable {
   private AtomicLong saveCounter = new AtomicLong(0);
 
   private AtomicBoolean isStopped = new AtomicBoolean(false);
-
-  private PngEncoder encoder = new PngEncoder();
 
   private Thread recorderThread = null;
 
@@ -146,8 +140,9 @@ public class Recorder implements Runnable {
         e.printStackTrace();
       }
       if (isStopped.get() && !genExecutor.isShutdown()) {
-        LOG.debug("Shutdown taking snapshots...");
+        LOG.info("Shutdown taking snapshots...");
         genExecutor.shutdown();
+        LOG.info("Saving queued snapshots to disk...");
       }
     }
     LOG.debug("Shutdown saving snapshots...");
