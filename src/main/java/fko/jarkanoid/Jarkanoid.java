@@ -93,9 +93,7 @@ public class Jarkanoid extends Application {
     primaryStage.setResizable(false);
 
     // closeAction
-    primaryStage.setOnCloseRequest(event -> {
-      exit();
-    });
+    primaryStage.setOnCloseRequest(event -> exit());
 
     primaryStage.show();
 
