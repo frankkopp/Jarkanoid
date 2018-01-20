@@ -82,7 +82,7 @@ public class GameModel extends Observable {
   private static final double PLAYFIELD_INITIAL_WIDTH = 780;
 
   // paddle constants
-  private static final double PADDLE_INITIAL_FRAMERATE = 100; // Framerate for paddle movements
+  private static final double PADDLE_INITIAL_FRAMERATE = 120; // Framerate for paddle movements
   private static final double PADDLE_MOVE_STEPS = 5.0; // steps per animation cycle
   private static final double PADDLE_INITIAL_Y = 670;
   private static final double PADDLE_INITIAL_X = 315;

@@ -108,6 +108,15 @@
 .gameover {
 	-fx-font-size: 80;
 	-fx-fill: #ffd400;
-	-fx-translate-x: 179;
-	-fx-translate-y: 221;
+}
+
+.gameprestart {
+    -fx-font-size: 35;
+    -fx-fill: #ffd400;
+}
+
+.gamename {
+	-fx-font-family: AstronomicMono;
+    -fx-font-size: 100;
+    -fx-fill: #ff0000;
 }

@@ -30,8 +30,6 @@ import fko.jarkanoid.model.*;
 import fko.jarkanoid.model.SoundManager.Clips;
 import fko.jarkanoid.recorder.Recorder;
 import fko.jarkanoid.view.MainView;
-import javafx.animation.FillTransition;
-import javafx.animation.Transition;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ListChangeListener.Change;
@@ -42,11 +40,11 @@ import javafx.scene.control.Button;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -92,6 +90,7 @@ public class MainController implements Initializable, Observer {
   @FXML private Rectangle rightWall;
   @FXML private Rectangle paddle;
   @FXML private Text gameOverSplash;
+  @FXML private VBox gamePreStartSplash;
 
   /**
    * Constructor the MainController
@@ -218,8 +217,10 @@ public class MainController implements Initializable, Observer {
     pointsLabel.textProperty().bind(model.currentScoreProperty().asString("%06d"));
 
     // game over splash text
-    // TODO: GAME_OVER vs. GAME_WIN
     gameOverSplash.visibleProperty().bind(model.gameOverProperty());
+
+    // pre start splash
+    gamePreStartSplash.visibleProperty().bind(model.isPlayingProperty().not());
   }
 
   /**
@@ -396,18 +397,40 @@ public class MainController implements Initializable, Observer {
       case R:
         recordingAction();
         break;
-      case Q:
+       case Q:
         if (event.isControlDown()) {
           model.skipLevelCheat();
         }
         break;
 
       // paddle control
+      case A:
       case LEFT:
         onPaddleLeftAction(true);
         break;
+      case D:
       case RIGHT:
         onPaddleRightAction(true);
+        break;
+      default:
+    }
+  }
+
+  /**
+   * Handles key released events
+   *
+   * @param event
+   */
+  private void keyReleasedAction(KeyEvent event) {
+    switch (event.getCode()) {
+      // paddle control
+      case A:
+      case LEFT:
+        onPaddleLeftAction(false);
+        break;
+      case D:
+      case RIGHT:
+        onPaddleRightAction(false);
         break;
       default:
     }
@@ -512,24 +535,6 @@ public class MainController implements Initializable, Observer {
       LOG.info("User requested sound on");
       soundButton.setText("Sound Off");
       sounds.soundOn();
-    }
-  }
-
-  /**
-   * Handles key released events
-   *
-   * @param event
-   */
-  private void keyReleasedAction(KeyEvent event) {
-    switch (event.getCode()) {
-        // paddle control
-      case LEFT:
-        onPaddleLeftAction(false);
-        break;
-      case RIGHT:
-        onPaddleRightAction(false);
-        break;
-      default:
     }
   }
 

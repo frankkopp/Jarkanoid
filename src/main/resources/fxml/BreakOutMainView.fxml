@@ -164,7 +164,25 @@
                                           <Reflection />
                                        </effect>
                                     </Rectangle>
-                                    <Text fx:id="gameOverSplash" fill="#ffd400" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="gameover" text="Game Over" textAlignment="CENTER" />
+                                    <VBox fx:id="gamePreStartSplash" alignment="CENTER" layoutX="47.0" layoutY="55.0" styleClass="gameprestart">
+                                       <children>
+                                          <Text fill="#ffd400" strokeType="OUTSIDE" strokeWidth="0.0" text="JARKANOID">
+                                             <styleClass>
+                                                <String fx:value="gameprestart" />
+                                                <String fx:value="gamename" />
+                                             </styleClass>
+                                          </Text>
+                                          <Text fill="#ffd400" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="gameprestart" text="by Frank Kopp" />
+                                          <Text fill="#ffd400" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="gameprestart" />
+                                          <Text fill="#ffd400" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="gameprestart" text="Press &quot;Enter&quot; to start" />
+                                          <Text fill="#ffd400" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="gameprestart" text="Use mouse or arrow keys to move paddle" textAlignment="CENTER" />
+                                          <Text fx:id="gameOverSplash" fill="#ffd400" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="gameover" text="Game Over" textAlignment="CENTER">
+                                             <VBox.margin>
+                                                <Insets bottom="30.0" top="30.0" />
+                                             </VBox.margin>
+                                          </Text>
+                                       </children>
+                                    </VBox>
                                  </children>
                               </Pane>
                            </center>
