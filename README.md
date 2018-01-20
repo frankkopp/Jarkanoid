@@ -10,4 +10,4 @@ After being nearly feaure complete I'm not as convinced as before anymore that M
 
 The better pattern would propably be a classical GameLoop pattern (GameLoop -> (processEvents, updateWorld, renderFrame). Although I do also have a game loop pattern in place it updates only model objects. The model then uses property bindung and the Observer pattern to update the view. 
 
-The GameLoop pattern would also have made the code easier to understand and would probalby have avoided many line of code compared to the MVC pattern.
+The GameLoop pattern would also have made the code easier to understand and would probalby have avoided many lines of code compared to the MVC pattern.
