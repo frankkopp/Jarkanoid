@@ -16,8 +16,7 @@ hs_err_pid*
 bin/*
 out/*
 target/*
-.idea/uiDesigner.xml
-.idea/workspace.xml
+.idea/
 design/sounds/Arcade Longplay [270] Arkanoid.wav
 design/sounds/full/
 screenshots/
