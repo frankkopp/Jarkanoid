@@ -39,6 +39,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -94,6 +95,10 @@ public class MainController implements Initializable, Observer {
   @FXML private Text gameOverSplash;
   @FXML private VBox gamePreStartSplash;
   @FXML private TableView highScoreTable;
+  @FXML private TextField playerNameTextField;
+
+  // to avoid keeping space pressed and therefore having rapid fire
+  private boolean spaceIsPressed = false;
 
   /**
    * Constructor the MainController
@@ -227,11 +232,17 @@ public class MainController implements Initializable, Observer {
 
     // pre start splash
     gamePreStartSplash.visibleProperty().bind(model.isPlayingProperty().not());
+
+    // bind bidrectional playerName
+    playerNameTextField.textProperty().bindBidirectional(model.playerNameProperty());
+
+    // to not have focus on playerNameTextField
+    view.asParent().requestFocus();
   }
 
   /**
    * Called by a property binding to the active power property.
-   * Is used to accomodate animations when a new power gets acitve and
+   * Is used to accommodate animations when a new power gets acitve and
    * the old power gets inactive. Not all powers have or need animations.
    *
    * @param oldPowerType
@@ -397,11 +408,17 @@ public class MainController implements Initializable, Observer {
   private void keyPressedAction(KeyEvent event) {
     switch (event.getCode()) {
       // game control
+      case ESCAPE:
+      case ENTER:
       case N:
         startStopButtonAction(new ActionEvent());
         break;
       case SPACE:
         restartCaughtBallAction(new ActionEvent());
+        if (!spaceIsPressed) {
+          spaceIsPressed=true;
+          model.shootLaser();
+        }
         break;
       case P:
         pauseResumeButtonAction(new ActionEvent());
@@ -447,9 +464,29 @@ public class MainController implements Initializable, Observer {
       case RIGHT:
         onPaddleRightAction(false);
         break;
+      case SPACE:
+        spaceIsPressed=false;
       default:
     }
   }
+
+  @FXML
+  void changePlayerNameAction(ActionEvent event) {
+    LOG.debug("Change player name action: {}", event);
+    // the value itself has a bidirectional binding to model property
+    // to not have focus on playerNameTextField
+    view.asParent().requestFocus();
+  }
+
+  @FXML
+  void playerNameTextFieldClickedAction(MouseEvent event) {
+    LOG.debug("Change player name field clicked action: {}", event);
+    // the value itself has a bidirectional binding to model property
+    // to not have focus on playerNameTextField
+    playerNameTextField.selectAll();
+  }
+
+
 
   @FXML
   void recordingAction(MouseEvent event) {
@@ -477,6 +514,7 @@ public class MainController implements Initializable, Observer {
   private void mousePressedAction(final MouseEvent mouseEvent) {
     model.releaseCaughtBall();
     model.shootLaser();
+    view.asParent().requestFocus();
   }
 
   /**
@@ -514,7 +552,6 @@ public class MainController implements Initializable, Observer {
   /** Called when user wants to restart a caught Ball */
   private void restartCaughtBallAction(final ActionEvent actionEvent) {
     model.releaseCaughtBall();
-    model.shootLaser();
   }
 
   /**

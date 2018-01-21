@@ -140,6 +140,7 @@ public class HighScore {
                         Integer.parseInt(parts[2]),
                         LocalDateTime.parse(parts[3].trim())));
               });
+
       sortList();
 
       LOG.info("Read {} entries from highscore file", _list.size());
@@ -239,7 +240,6 @@ public class HighScore {
    * sort the list with the highest score first
    */
   private void sortList() {
-    // Sorting using Anonymous Inner class.
     _list.sort((HighScoreEntry e1, HighScoreEntry e2) -> e2.score - e1.score);
   }
 

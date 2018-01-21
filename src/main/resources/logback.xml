@@ -36,7 +36,7 @@
         </encoder>
     </appender>
 
-    <logger name="fko.jarkanoid" level="INFO" additivity="true">
+    <logger name="fko.jarkanoid" level="DEBUG" additivity="true">
     </logger>
 
     <logger name="fko.jarkanoid.model" level="INFO" additivity="true">
@@ -48,7 +48,7 @@
     <logger name="fko.jarkanoid.controller" level="INFO" additivity="true">
     </logger>
 
-    <logger name="fko.jarkanoid.recorder" level="INFO" additivity="true">
+    <logger name="fko.jarkanoid.recorder" level="DEBUG" additivity="true">
     </logger>
 
     <logger name="fko.jarkanoid.events" level="WARN" additivity="true">

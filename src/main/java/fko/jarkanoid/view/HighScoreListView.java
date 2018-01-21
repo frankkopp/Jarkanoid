@@ -30,11 +30,16 @@ import fko.jarkanoid.model.GameModel;
 import fko.jarkanoid.model.HighScore;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.css.PseudoClass;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.util.Callback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,12 +48,13 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 
 public class HighScoreListView {
 
   private static final Logger LOG = LoggerFactory.getLogger(HighScoreListView.class);
 
-  private final TableView highScoreTable;
+  private final TableView<TableRowBean> highScoreTable;
   private final GameModel model;
   private final MainController controller;
   private final ObservableList<TableRowBean> observableList;
@@ -56,16 +62,16 @@ public class HighScoreListView {
   private HighScore.HighScoreEntry newestEntry;
 
   /**
-   *
-   * TODO: fix warnings
-   * TODO: add option to edit name
+   * TODO: fix warnings TODO: add option to edit name
    *
    * @param model
    * @param controller
    * @param highScoreTable
    */
   public HighScoreListView(
-      final GameModel model, final MainController controller, final TableView highScoreTable) {
+      final GameModel model,
+      final MainController controller,
+      final TableView<TableRowBean> highScoreTable) {
 
     LOG.debug("Building HighScoreListView");
 
@@ -79,30 +85,41 @@ public class HighScoreListView {
 
     double tablePrefWidth = highScoreTable.getPrefWidth();
 
-    TableColumn placeCol = getTableColumn("Place", 0.1 * tablePrefWidth, "place");
-    TableColumn nameCol = getTableColumn("Name", 0.4 * tablePrefWidth, "name");
-    TableColumn scoreCol = getTableColumn("Score", 0.15 * tablePrefWidth, "score");
-    TableColumn levelCol = getTableColumn("Level", 0.1 * tablePrefWidth, "level");
-    TableColumn dateCol = getTableColumn("Date", 0.25 * tablePrefWidth, "date");
+    TableColumn<TableRowBean, String> placeCol =
+        createTableColumn("Place", 0.1 * tablePrefWidth, TableRowBean::placeProperty);
+    TableColumn<TableRowBean, String> nameCol =
+        createTableColumn("Name", 0.4 * tablePrefWidth, TableRowBean::nameProperty);
+    TableColumn<TableRowBean, String> scoreCol =
+        createTableColumn("Score", 0.15 * tablePrefWidth, TableRowBean::scoreProperty);
+    TableColumn<TableRowBean, String> levelCol =
+        createTableColumn("Level", 0.1 * tablePrefWidth, TableRowBean::levelProperty);
+    TableColumn<TableRowBean, String> dateCol =
+        createTableColumn("Date", 0.25 * tablePrefWidth, TableRowBean::dateProperty);
 
     highScoreTable.getColumns().addAll(placeCol, nameCol, scoreCol, levelCol, dateCol);
 
     this.highScoreTable.setItems(observableList);
 
+    highScoreTable.setEditable(false);
+
     updateList();
   }
 
-  public TableColumn getTableColumn(
-      final String columnTitle, final double width, final String property) {
-    TableColumn column = new TableColumn(columnTitle);
+  public TableColumn<TableRowBean, String> createTableColumn(
+      final String columnTitle,
+      final double width,
+      final Function<TableRowBean, ObservableValue<String>> property) {
+
+    TableColumn<TableRowBean, String> column = new TableColumn(columnTitle);
     column.setResizable(false);
     column.setSortable(false);
-    column.setEditable(false);
-    column.setEditable(false);
+    column.setEditable(true);
     column.setPrefWidth(width);
     column.setMinWidth(width);
     column.setMaxWidth(width);
-    column.setCellValueFactory(new PropertyValueFactory<>(property));
+
+    //    column.setCellValueFactory(new PropertyValueFactory<>(property));
+    column.setCellValueFactory(cellData -> property.apply(cellData.getValue()));
 
     try {
       column.impl_setReorderable(false);
@@ -165,7 +182,7 @@ public class HighScoreListView {
 
       this.place = new SimpleStringProperty(place);
       this.name = new SimpleStringProperty(name);
-      this.score = new SimpleStringProperty(Integer.toString(score));
+      this.score = new SimpleStringProperty(String.format("%,d", score));
       this.level = new SimpleStringProperty(Integer.toString(level));
       this.date =
           new SimpleStringProperty(

@@ -6,6 +6,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.InnerShadow?>
 <?import javafx.scene.effect.Reflection?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -53,25 +54,18 @@
                <children>
                   <GridPane maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="800.0">
                     <columnConstraints>
-                      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="5.0" prefWidth="100.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
+                      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
+                        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" percentWidth="30.0" prefWidth="100.0" />
+                        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" percentWidth="5.0" prefWidth="100.0" />
                     </columnConstraints>
                     <rowConstraints>
                       <RowConstraints />
                     </rowConstraints>
                      <children>
-                        <Circle fx:id="recordingIndicator" fill="#22cd1c" onMouseClicked="#recordingAction" radius="10.0" stroke="BLACK" strokeType="INSIDE" GridPane.columnIndex="4">
-                           <GridPane.margin>
-                              <Insets right="20.0" />
-                           </GridPane.margin>
-                           <effect>
-                              <InnerShadow />
-                           </effect>
-                        </Circle>
-                        <Button fx:id="startStopButton" defaultButton="true" focusTraversable="false" mnemonicParsing="false" onAction="#startStopButtonAction" text="Play" GridPane.columnIndex="1">
+                        <Button fx:id="startStopButton" focusTraversable="false" mnemonicParsing="false" onAction="#startStopButtonAction" text="Play" GridPane.columnIndex="1">
                            <GridPane.margin>
                               <Insets />
                            </GridPane.margin>
@@ -95,6 +89,19 @@
                               <String fx:value="button" />
                            </styleClass>
                         </Button>
+                        <Circle fx:id="recordingIndicator" fill="#22cd1c" onMouseClicked="#recordingAction" radius="10.0" stroke="BLACK" strokeType="INSIDE" GridPane.columnIndex="5">
+                           <GridPane.margin>
+                              <Insets right="10.0" />
+                           </GridPane.margin>
+                           <effect>
+                              <InnerShadow />
+                           </effect>
+                        </Circle>
+                        <TextField fx:id="playerNameTextField" alignment="CENTER_RIGHT" focusTraversable="false" onAction="#changePlayerNameAction" onInputMethodTextChanged="#changePlayerNameAction" onMouseClicked="#playerNameTextFieldClickedAction" promptText="Enter Player Name" styleClass="namefield" GridPane.columnIndex="4">
+                           <GridPane.margin>
+                              <Insets right="10.0" />
+                           </GridPane.margin>
+                        </TextField>
                      </children>
                      <VBox.margin>
                         <Insets top="5.0" />

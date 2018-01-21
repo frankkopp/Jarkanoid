@@ -73,7 +73,7 @@ public class GameModel extends Observable {
    * Constants for game dimensions and other relevant settings.
    * Need to be aligned with FXML UI Design.
    */
-  private static final int START_LEVEL = 13;
+  private static final int START_LEVEL = 1;
   private static final int START_LIVES = 3;
 
   private static final long SLEEP_BETWEEN_LIVES = 2000; // in ms
@@ -196,7 +196,7 @@ public class GameModel extends Observable {
       new SimpleObjectProperty<PowerPillType>(PowerPillType.NONE);
   private boolean ballCatchedFlag = false;
 
-  // count each time tte game loop is called and some statistics
+  // count each time the game loop is called and some statistics
   private long frameLoopCounter = 0;
   private long frameLoopCounterTimeStamp = System.nanoTime();
   private long lastloopTime;
@@ -212,6 +212,9 @@ public class GameModel extends Observable {
 
   // highscore manager
   private final HighScore highScoreManager = HighScore.getInstance();
+
+  // player name property
+  private final StringProperty playerName = new SimpleStringProperty("Unknown Player");
 
   /** Constructor - prepares the brick layout and the game loops. */
   public GameModel() {
@@ -627,7 +630,7 @@ public class GameModel extends Observable {
         break;
       case SLOW:
         // deactivate only if it is not SLOW again
-        if (!newType.equals(PowerPillType.SLOW)) {
+        if (!newType.equals(PowerPillType.SLOW) && ballManager.size() > 0) {
           // reset speed
           ballManager.get(0).setVelocity(BALL_INITIAL_SPEED);
         }
@@ -1031,7 +1034,7 @@ public class GameModel extends Observable {
             currentScore.get() > highScoreManager.getList().get(HIGHSCORE_MAX_PLACE-1).score) {
       HighScore.HighScoreEntry entry =
           new HighScore.HighScoreEntry(
-              "unknown", currentScore.get(), currentLevel.get(), LocalDateTime.now());
+              playerName.get(), currentScore.get(), currentLevel.get(), LocalDateTime.now());
       highScoreManager.addEntryAndSave(entry);
       setChanged();
       notifyObservers(new GameEvent(GameEventType.NEW_HIGHSCORE, entry));
@@ -1234,6 +1237,18 @@ public class GameModel extends Observable {
     return currentScore.getReadOnlyProperty();
   }
 
+  public String getPlayerName() {
+    return playerName.get();
+  }
+
+  public StringProperty playerNameProperty() {
+    return playerName;
+  }
+
+  public void setPlayerName(final String playerName) {
+    this.playerName.set(playerName);
+  }
+
   public void setPaddleLeft(boolean b) {
     paddleLeft = b;
   }
@@ -1284,4 +1299,7 @@ public class GameModel extends Observable {
   public List<HighScore.HighScoreEntry> getHighScoreManager() {
     return highScoreManager.getList();
   }
+
+
+
 }
