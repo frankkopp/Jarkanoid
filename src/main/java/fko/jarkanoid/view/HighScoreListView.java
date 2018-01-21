@@ -42,6 +42,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
@@ -57,16 +58,16 @@ public class HighScoreListView {
   private HighScore.HighScoreEntry newestEntry;
 
   /**
-   * TODO: fix warnings TODO: add option to edit name
+   * TODO: fix warnings
    *
-   * @param model
-   * @param controller
-   * @param highScoreTable
+   * @param model the model
+   * @param controller the controller
+   * @param highScoreTable the model's high score table
    */
-  public HighScoreListView(
-      final GameModel model,
-      final MainController controller,
-      final TableView<TableRowBean> highScoreTable) {
+  HighScoreListView(
+          final GameModel model,
+          final MainController controller,
+          final TableView<TableRowBean> highScoreTable) {
 
     LOG.debug("Building HighScoreListView");
 
@@ -102,12 +103,12 @@ public class HighScoreListView {
     updateList();
   }
 
-  public TableColumn<TableRowBean, String> createTableColumn(
-      final String columnTitle,
-      final double width,
-      final Function<TableRowBean, ObservableValue<String>> property) {
+  private TableColumn<TableRowBean, String> createTableColumn(
+          final String columnTitle,
+          final double width,
+          final Function<TableRowBean, ObservableValue<String>> property) {
 
-    TableColumn<TableRowBean, String> column = new TableColumn(columnTitle);
+    TableColumn<TableRowBean, String> column = new TableColumn<>(columnTitle);
     column.setResizable(false);
     column.setSortable(false);
     column.setEditable(true);
@@ -185,47 +186,47 @@ public class HighScoreListView {
                   DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT, FormatStyle.SHORT)));
     }
 
-    public StringProperty placeProperty() {
+    StringProperty placeProperty() {
       return place;
     }
 
-    public String getName() {
+    String getName() {
       return name.get();
     }
 
-    public StringProperty nameProperty() {
+    StringProperty nameProperty() {
       return name;
     }
 
-    public void setPlace(final String place) {
+    void setPlace(final String place) {
       this.place.set(place);
     }
 
-    public String getPlace() {
+    String getPlace() {
       return place.get();
     }
 
-    public String getScore() {
+    String getScore() {
       return score.get();
     }
 
-    public StringProperty scoreProperty() {
+    StringProperty scoreProperty() {
       return score;
     }
 
-    public String getLevel() {
+    String getLevel() {
       return level.get();
     }
 
-    public StringProperty levelProperty() {
+    StringProperty levelProperty() {
       return level;
     }
 
-    public String getDate() {
+    String getDate() {
       return date.get();
     }
 
-    public StringProperty dateProperty() {
+    StringProperty dateProperty() {
       return date;
     }
 
