@@ -48,7 +48,7 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class Recorder implements Runnable {
 
-  private static Logger LOG = LoggerFactory.getLogger(Recorder.class);
+  private static final Logger LOG = LoggerFactory.getLogger(Recorder.class);
 
   public static final String SCREENSHOTS_FOLDER = "screenshots/";
 
@@ -66,10 +66,10 @@ public class Recorder implements Runnable {
 
   private static final Object LOCK = new Object();
 
-  private AtomicLong genCounter = new AtomicLong(0);
-  private AtomicLong saveCounter = new AtomicLong(0);
+  private final AtomicLong genCounter = new AtomicLong(0);
+  private final AtomicLong saveCounter = new AtomicLong(0);
 
-  private AtomicBoolean isStopped = new AtomicBoolean(false);
+  private final AtomicBoolean isStopped = new AtomicBoolean(false);
 
   private Thread recorderThread = null;
 

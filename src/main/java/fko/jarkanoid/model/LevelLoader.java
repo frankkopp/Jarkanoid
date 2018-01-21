@@ -67,7 +67,7 @@ import org.slf4j.LoggerFactory;
  */
 public final class LevelLoader {
 
-  private static Logger LOG = LoggerFactory.getLogger(LevelLoader.class);
+  private static final Logger LOG = LoggerFactory.getLogger(LevelLoader.class);
 
   private static LevelLoader instance; // Singleton
 

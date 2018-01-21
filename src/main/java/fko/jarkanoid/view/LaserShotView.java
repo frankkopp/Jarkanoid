@@ -37,25 +37,12 @@ public class LaserShotView extends Rectangle {
    *
    * @param laserShot the model's lasershot for this view
    */
-  LaserShotView(LaserShot laserShot) {
+  public LaserShotView(LaserShot laserShot) {
     this.laserShot = laserShot;
 
     // let the CSS determine the look of the ball
     this.getStyleClass().add("lasershot");
 
-    //    this.setArcWidth(5.0);
-    //    this.setArcHeight(5.0);
-    //    this.setStroke(Color.BLACK);
-    //    this.setStrokeType(StrokeType.INSIDE);
-    //    this.setStrokeWidth(1.0);
-    //    this.setEffect(effect);
-
-    //    solidBrickHitTimeline = new FillTransition(Duration.millis(75));
-    //    solidBrickHitTimeline.setFromValue(brick.getColor());
-    //    solidBrickHitTimeline.setToValue(Color.WHITE);
-    //    solidBrickHitTimeline.setCycleCount(2);
-    //    solidBrickHitTimeline.setAutoReverse(true);
-    //    solidBrickHitTimeline.setShape(this);
   }
 
   private LaserShot getLaserShot() {

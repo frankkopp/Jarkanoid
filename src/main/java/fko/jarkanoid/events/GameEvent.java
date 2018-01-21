@@ -37,7 +37,7 @@ package fko.jarkanoid.events;
 public class GameEvent {
 
   private final GameEventType eventType;
-  private Object args;
+  private final Object args;
 
   /**
    * Creates a GameEvent of a certain type.

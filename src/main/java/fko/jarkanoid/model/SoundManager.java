@@ -38,7 +38,6 @@ import org.slf4j.LoggerFactory;
  * Sounds
  * <p>
  * Loads all main.resources.sounds and maps them to an enumeration for easy access.
- * <p>
  */
 public final class SoundManager {
 

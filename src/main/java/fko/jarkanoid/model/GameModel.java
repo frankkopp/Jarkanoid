@@ -60,9 +60,7 @@ public class GameModel extends Observable {
   private static final Logger LOG = LoggerFactory.getLogger(GameModel.class);
 
   // TODO: add acceleration
-  // TODO: create all main.resources.levels
-  // TODO: improve powers / animation etc.
-  // TODO: Highscore
+  // TODO: create all levels
   // IDEAS: Powers: multiball (star), Trasher (no bouncing on bricks detroyed), extra wide, smaller
   // IDEAS :paddle, thehered paddle,
   // IDEAS: Powers: upside down, reverse control, cloaked, power not falling in straight line
@@ -127,7 +125,7 @@ public class GameModel extends Observable {
   private static final int MAX_NUMBER_OF_LOOP_HITS = 25;
 
   // the maximal entries in the highscore list
-  public static final int HIGHSCORE_MAX_PLACE = 15;
+  private static final int HIGHSCORE_MAX_PLACE = 15;
 
   /*
    * These values determine the size and dimension of elements in Breakout.
@@ -1110,7 +1108,7 @@ public class GameModel extends Observable {
   }
 
   /**
-   * Called by the <code>paddleMovementTimeline<code> animation event to move the paddles.
+   * Called by the <code>paddleMovementTimeline</code> animation event to move the paddles.
    */
   private void paddleMovementLoop() {
     if (isPaused()) return; // no paddle movement when game is paused

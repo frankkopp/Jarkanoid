@@ -68,7 +68,7 @@ class BrickLayoutTest {
    */
   @Test
   void testGetMatrix() {
-    BrickLayout bl = new BrickLayout(playfieldWidth, playfieldWidth);
+    BrickLayout bl = new BrickLayout(playfieldWidth, playfieldHeight);
     assertNotNull(bl.getMatrix());
     assertTrue(bl.getMatrix() instanceof Brick[][]);
 //		System.out.println(bl);
@@ -79,7 +79,7 @@ class BrickLayoutTest {
    */
   @Test
   void testGetRow() {
-    BrickLayout bl = new BrickLayout(playfieldWidth, playfieldWidth);
+    BrickLayout bl = new BrickLayout(playfieldWidth, playfieldHeight);
     assertNotNull(bl.getRow(0));
     assertTrue(bl.getRow(0) instanceof Brick[]);
 //		System.out.println(Arrays.toString(bl.getRow(0)));
@@ -90,7 +90,7 @@ class BrickLayoutTest {
    */
   @Test
   void testSetGetBrick() {
-    BrickLayout bl = new BrickLayout(playfieldWidth, playfieldWidth);
+    BrickLayout bl = new BrickLayout(playfieldWidth, playfieldHeight);
     Brick b1 = new Brick(BrickType.GREY, PowerPillType.NONE);
     bl.setBrick(4, 4, b1);
     System.out.println(bl);
@@ -100,7 +100,7 @@ class BrickLayoutTest {
 
   @Test
   public void testUpdateDataforMatrix() throws Exception {
-    BrickLayout bl = new BrickLayout(playfieldWidth, playfieldWidth);
+    BrickLayout bl = new BrickLayout(playfieldWidth, playfieldHeight);
     bl.setMatrix(LevelLoader.getInstance().getLevel(1));
 
     //		System.out.println(
@@ -127,7 +127,7 @@ class BrickLayoutTest {
 
   @Test
   void getUpperBound() {
-    BrickLayout bl = new BrickLayout(playfieldWidth, playfieldWidth);
+    BrickLayout bl = new BrickLayout(playfieldWidth, playfieldHeight);
     assertEquals(0, bl.getUpperBound(0,0));
     assertEquals(0, bl.getUpperBound(0,5));
     assertEquals(bl.getBrickHeight(), bl.getUpperBound(1,0));
@@ -136,7 +136,7 @@ class BrickLayoutTest {
 
   @Test
   void getLowerBound() {
-    BrickLayout bl = new BrickLayout(playfieldWidth, playfieldWidth);
+    BrickLayout bl = new BrickLayout(playfieldWidth, playfieldHeight);
     assertEquals(bl.getBrickHeight(), bl.getLowerBound(0,0));
     assertEquals(bl.getBrickHeight(), bl.getLowerBound(0,5));
     assertEquals(2 * bl.getBrickHeight(), bl.getLowerBound(1,0));
@@ -145,7 +145,7 @@ class BrickLayoutTest {
 
   @Test
   void getLeftBound() {
-    BrickLayout bl = new BrickLayout(playfieldWidth, playfieldWidth);
+    BrickLayout bl = new BrickLayout(playfieldWidth, playfieldHeight);
     assertEquals(0, bl.getLeftBound(0,0));
     assertEquals(0, bl.getLeftBound(1,0));
     assertEquals(bl.getBrickWidth(), bl.getLeftBound(0,1));
@@ -154,7 +154,7 @@ class BrickLayoutTest {
 
   @Test
   void getRightBound() {
-    BrickLayout bl = new BrickLayout(playfieldWidth, playfieldWidth);
+    BrickLayout bl = new BrickLayout(playfieldWidth, playfieldHeight);
     assertEquals(bl.getBrickWidth(), bl.getRightBound(0,0));
     assertEquals(bl.getBrickWidth(), bl.getRightBound(5,0));
     assertEquals(2 * bl.getBrickWidth(), bl.getRightBound(0,1));

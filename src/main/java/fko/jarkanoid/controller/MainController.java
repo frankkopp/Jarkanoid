@@ -29,7 +29,6 @@ import fko.jarkanoid.events.GameEvent;
 import fko.jarkanoid.model.*;
 import fko.jarkanoid.model.SoundManager.Clips;
 import fko.jarkanoid.recorder.Recorder;
-import fko.jarkanoid.view.HighScoreListView;
 import fko.jarkanoid.view.MainView;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ListChangeListener;
@@ -485,8 +484,6 @@ public class MainController implements Initializable, Observer {
     // to not have focus on playerNameTextField
     playerNameTextField.selectAll();
   }
-
-
 
   @FXML
   void recordingAction(MouseEvent event) {

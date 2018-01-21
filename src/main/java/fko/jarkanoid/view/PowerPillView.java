@@ -41,7 +41,7 @@ public class PowerPillView extends StackPane {
 
   private final PowerPill powerPill;
 
-  private Timeline pillAnimationTimer = new Timeline();
+  private final Timeline pillAnimationTimer = new Timeline();
 
 //  private static final Font newFont = Font.font(null, FontWeight.EXTRA_BOLD, FontPosture.REGULAR, 18);
 

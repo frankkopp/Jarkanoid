@@ -33,13 +33,8 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.css.PseudoClass;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.util.Callback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -147,15 +142,13 @@ public class HighScoreListView {
         .stream()
         .limit(15)
         .forEach(
-            entry -> {
-              observableList.add(
-                  new TableRowBean(
-                      Integer.toString(counter.getAndIncrement()),
-                      entry.name,
-                      entry.score,
-                      entry.level,
-                      entry.date));
-            });
+            entry -> observableList.add(
+                new TableRowBean(
+                    Integer.toString(counter.getAndIncrement()),
+                    entry.name,
+                    entry.score,
+                    entry.level,
+                    entry.date)));
 
     if (LOG.isDebugEnabled()) {
       LOG.debug("{}", observableList);

@@ -50,12 +50,12 @@ public class Jarkanoid extends Application {
 
   // VERSION
   @SuppressWarnings("unused")
-  public static final String VERSION = "prototype0.6";
+  public static final String VERSION = "prototype0.7";
 
   private static Stage pStage;
   private Scene scene;
 
-  private static Recorder recorder = new Recorder();
+  private static final Recorder recorder = new Recorder();
 
   /**
    * Main

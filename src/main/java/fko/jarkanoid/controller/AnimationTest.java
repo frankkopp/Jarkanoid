@@ -51,11 +51,11 @@ public class AnimationTest extends Application {
 	}
 
 	private Stage stage;
-	Pane root = new Pane();
-	private Circle ball;
+	final Pane root = new Pane();
+	private final Circle ball;
 
 	@Override
-	public void start(Stage primaryStage) throws Exception {
+	public void start(Stage primaryStage) {
 		stage = primaryStage;
 		final Scene scene = new Scene(root, 400, 400);
 		root.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
@@ -76,9 +76,9 @@ public class AnimationTest extends Application {
 
 	}
 
-	private ScaleTransition ballScaleTransition;
-	private StrokeTransition ballStrokeTransition;
-	private ParallelTransition combinedBallAnimation;
+	private final ScaleTransition ballScaleTransition;
+	private final StrokeTransition ballStrokeTransition;
+	private final ParallelTransition combinedBallAnimation;
 	private ScheduledExecutorService executor;
 
 	public AnimationTest() {

@@ -48,13 +48,13 @@ public class BrickLayout {
   public static final int ROWS = 18;
   public static final int COLUMNS = 13;
 
-  private DoubleProperty playfieldWidth;
-  private DoubleProperty playfieldHeight;
+  private final DoubleProperty playfieldWidth;
+  private final DoubleProperty playfieldHeight;
 
   private Brick[][] brickMatrix = new Brick[ROWS][COLUMNS];
 
-  private DoubleProperty brickWidth = new SimpleDoubleProperty();
-  private DoubleProperty brickHeight = new SimpleDoubleProperty();
+  private final DoubleProperty brickWidth = new SimpleDoubleProperty();
+  private final DoubleProperty brickHeight = new SimpleDoubleProperty();
 
   private int numberOfBricks = 0;
 

@@ -274,9 +274,9 @@ public class MainView {
     brickLayoutView.getBrickView(row, col).hit();
   }
 
-  /** @param b indicating if the paddle is currently laser enabled */
-  public void laserPaddle(final boolean b) {
-    if (b) {
+  /** @param bool indicating if the paddle is currently laser enabled */
+  public void laserPaddle(final boolean bool) {
+    if (bool) {
       paddle.getStyleClass().add("laser");
     } else {
       paddle.getStyleClass().removeAll("laser");

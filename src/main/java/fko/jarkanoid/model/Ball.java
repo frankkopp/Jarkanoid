@@ -176,8 +176,9 @@ public class Ball {
   }
 
   /** @see java.lang.Object#clone() */
+  @SuppressWarnings("MethodDoesntCallSuperMethod")
   @Override
-  protected Ball clone() throws CloneNotSupportedException {
+  protected Ball clone() {
     return new Ball(this);
   }
 

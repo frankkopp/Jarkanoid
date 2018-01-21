@@ -38,7 +38,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 public class LaserShot {
 
   // speed upwards
-  private double vY;
+  private final double vY;
 
   // should this laser be removed
   private boolean isMarkedForRemoval = false;
@@ -84,7 +84,7 @@ public class LaserShot {
   /**
    * Defines the X coordinate of the upper-left corner of the rectangle.
    */
-  private DoubleProperty x = new SimpleDoubleProperty();
+  private final DoubleProperty x = new SimpleDoubleProperty();
 
   public double getX() {
     return x.get();
@@ -101,7 +101,7 @@ public class LaserShot {
   /**
    * Defines the Y coordinate of the upper-left corner of the rectangle.
    */
-  private DoubleProperty y = new SimpleDoubleProperty();
+  private final DoubleProperty y = new SimpleDoubleProperty();
 
   public final void setY(double value) {
     y.set(value);
