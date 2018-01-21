@@ -81,10 +81,12 @@ public class HighScoreListView {
     this.observableList = FXCollections.observableArrayList(new ArrayList<TableRowBean>());
     this.newestEntry = null;
 
+    // clear any columns which have been set by FXML
     highScoreTable.getColumns().clear();
 
     double tablePrefWidth = highScoreTable.getPrefWidth();
 
+    // add new columns
     TableColumn<TableRowBean, String> placeCol =
         createTableColumn("Place", 0.1 * tablePrefWidth, TableRowBean::placeProperty);
     TableColumn<TableRowBean, String> nameCol =
@@ -95,12 +97,12 @@ public class HighScoreListView {
         createTableColumn("Level", 0.1 * tablePrefWidth, TableRowBean::levelProperty);
     TableColumn<TableRowBean, String> dateCol =
         createTableColumn("Date", 0.25 * tablePrefWidth, TableRowBean::dateProperty);
-
     highScoreTable.getColumns().addAll(placeCol, nameCol, scoreCol, levelCol, dateCol);
 
     this.highScoreTable.setItems(observableList);
 
     highScoreTable.setEditable(false);
+    highScoreTable.setMouseTransparent(false);
 
     updateList();
   }

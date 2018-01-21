@@ -73,6 +73,9 @@ public class MainView {
   // highscore list
   private final HighScoreListView highScoreListView;
 
+  // the paddle
+  private final Rectangle paddle;
+
   // Balls
   private final HashMap<Ball, BallView> ballViewMap = new HashMap<>();
 
@@ -86,7 +89,8 @@ public class MainView {
   private ScaleTransition hitPaddleScaleTransition;
   private StrokeTransition hitPaddleStrokeTransition;
   private ParallelTransition paddleHitAnimation;
-  private final Rectangle paddle;
+
+
 
   /**
    * @param model the model instance this view will be bound to

@@ -46,11 +46,11 @@
   ~
   -->
 
-<AnchorPane stylesheets="@../css/breakout.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane styleClass="backgroundpane" stylesheets="@../css/breakout.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <BorderPane maxHeight="800.0" maxWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <center>
-            <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="805.0" prefWidth="800.0" styleClass="backgroundpane">
+            <VBox layoutX="0.0" layoutY="0.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="800.0">
                <children>
                   <GridPane maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="800.0">
                     <columnConstraints>
@@ -104,7 +104,7 @@
                         </TextField>
                      </children>
                      <VBox.margin>
-                        <Insets top="5.0" />
+                        <Insets />
                      </VBox.margin>
                   </GridPane>
                   <GridPane alignment="BOTTOM_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="55.0" prefWidth="800.0">
@@ -139,12 +139,15 @@
                            </styleClass>
                         </Text>
                      </children>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
                   </GridPane>
                   <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" VBox.vgrow="ALWAYS">
                      <children>
                         <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <left>
-                              <Rectangle fx:id="leftWall" arcHeight="5.0" arcWidth="5.0" height="720.0" stroke="#1101a1" strokeType="INSIDE" strokeWidth="0.0" width="10.0" BorderPane.alignment="CENTER">
+                              <Rectangle fx:id="leftWall" height="710.0" stroke="#1101a1" strokeType="INSIDE" strokeWidth="0.0" width="10.0" BorderPane.alignment="CENTER">
                                  <styleClass>
                                     <String fx:value="wall" />
                                     <String fx:value="left" />
@@ -152,7 +155,7 @@
                               </Rectangle>
                            </left>
                            <top>
-                              <Rectangle fx:id="ceilingWall" arcHeight="5.0" arcWidth="5.0" height="10.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="800.0" BorderPane.alignment="CENTER">
+                              <Rectangle fx:id="ceilingWall" height="10.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="800.0" BorderPane.alignment="CENTER">
                                  <styleClass>
                                     <String fx:value="wall" />
                                     <String fx:value="ceiling" />
@@ -160,7 +163,7 @@
                               </Rectangle>
                            </top>
                            <right>
-                              <Rectangle fx:id="rightWall" arcHeight="5.0" arcWidth="5.0" height="720.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="10.0" BorderPane.alignment="CENTER">
+                              <Rectangle fx:id="rightWall" height="710.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="10.0" BorderPane.alignment="CENTER">
                                  <styleClass>
                                     <String fx:value="wall" />
                                     <String fx:value="right" />

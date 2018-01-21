@@ -69,6 +69,9 @@ public class GameModel extends Observable {
   // IDEAS: Bricks: moving bricks, zombi bricks - come back to life, shield for bricks
   // IDEAS: Special: flying aliens, flying powers, ball catcher, ball beamer, ball warper
 
+  // debugging constants / for normal playing these have to be all false
+  private static final boolean BOUNCING_FLOOR = false;
+
   /*
    * Constants for game dimensions and other relevant settings.
    * Need to be aligned with FXML UI Design.
@@ -398,7 +401,18 @@ public class GameModel extends Observable {
     ball.centerXProperty()
         .bind(paddleX.add(xLocationOnPaddle)); // slightly to the right of the middle
     ball.centerYProperty().bind(paddleY.subtract(ball.getRadius()).subtract(1.0));
-    LOG.debug("Ball bound to paddle");
+
+    // release the ball after a few seconds
+    executor.schedule(
+            () -> {
+              // check if the game has been stopped while we were waiting
+              if (!isPlaying() || isPaused()) return;
+              ballCatchedFlag = false;
+            },
+            5000,
+            TimeUnit.MILLISECONDS);
+
+    LOG.debug("Ball bound to paddle for 5 sec");
   }
 
   /**
@@ -440,7 +454,9 @@ public class GameModel extends Observable {
       // System.out.printf("Avg. Time for loop: %.6f ms (framelimit %.6f ms) %n", tLoop, tFrame);
       if (tLoop > tFrame) {
         if (LOG.isWarnEnabled()) {
-          LOG.warn(String.format("FRAME LIMIT VIOLATION: %.6f ms (framelimit %.6f ms) %n", tLoop, tFrame));
+          LOG.warn(
+              String.format(
+                  "FRAME LIMIT VIOLATION: %.6f ms (framelimit %.6f ms) %n", tLoop, tFrame));
         }
       }
 
@@ -972,12 +988,17 @@ public class GameModel extends Observable {
       // ************************
 
       if (ball.getUpperBound() >= playfieldHeight.get()) {
-        ball.markForRemoval();
-        // actually set the ball exactly onto the intermediate location and return for the next step
-        ball.setCenterX(cbX);
-        ball.setCenterY(cbY);
-        // relevant Hit?
-        maxLoopHitsCounter = MAX_NUMBER_OF_LOOP_HITS;
+        if (BOUNCING_FLOOR) {
+          ball.inverseYdirection();
+        } else {
+          ball.markForRemoval();
+          // actually set the ball exactly onto the intermediate location and return for the next
+          // step
+          ball.setCenterX(cbX);
+          ball.setCenterY(cbY);
+          // relevant Hit?
+          maxLoopHitsCounter = MAX_NUMBER_OF_LOOP_HITS;
+        }
         return;
       }
     } // end for intermediate step
@@ -1030,8 +1051,8 @@ public class GameModel extends Observable {
       notifyObservers(new GameEvent(GameEventType.GAME_OVER));
     }
     // new highscore (1st until 15th place)
-    if (highScoreManager.getList().size() < HIGHSCORE_MAX_PLACE-1 ||
-            currentScore.get() > highScoreManager.getList().get(HIGHSCORE_MAX_PLACE-1).score) {
+    if (highScoreManager.getList().size() < HIGHSCORE_MAX_PLACE - 1
+        || currentScore.get() > highScoreManager.getList().get(HIGHSCORE_MAX_PLACE - 1).score) {
       HighScore.HighScoreEntry entry =
           new HighScore.HighScoreEntry(
               playerName.get(), currentScore.get(), currentLevel.get(), LocalDateTime.now());
@@ -1299,7 +1320,4 @@ public class GameModel extends Observable {
   public List<HighScore.HighScoreEntry> getHighScoreManager() {
     return highScoreManager.getList();
   }
-
-
-
 }
