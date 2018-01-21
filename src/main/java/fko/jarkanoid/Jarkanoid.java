@@ -78,23 +78,26 @@ public class Jarkanoid extends Application {
 
     pStage = primaryStage;
 
+    // create model, view, controller
     GameModel model = new GameModel();
     MainController controller = new MainController(model);
     MainView view = new MainView(model, controller);
 
-    scene = new Scene(view.asParent());
-
+    // set initial window title - will be extended in controller
     primaryStage.setTitle("Jarkanoid by Frank Kopp");
 
-    controller.bindModelToView(view);
+    // bind view properties to model properties
+    controller.bindViewToModel(view);
 
+    // setup window
+    scene = new Scene(view.asParent());
     primaryStage.setScene(scene);
     primaryStage.centerOnScreen();
     primaryStage.setResizable(false);
-
     // closeAction
     primaryStage.setOnCloseRequest(event -> exit());
 
+    // finally show window
     primaryStage.show();
 
     LOG.info("JavaFX Application started");
@@ -106,6 +109,8 @@ public class Jarkanoid extends Application {
   @Override
   public void init() throws Exception {
     super.init();
+
+    // load fonts we need
     String fontName = "/fonts/AstronomicMono.otf";
     final URL urlResource = Jarkanoid.class.getResource(fontName);
     if (urlResource == null) {

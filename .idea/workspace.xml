@@ -3,25 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="7addf553-5c04-4a16-899d-8f87f62b1fee" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/Jarkanoid.java" afterPath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/Jarkanoid.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/controller/AnimationTest.java" afterPath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/controller/AnimationTest.java" />
       <change beforePath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/controller/MainController.java" afterPath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/controller/MainController.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/events/GameEvent.java" afterPath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/events/GameEvent.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/Ball.java" afterPath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/Ball.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/BrickLayout.java" afterPath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/BrickLayout.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/GameModel.java" afterPath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/GameModel.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/LaserShot.java" afterPath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/LaserShot.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/LevelLoader.java" afterPath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/LevelLoader.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/SoundManager.java" afterPath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/SoundManager.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/recorder/Recorder.java" afterPath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/recorder/Recorder.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/HighScoreListView.java" afterPath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/HighScoreListView.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/LaserShotView.java" afterPath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/LaserShotView.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/MainView.java" afterPath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/MainView.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/PowerPillView.java" afterPath="$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/PowerPillView.java" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/fko/jarkanoid/model/BrickLayoutTest.java" afterPath="$PROJECT_DIR$/src/test/java/fko/jarkanoid/model/BrickLayoutTest.java" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/fko/jarkanoid/model/GameModelTest.java" afterPath="$PROJECT_DIR$/src/test/java/fko/jarkanoid/model/GameModelTest.java" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/fko/jarkanoid/model/HighScoreTest.java" afterPath="$PROJECT_DIR$/src/test/java/fko/jarkanoid/model/HighScoreTest.java" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/fko/jarkanoid/model/LevelLoaderTest.java" afterPath="$PROJECT_DIR$/src/test/java/fko/jarkanoid/model/LevelLoaderTest.java" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/fko/jarkanoid/model/SoundManagerTest.java" afterPath="$PROJECT_DIR$/src/test/java/fko/jarkanoid/model/SoundManagerTest.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -41,20 +23,30 @@
     <splitter split-orientation="horizontal" split-proportion="0.4955397">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-          <file leaf-file-name="GameModel.java" pinned="false" current-in-tab="false">
+          <file leaf-file-name="Jarkanoid.java" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/Jarkanoid.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="1974">
+                  <caret line="129" column="25" lean-forward="true" selection-start-line="129" selection-start-column="25" selection-end-line="129" selection-end-column="25" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="GameModel.java" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/GameModel.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="712">
+                <state relative-caret-position="1995">
                   <caret line="137" column="25" lean-forward="true" selection-start-line="137" selection-start-column="25" selection-end-line="137" selection-end-column="25" />
                   <folding />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="HighScore.java" pinned="false" current-in-tab="true">
+          <file leaf-file-name="HighScore.java" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/HighScore.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="250">
+                <state relative-caret-position="1069">
                   <caret line="212" column="18" lean-forward="false" selection-start-line="212" selection-start-column="18" selection-end-line="212" selection-end-column="18" />
                   <folding>
                     <element signature="e#5209#5210#0" expanded="true" />
@@ -183,7 +175,6 @@
         <option value="$PROJECT_DIR$/src/main/java/fko/jarkanoid/controller/MainController.java" />
         <option value="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/GameModel.java" />
         <option value="$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/LaserShotView.java" />
-        <option value="$PROJECT_DIR$/src/main/java/fko/jarkanoid/Jarkanoid.java" />
         <option value="$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/PowerPillView.java" />
         <option value="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/LaserShot.java" />
         <option value="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/BrickLayout.java" />
@@ -197,6 +188,7 @@
         <option value="$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/MainView.java" />
         <option value="$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/SoundManager.java" />
         <option value="$PROJECT_DIR$/src/test/java/fko/jarkanoid/model/BrickLayoutTest.java" />
+        <option value="$PROJECT_DIR$/src/main/java/fko/jarkanoid/Jarkanoid.java" />
       </list>
     </option>
   </component>
@@ -1300,6 +1292,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-5" y="2" width="2730" height="1401" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32927817" sideWeight="0.49867108" order="6" side_tool="false" content_ui="tabs" />
@@ -1640,20 +1633,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/Jarkanoid.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="250">
-          <caret line="57" column="32" lean-forward="false" selection-start-line="57" selection-start-column="32" selection-end-line="57" selection-end-column="32" />
-          <folding>
-            <element signature="e#0#3951#0" expanded="false" />
-            <element signature="e#3856#3857#0" expanded="false" />
-            <element signature="e#3879#3880#0" expanded="false" />
-            <element signature="e#3921#3922#0" expanded="false" />
-            <element signature="e#3946#3947#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/view/PowerPillView.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="210">
@@ -1868,17 +1847,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/GameModel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="712">
-          <caret line="137" column="25" lean-forward="true" selection-start-line="137" selection-start-column="25" selection-end-line="137" selection-end-column="25" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/HighScore.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="250">
+        <state relative-caret-position="1069">
           <caret line="212" column="18" lean-forward="false" selection-start-line="212" selection-start-column="18" selection-end-line="212" selection-end-column="18" />
           <folding>
             <element signature="e#5209#5210#0" expanded="true" />
@@ -1888,6 +1859,22 @@
             <element signature="e#7469#7470#0" expanded="true" />
             <element signature="e#7552#7553#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/Jarkanoid.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1974">
+          <caret line="129" column="25" lean-forward="true" selection-start-line="129" selection-start-column="25" selection-end-line="129" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/fko/jarkanoid/model/GameModel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1995">
+          <caret line="137" column="25" lean-forward="true" selection-start-line="137" selection-start-column="25" selection-end-line="137" selection-end-column="25" />
+          <folding />
         </state>
       </provider>
     </entry>

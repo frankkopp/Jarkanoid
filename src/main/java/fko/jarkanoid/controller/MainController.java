@@ -125,7 +125,7 @@ public class MainController implements Initializable, Observer {
    *
    * @param view
    */
-  public void bindModelToView(MainView view) {
+  public void bindViewToModel(MainView view) {
 
     LOG.info("Binding view to model");
 
