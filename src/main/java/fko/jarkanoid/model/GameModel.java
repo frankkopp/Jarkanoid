@@ -26,7 +26,6 @@ package fko.jarkanoid.model;
 
 import fko.jarkanoid.events.GameEvent;
 import fko.jarkanoid.events.GameEvent.GameEventType;
-import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -36,7 +35,9 @@ import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ListIterator;
 import java.util.Observable;
 import java.util.concurrent.Executors;
@@ -72,7 +73,7 @@ public class GameModel extends Observable {
    * Constants for game dimensions and other relevant settings.
    * Need to be aligned with FXML UI Design.
    */
-  private static final int START_LEVEL = 1;
+  private static final int START_LEVEL = 13;
   private static final int START_LIVES = 3;
 
   private static final long SLEEP_BETWEEN_LIVES = 2000; // in ms
@@ -121,6 +122,9 @@ public class GameModel extends Observable {
   // the maximum number the ball may bounce without hitting the paddle or destroying a brick
   // After this number the ball gets a random nudge in a different direction
   private static final int MAX_NUMBER_OF_LOOP_HITS = 25;
+
+  // the maximal entries in the highscore list
+  public static final int HIGHSCORE_MAX_PLACE = 15;
 
   /*
    * These values determine the size and dimension of elements in Breakout.
@@ -206,6 +210,8 @@ public class GameModel extends Observable {
   // counter since last paddle or brick hit to detect endless loops with gold bricks
   private int maxLoopHitsCounter = MAX_NUMBER_OF_LOOP_HITS;
 
+  // highscore manager
+  private final HighScore highScoreManager = HighScore.getInstance();
 
   /** Constructor - prepares the brick layout and the game loops. */
   public GameModel() {
@@ -213,10 +219,10 @@ public class GameModel extends Observable {
     // setup BrickLayout
     brickLayout = new BrickLayout(playfieldWidth, playfieldHeight);
 
-    // configure ballManager
+    // configure ball list
     ballManager.set(FXCollections.observableList(new ArrayList<>(3)));
 
-    // configure laserShotManager
+    // configure laserShot list
     laserShotManager.set(FXCollections.observableList(new ArrayList<>()));
 
     // configure fallingPower list
@@ -225,37 +231,38 @@ public class GameModel extends Observable {
     // start the paddle movements
     paddleMovementLoop.setCycleCount(Timeline.INDEFINITE);
     KeyFrame movePaddle =
-        new KeyFrame(Duration.seconds(1.0 / PADDLE_INITIAL_FRAMERATE), e -> paddleMovementLoop());
+        new KeyFrame(Duration.millis(1000f / PADDLE_INITIAL_FRAMERATE), e -> paddleMovementLoop());
     paddleMovementLoop.getKeyFrames().add(movePaddle);
     paddleMovementLoop.play();
 
     // prepare ball movements (will be start in startGame())
     mainGameLoop.setCycleCount(Timeline.INDEFINITE);
-    KeyFrame moveBall = new KeyFrame(Duration.seconds(1.0 / INITIAL_FRAMERATE), e -> gameLoop());
+    KeyFrame moveBall = new KeyFrame(Duration.millis(1000f / INITIAL_FRAMERATE), e -> gameLoop());
     mainGameLoop.getKeyFrames().add(moveBall);
 
     // animation to grow the paddle slowly when we get an ENLARGE power
     // As we want to be able to move the paddle during the animation and also check if the
     // paddle grows out of the playing field we can't use normal property value timelines.
-    final int steps = 25; // do 25 intermediate steps - when at 10ms per step this is a 250ms animation
+    final int steps =
+        25; // do 25 intermediate steps - when at 10ms per step this is a 250ms animation
     paddleGrower.setCycleCount(steps);
     // larger
-    final double lSteps = (PADDLE_ENLARGEMENT_FACTOR-1) / steps;
+    final double lSteps = (PADDLE_ENLARGEMENT_FACTOR - 1) / steps;
     // move to the left to make it look as if it grew from the middle
     final double xSteps = (((PADDLE_ENLARGEMENT_FACTOR - 1) / 2) * PADDEL_INITIAL_WIDTH) / steps;
     KeyFrame grow =
-            new KeyFrame(
-                    Duration.millis(10),
-                    (event) -> {
-                      paddleWidth.set(paddleWidth.get() * (1.0+lSteps));
-                      paddleX.set(paddleX.get() - xSteps);
-                      // push the paddle betweem the walls in case it was outside
-                      if (paddleX.get() + paddleWidth.get() >= playfieldWidth.get()) {
-                        paddleX.set(playfieldWidth.get() - paddleWidth.get());
-                      } else if (paddleX.get() <= 0) {
-                        paddleX.set(0);
-                      }
-                    });
+        new KeyFrame(
+            Duration.millis(10),
+            (event) -> {
+              paddleWidth.set(paddleWidth.get() * (1.0 + lSteps));
+              paddleX.set(paddleX.get() - xSteps);
+              // push the paddle betweem the walls in case it was outside
+              if (paddleX.get() + paddleWidth.get() >= playfieldWidth.get()) {
+                paddleX.set(playfieldWidth.get() - paddleWidth.get());
+              } else if (paddleX.get() <= 0) {
+                paddleX.set(0);
+              }
+            });
     paddleGrower.getKeyFrames().addAll(grow);
   }
 
@@ -283,11 +290,6 @@ public class GameModel extends Observable {
     launchBall(SLEEP_BETWEEN_LIVES);
   }
 
-  /** @return true of game is running */
-  public boolean isPlaying() {
-    return isPlaying.get();
-  }
-
   /**
    * Loads a level and sets the brick matrix
    *
@@ -300,7 +302,7 @@ public class GameModel extends Observable {
     // load next level or game is won if non available
     final Brick[][] newLevel = LevelLoader.getInstance().getLevel(level);
     if (newLevel == null) {
-      gameWon();
+      gameOver(true);
       return;
     }
 
@@ -310,16 +312,6 @@ public class GameModel extends Observable {
     // Level done
     setChanged();
     notifyObservers(new GameEvent(GameEventType.LEVEL_START));
-  }
-
-  /** Called when game is won - last level is cleared */
-  private void gameWon() {
-    LOG.info("Game Won");
-
-    stopPlaying();
-    gameOver.set(true);
-    setChanged();
-    notifyObservers(new GameEvent(GameEventType.GAME_WON));
   }
 
   /** stops the current game */
@@ -444,7 +436,9 @@ public class GameModel extends Observable {
       double tFrame = 1000 / INITIAL_FRAMERATE;
       // System.out.printf("Avg. Time for loop: %.6f ms (framelimit %.6f ms) %n", tLoop, tFrame);
       if (tLoop > tFrame) {
-        System.err.printf("FRAME LIMIT VIOLATION: %.6f ms (framelimit %.6f ms) %n", tLoop, tFrame);
+        if (LOG.isWarnEnabled()) {
+          LOG.warn(String.format("FRAME LIMIT VIOLATION: %.6f ms (framelimit %.6f ms) %n", tLoop, tFrame));
+        }
       }
 
       commulativeLoopTime = 0;
@@ -467,7 +461,6 @@ public class GameModel extends Observable {
       updateLaser();
       updateBalls();
       updateLevel();
-
     }
   }
 
@@ -479,7 +472,7 @@ public class GameModel extends Observable {
     // out of lives => game over
     if (remainingLives < 0) {
       currentRemainingLives.set(0);
-      gameOver();
+      gameOver(false);
       return;
     }
 
@@ -559,7 +552,7 @@ public class GameModel extends Observable {
       if (maxLoopHitsCounter <= 0) {
         ball.nudgeBall();
         maxLoopHitsCounter = MAX_NUMBER_OF_LOOP_HITS;
-        LOG.info("Possible loop -> nudge ball");
+        LOG.debug("Possible loop -> nudge ball");
       }
     }
   }
@@ -624,7 +617,6 @@ public class GameModel extends Observable {
         // only shrink it if the next pill is something else
         if (!newType.equals(PowerPillType.ENLARGE)) {
           shrinkPaddle();
-
         }
         break;
       case CATCH:
@@ -767,13 +759,14 @@ public class GameModel extends Observable {
     final double stepV = ball.getVelocity() / 10;
 
     if (LOG.isDebugEnabled()) { // to not even create the string when not logging
-      LOG.debug(String.format(
-          "FULL: vY: %6.2f  vX: %6.2f  v: %6.2f  CURRENT     : Y: %8.2f X: %8.2f PREVIOUS: Y: %8.2f X: %8.2f *** loop=%d",
-          vY, vX, ball.getVelocity(), bY, bX, bpY, bpX, maxLoopHitsCounter));
+      LOG.debug(
+          String.format(
+              "FULL: vY: %6.2f  vX: %6.2f  v: %6.2f  CURRENT     : Y: %8.2f X: %8.2f PREVIOUS: Y: %8.2f X: %8.2f *** loop=%d",
+              vY, vX, ball.getVelocity(), bY, bX, bpY, bpX, maxLoopHitsCounter));
       // DEBUG - because of floating numbers round this needs to be a fuzzy
       if (bY - vY - bpY > 0.01 && bY - vY - bpY < -0.01
-              || bX - vX - bpX > 0.01
-              || bX - vX - bpX < -0.01) {
+          || bX - vX - bpX > 0.01
+          || bX - vX - bpX < -0.01) {
         LOG.warn("WARP ERROR");
       }
     }
@@ -786,7 +779,8 @@ public class GameModel extends Observable {
       cbX += stepX;
 
       if (LOG.isDebugEnabled()) { // to not even create the string when not logging
-        LOG.debug(String.format(
+        LOG.debug(
+            String.format(
                 "STEP: vY: %6.2f  vX: %6.2f  v: %6.2f  INTERMEDIATE: Y: %8.2f X: %8.2f",
                 stepY, stepX, stepV, cbY, cbX));
       }
@@ -1007,25 +1001,41 @@ public class GameModel extends Observable {
       if (nextPowerUp == 0) {
         nextPowerPill =
             new PowerPill(
-//                PowerPillType.ENLARGE,
+                //                PowerPillType.ENLARGE,
                 PowerPillType.getRandom(),
                 brickLayout.getLeftBound(row, col),
                 brickLayout.getUpperBound(row, col),
                 brickLayout.getBrickWidth(),
                 brickLayout.getBrickHeight());
         nextPowerUp = getNextPowerUp();
-        LOG.info("PowerPill generated: {}",nextPowerPill);
+        LOG.debug("PowerPill generated: {}", nextPowerPill);
       }
     }
   }
 
   /** Called when out of lives or after last level */
-  private void gameOver() {
+  private void gameOver(boolean won) {
     stopPlaying();
     gameOver.set(true);
-    LOG.info("Game Over");
-    setChanged();
-    notifyObservers(new GameEvent(GameEventType.GAME_OVER));
+    if (won) {
+      LOG.info("Game Won");
+      setChanged();
+      notifyObservers(new GameEvent(GameEventType.GAME_WON));
+    } else {
+      LOG.info("Game Over");
+      setChanged();
+      notifyObservers(new GameEvent(GameEventType.GAME_OVER));
+    }
+    // new highscore (1st until 15th place)
+    if (highScoreManager.getList().size() < HIGHSCORE_MAX_PLACE-1 ||
+            currentScore.get() > highScoreManager.getList().get(HIGHSCORE_MAX_PLACE-1).score) {
+      HighScore.HighScoreEntry entry =
+          new HighScore.HighScoreEntry(
+              "unknown", currentScore.get(), currentLevel.get(), LocalDateTime.now());
+      highScoreManager.addEntryAndSave(entry);
+      setChanged();
+      notifyObservers(new GameEvent(GameEventType.NEW_HIGHSCORE, entry));
+    }
   }
 
   /**
@@ -1125,6 +1135,11 @@ public class GameModel extends Observable {
     isPaused.set(true);
     mainGameLoop.pause();
     LOG.info("Game paused");
+  }
+
+  /** @return true of game is running */
+  public boolean isPlaying() {
+    return isPlaying.get();
   }
 
   /** @return true if game is paused */
@@ -1264,5 +1279,9 @@ public class GameModel extends Observable {
 
   public PowerPillType getActivePower() {
     return activePower.get();
+  }
+
+  public List<HighScore.HighScoreEntry> getHighScoreManager() {
+    return highScoreManager.getList();
   }
 }

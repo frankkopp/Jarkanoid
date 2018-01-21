@@ -28,16 +28,14 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import fko.jarkanoid.controller.MainController;
-import fko.jarkanoid.model.Ball;
-import fko.jarkanoid.model.GameModel;
-import fko.jarkanoid.model.LaserShot;
-import fko.jarkanoid.model.PowerPill;
+import fko.jarkanoid.model.*;
 import javafx.animation.ParallelTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.StrokeTransition;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -46,6 +44,7 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 /**
  * MainView
@@ -70,6 +69,9 @@ public class MainView {
 
   // the playfield
   private Pane playFieldPane;
+
+  // highscore list
+  private final HighScoreListView highScoreListView;
 
   // Balls
   private final HashMap<Ball, BallView> ballViewMap = new HashMap<>();
@@ -110,6 +112,10 @@ public class MainView {
 
     // Paddle
     paddle = (Rectangle) fxmlLoader.getNamespace().get("paddle");
+
+    // HighScore View
+    highScoreListView = new HighScoreListView(
+        model, controller, (TableView) fxmlLoader.getNamespace().get("highScoreTable"));
 
     prepareAnimations(paddle);
   }
@@ -271,6 +277,9 @@ public class MainView {
     } else {
       paddle.getStyleClass().removeAll("laser");
     }
-    LOG.debug("CSS for paddle is now {}", paddle.getStyleClass());
+  }
+
+  public HighScoreListView getHighScoreListView() {
+    return highScoreListView;
   }
 }

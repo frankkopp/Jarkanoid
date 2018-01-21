@@ -29,6 +29,7 @@ import fko.jarkanoid.events.GameEvent;
 import fko.jarkanoid.model.*;
 import fko.jarkanoid.model.SoundManager.Clips;
 import fko.jarkanoid.recorder.Recorder;
+import fko.jarkanoid.view.HighScoreListView;
 import fko.jarkanoid.view.MainView;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ListChangeListener;
@@ -37,6 +38,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -91,6 +93,7 @@ public class MainController implements Initializable, Observer {
   @FXML private Rectangle paddle;
   @FXML private Text gameOverSplash;
   @FXML private VBox gamePreStartSplash;
+  @FXML private TableView highScoreTable;
 
   /**
    * Constructor the MainController
@@ -134,6 +137,9 @@ public class MainController implements Initializable, Observer {
         .bind(
             new SimpleStringProperty(tmpTitle + " (fps:")
                 .concat(model.fpsProperty().asString("%.2f"))
+                .concat(")")
+                .concat(" (Version: ")
+                .concat(Jarkanoid.VERSION)
                 .concat(")"));
 
     // add keyboard handlers
@@ -232,7 +238,8 @@ public class MainController implements Initializable, Observer {
    * @param newPowerType
    */
   private void updateActivePower(
-      final PowerPillType oldPowerType, final PowerPillType newPowerType) {
+          final PowerPillType oldPowerType,
+          final PowerPillType newPowerType) {
 
     switch (oldPowerType) {
       case NONE:
@@ -350,8 +357,16 @@ public class MainController implements Initializable, Observer {
       case CAUGHT:
         sounds.playClip(Clips.CAUGHT);
         break;
+      case LASER_ON:
+        break;
+      case LASER_OFF:
+        break;
       case NEW_LIFE:
         sounds.playClip(Clips.NEW_LIFE);
+        break;
+      case NEW_HIGHSCORE:
+        view.getHighScoreListView().updateList((HighScore.HighScoreEntry)param[0]);
+        //showHighScoreEditor();
         break;
       default:
     }

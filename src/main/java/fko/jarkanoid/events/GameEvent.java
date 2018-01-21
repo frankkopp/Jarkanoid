@@ -97,7 +97,6 @@ public class GameEvent {
     LASER_ON,
     LASER_OFF,
     NEW_LIFE,
-    ENLARGE
-
+    NEW_HIGHSCORE
   }
 }
