@@ -1,28 +1,33 @@
-/**
+/*
  * MIT License
  *
- * <p>Copyright (c) 2018 Frank Kopp
+ * Copyright (c) 2018 Frank Kopp
  *
- * <p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software
- * and associated documentation files (the "Software"), to deal in the Software without restriction,
- * including without limitation the rights to use, copy, modify, merge, publish, distribute,
- * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * <p>The above copyright notice and this permission notice shall be included in all copies or
- * substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
  *
- * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
- * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
  */
 package fko.jarkanoid.model;
 
 import fko.jarkanoid.events.GameEvent;
 import fko.jarkanoid.events.GameEvent.GameEventType;
 import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -30,15 +35,15 @@ import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ListIterator;
 import java.util.Observable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-
-import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * BreakOutModel
@@ -52,7 +57,7 @@ import static org.slf4j.LoggerFactory.getLogger;
  */
 public class GameModel extends Observable {
 
-  private static Logger LOG = LoggerFactory.getLogger(GameModel.class);
+  private static final Logger LOG = LoggerFactory.getLogger(GameModel.class);
 
   // TODO: add acceleration
   // TODO: create all main.resources.levels
@@ -63,6 +68,9 @@ public class GameModel extends Observable {
   // IDEAS: Powers: upside down, reverse control, cloaked, power not falling in straight line
   // IDEAS: Bricks: moving bricks, zombi bricks - come back to life, shield for bricks
   // IDEAS: Special: flying aliens, flying powers, ball catcher, ball beamer, ball warper
+
+  // debugging constants / for normal playing these have to be all false
+  private static final boolean BOUNCING_FLOOR = false;
 
   /*
    * Constants for game dimensions and other relevant settings.
@@ -78,7 +86,7 @@ public class GameModel extends Observable {
   private static final double PLAYFIELD_INITIAL_WIDTH = 780;
 
   // paddle constants
-  private static final double PADDLE_INITIAL_FRAMERATE = 100; // Framerate for paddle movements
+  private static final double PADDLE_INITIAL_FRAMERATE = 120; // Framerate for paddle movements
   private static final double PADDLE_MOVE_STEPS = 5.0; // steps per animation cycle
   private static final double PADDLE_INITIAL_Y = 670;
   private static final double PADDLE_INITIAL_X = 315;
@@ -91,10 +99,12 @@ public class GameModel extends Observable {
   private static final double BALL_MAX_ANGLE = 60;
   private static final double BALL_INITIAL_X = 390;
   private static final double BALL_INITIAL_Y = PADDLE_INITIAL_Y - BALL_INITIAL_RADIUS;
+
   // Absolute speed of ball, when vertical equals px in y, when horizontal equals px in x
   private static final double BALL_INITIAL_SPEED = 10.0;
 
-  private static final double INITIAL_FRAMERATE = 60; // Framerate for ball movements
+  // Framerate for game loop
+  private static final double INITIAL_FRAMERATE = 60;
 
   // Laser constants
   private static final double LASER_EDGE_OFFSET = 45;
@@ -110,11 +120,14 @@ public class GameModel extends Observable {
   // how many destroyed bricks between power ups (needs to be >0)
   private static final int NEXT_POWERUP_OFFSET = 3;
   // power up randomly after 0 to 10 destroyed bricks after offset
-  private static final int POWER_UP_FREQUENCY = 10;
+  private static final int POWER_UP_FREQUENCY = 8;
 
   // the maximum number the ball may bounce without hitting the paddle or destroying a brick
-  // after this number the ball gets a random nudge in a different direction
-  public static final int MAX_NUMBER_OF_LOOP_HITS = 25;
+  // After this number the ball gets a random nudge in a different direction
+  private static final int MAX_NUMBER_OF_LOOP_HITS = 25;
+
+  // the maximal entries in the highscore list
+  public static final int HIGHSCORE_MAX_PLACE = 15;
 
   /*
    * These values determine the size and dimension of elements in Breakout.
@@ -170,10 +183,9 @@ public class GameModel extends Observable {
   // called when key is pressed/released to indicate paddle movement to movement animation
   private boolean paddleLeft;
   private boolean paddleRight;;
-  private ScheduledFuture scheduledStart;
 
-  // signals the game loop to split the ball into multiple balls
-  private boolean splitBallFlag = false;;
+  // to delay the start of the ball and to be able to stop a game before this timer delay runs out
+  private ScheduledFuture scheduledStart;
 
   // count all destroyed bricks
   private int destroyedBricksCounter = 0;
@@ -187,15 +199,25 @@ public class GameModel extends Observable {
       new SimpleObjectProperty<PowerPillType>(PowerPillType.NONE);
   private boolean ballCatchedFlag = false;
 
-  // count each time hte game loop is called
+  // count each time the game loop is called and some statistics
   private long frameLoopCounter = 0;
   private long frameLoopCounterTimeStamp = System.nanoTime();
   private long lastloopTime;
   private long commulativeLoopTime;
   private final DoubleProperty fps = new SimpleDoubleProperty(INITIAL_FRAMERATE);
 
+  // grower and skrinker timeline of paddles
+  private final Timeline paddleGrower = new Timeline();
+  private final Timeline paddleShrinker = new Timeline();
+
   // counter since last paddle or brick hit to detect endless loops with gold bricks
   private int maxLoopHitsCounter = MAX_NUMBER_OF_LOOP_HITS;
+
+  // highscore manager
+  private final HighScore highScoreManager = HighScore.getInstance();
+
+  // player name property
+  private final StringProperty playerName = new SimpleStringProperty("Unknown Player");
 
   /** Constructor - prepares the brick layout and the game loops. */
   public GameModel() {
@@ -203,10 +225,10 @@ public class GameModel extends Observable {
     // setup BrickLayout
     brickLayout = new BrickLayout(playfieldWidth, playfieldHeight);
 
-    // configure ballManager
+    // configure ball list
     ballManager.set(FXCollections.observableList(new ArrayList<>(3)));
 
-    // configure laserShotManager
+    // configure laserShot list
     laserShotManager.set(FXCollections.observableList(new ArrayList<>()));
 
     // configure fallingPower list
@@ -215,14 +237,39 @@ public class GameModel extends Observable {
     // start the paddle movements
     paddleMovementLoop.setCycleCount(Timeline.INDEFINITE);
     KeyFrame movePaddle =
-        new KeyFrame(Duration.seconds(1.0 / PADDLE_INITIAL_FRAMERATE), e -> paddleMovementLoop());
+        new KeyFrame(Duration.millis(1000f / PADDLE_INITIAL_FRAMERATE), e -> paddleMovementLoop());
     paddleMovementLoop.getKeyFrames().add(movePaddle);
     paddleMovementLoop.play();
 
     // prepare ball movements (will be start in startGame())
     mainGameLoop.setCycleCount(Timeline.INDEFINITE);
-    KeyFrame moveBall = new KeyFrame(Duration.seconds(1.0 / INITIAL_FRAMERATE), e -> gameLoop());
+    KeyFrame moveBall = new KeyFrame(Duration.millis(1000f / INITIAL_FRAMERATE), e -> gameLoop());
     mainGameLoop.getKeyFrames().add(moveBall);
+
+    // animation to grow the paddle slowly when we get an ENLARGE power
+    // As we want to be able to move the paddle during the animation and also check if the
+    // paddle grows out of the playing field we can't use normal property value timelines.
+    final int steps =
+        25; // do 25 intermediate steps - when at 10ms per step this is a 250ms animation
+    paddleGrower.setCycleCount(steps);
+    // larger
+    final double lSteps = (PADDLE_ENLARGEMENT_FACTOR - 1) / steps;
+    // move to the left to make it look as if it grew from the middle
+    final double xSteps = (((PADDLE_ENLARGEMENT_FACTOR - 1) / 2) * PADDEL_INITIAL_WIDTH) / steps;
+    KeyFrame grow =
+        new KeyFrame(
+            Duration.millis(10),
+            (event) -> {
+              paddleWidth.set(paddleWidth.get() * (1.0 + lSteps));
+              paddleX.set(paddleX.get() - xSteps);
+              // push the paddle betweem the walls in case it was outside
+              if (paddleX.get() + paddleWidth.get() >= playfieldWidth.get()) {
+                paddleX.set(playfieldWidth.get() - paddleWidth.get());
+              } else if (paddleX.get() <= 0) {
+                paddleX.set(0);
+              }
+            });
+    paddleGrower.getKeyFrames().addAll(grow);
   }
 
   /** Starts a new game. */
@@ -249,11 +296,6 @@ public class GameModel extends Observable {
     launchBall(SLEEP_BETWEEN_LIVES);
   }
 
-  /** @return true of game is running */
-  public boolean isPlaying() {
-    return isPlaying.get();
-  }
-
   /**
    * Loads a level and sets the brick matrix
    *
@@ -266,10 +308,9 @@ public class GameModel extends Observable {
     // load next level or game is won if non available
     final Brick[][] newLevel = LevelLoader.getInstance().getLevel(level);
     if (newLevel == null) {
-      gameWon();
+      gameOver(true);
       return;
     }
-    ;
 
     // set the received level into the brickLayout
     brickLayout.setMatrix(newLevel);
@@ -277,16 +318,6 @@ public class GameModel extends Observable {
     // Level done
     setChanged();
     notifyObservers(new GameEvent(GameEventType.LEVEL_START));
-  }
-
-  /** Called when game is won - last level is cleared */
-  private void gameWon() {
-    LOG.info("Game Won");
-
-    stopPlaying();
-    gameOver.set(true);
-    setChanged();
-    notifyObservers(new GameEvent(GameEventType.GAME_WON));
   }
 
   /** stops the current game */
@@ -370,7 +401,18 @@ public class GameModel extends Observable {
     ball.centerXProperty()
         .bind(paddleX.add(xLocationOnPaddle)); // slightly to the right of the middle
     ball.centerYProperty().bind(paddleY.subtract(ball.getRadius()).subtract(1.0));
-    LOG.debug("Ball bound to paddle");
+
+    // release the ball after a few seconds
+    executor.schedule(
+            () -> {
+              // check if the game has been stopped while we were waiting
+              if (!isPlaying() || isPaused()) return;
+              ballCatchedFlag = false;
+            },
+            5000,
+            TimeUnit.MILLISECONDS);
+
+    LOG.debug("Ball bound to paddle for 5 sec");
   }
 
   /**
@@ -411,7 +453,11 @@ public class GameModel extends Observable {
       double tFrame = 1000 / INITIAL_FRAMERATE;
       // System.out.printf("Avg. Time for loop: %.6f ms (framelimit %.6f ms) %n", tLoop, tFrame);
       if (tLoop > tFrame) {
-        System.err.printf("FRAME LIMIT VIOLATION: %.6f ms (framelimit %.6f ms) %n", tLoop, tFrame);
+        if (LOG.isWarnEnabled()) {
+          LOG.warn(
+              String.format(
+                  "FRAME LIMIT VIOLATION: %.6f ms (framelimit %.6f ms) %n", tLoop, tFrame));
+        }
       }
 
       commulativeLoopTime = 0;
@@ -424,6 +470,7 @@ public class GameModel extends Observable {
 
     // if no more balls we lost a live
     if (ballManager.isEmpty()) {
+
       LOG.info("Lost last ball");
       updateLives();
 
@@ -444,7 +491,7 @@ public class GameModel extends Observable {
     // out of lives => game over
     if (remainingLives < 0) {
       currentRemainingLives.set(0);
-      gameOver();
+      gameOver(false);
       return;
     }
 
@@ -524,7 +571,7 @@ public class GameModel extends Observable {
       if (maxLoopHitsCounter <= 0) {
         ball.nudgeBall();
         maxLoopHitsCounter = MAX_NUMBER_OF_LOOP_HITS;
-        LOG.info("Possible loop -> nudge ball");
+        LOG.debug("Possible loop -> nudge ball");
       }
     }
   }
@@ -588,9 +635,7 @@ public class GameModel extends Observable {
       case ENLARGE:
         // only shrink it if the next pill is something else
         if (!newType.equals(PowerPillType.ENLARGE)) {
-          paddleWidth.set(PADDEL_INITIAL_WIDTH);
-          // move to the right to make it look as if it grew from the middle
-          paddleX.set(paddleX.get() + ((PADDLE_ENLARGEMENT_FACTOR - 1) / 2) * PADDEL_INITIAL_WIDTH);
+          shrinkPaddle();
         }
         break;
       case CATCH:
@@ -601,7 +646,7 @@ public class GameModel extends Observable {
         break;
       case SLOW:
         // deactivate only if it is not SLOW again
-        if (!newType.equals(PowerPillType.SLOW)) {
+        if (!newType.equals(PowerPillType.SLOW) && ballManager.size() > 0) {
           // reset speed
           ballManager.get(0).setVelocity(BALL_INITIAL_SPEED);
         }
@@ -630,18 +675,7 @@ public class GameModel extends Observable {
       case ENLARGE:
         // if we are not already large we growing big
         if (!oldType.equals(PowerPillType.ENLARGE)) {
-          // bigger
-          paddleWidth.set(PADDLE_ENLARGEMENT_FACTOR * PADDEL_INITIAL_WIDTH);
-          // move to the left to make it look as if it grew from the middle
-          paddleX.set(paddleX.get() - ((PADDLE_ENLARGEMENT_FACTOR - 1) / 2) * PADDEL_INITIAL_WIDTH);
-          // push the paddle betweem the walls in case it was outside
-          if (paddleX.get() + paddleWidth.get() >= playfieldWidth.get()) {
-            paddleX.set(playfieldWidth.get() - paddleWidth.get());
-          } else if (paddleX.get() <= 0) {
-            paddleX.set(0);
-          }
-          setChanged();
-          notifyObservers(new GameEvent(GameEventType.ENLARGE));
+          growPaddle();
         }
         break;
       case CATCH:
@@ -674,6 +708,25 @@ public class GameModel extends Observable {
         increaeRemainingLives();
         break;
     }
+  }
+
+  /** Grwos paddle over time */
+  private void growPaddle() {
+    paddleGrower.playFromStart();
+  }
+
+  /** shrink paddle over time */
+  private void shrinkPaddle() {
+    // shrink the paddle slowly
+    paddleShrinker.setCycleCount(1);
+    // smaller
+    double smallerSize = PADDEL_INITIAL_WIDTH;
+    // move to the left to make it look as if it grew from the middle
+    double newLeftX = paddleX.get() + ((PADDLE_ENLARGEMENT_FACTOR - 1) / 2) * PADDEL_INITIAL_WIDTH;
+    KeyFrame shrinkR = new KeyFrame(Duration.millis(250), new KeyValue(paddleWidth, smallerSize));
+    KeyFrame shrinkL = new KeyFrame(Duration.millis(250), new KeyValue(paddleX, newLeftX));
+    paddleShrinker.getKeyFrames().addAll(shrinkL, shrinkR);
+    paddleShrinker.playFromStart();
   }
 
   /** Checks if all bricks are gone and if so icreases level and launches new ball. */
@@ -725,13 +778,14 @@ public class GameModel extends Observable {
     final double stepV = ball.getVelocity() / 10;
 
     if (LOG.isDebugEnabled()) { // to not even create the string when not logging
-      LOG.debug(String.format(
-          "FULL: vY: %6.2f  vX: %6.2f  v: %6.2f  CURRENT     : Y: %8.2f X: %8.2f PREVIOUS: Y: %8.2f X: %8.2f *** loop=%d",
-          vY, vX, ball.getVelocity(), bY, bX, bpY, bpX, maxLoopHitsCounter));
+      LOG.debug(
+          String.format(
+              "FULL: vY: %6.2f  vX: %6.2f  v: %6.2f  CURRENT     : Y: %8.2f X: %8.2f PREVIOUS: Y: %8.2f X: %8.2f *** loop=%d",
+              vY, vX, ball.getVelocity(), bY, bX, bpY, bpX, maxLoopHitsCounter));
       // DEBUG - because of floating numbers round this needs to be a fuzzy
       if (bY - vY - bpY > 0.01 && bY - vY - bpY < -0.01
-              || bX - vX - bpX > 0.01
-              || bX - vX - bpX < -0.01) {
+          || bX - vX - bpX > 0.01
+          || bX - vX - bpX < -0.01) {
         LOG.warn("WARP ERROR");
       }
     }
@@ -744,7 +798,8 @@ public class GameModel extends Observable {
       cbX += stepX;
 
       if (LOG.isDebugEnabled()) { // to not even create the string when not logging
-        LOG.debug(String.format(
+        LOG.debug(
+            String.format(
                 "STEP: vY: %6.2f  vX: %6.2f  v: %6.2f  INTERMEDIATE: Y: %8.2f X: %8.2f",
                 stepY, stepX, stepV, cbY, cbX));
       }
@@ -933,12 +988,17 @@ public class GameModel extends Observable {
       // ************************
 
       if (ball.getUpperBound() >= playfieldHeight.get()) {
-        ball.markForRemoval();
-        // actually set the ball exactly onto the intermediate location and return for the next step
-        ball.setCenterX(cbX);
-        ball.setCenterY(cbY);
-        // relevant Hit?
-        maxLoopHitsCounter = MAX_NUMBER_OF_LOOP_HITS;
+        if (BOUNCING_FLOOR) {
+          ball.inverseYdirection();
+        } else {
+          ball.markForRemoval();
+          // actually set the ball exactly onto the intermediate location and return for the next
+          // step
+          ball.setCenterX(cbX);
+          ball.setCenterY(cbY);
+          // relevant Hit?
+          maxLoopHitsCounter = MAX_NUMBER_OF_LOOP_HITS;
+        }
         return;
       }
     } // end for intermediate step
@@ -965,25 +1025,41 @@ public class GameModel extends Observable {
       if (nextPowerUp == 0) {
         nextPowerPill =
             new PowerPill(
-                //PowerPillType.LASER,
+                //                PowerPillType.ENLARGE,
                 PowerPillType.getRandom(),
                 brickLayout.getLeftBound(row, col),
                 brickLayout.getUpperBound(row, col),
                 brickLayout.getBrickWidth(),
                 brickLayout.getBrickHeight());
         nextPowerUp = getNextPowerUp();
-        LOG.info("PowerPill generated: {}",nextPowerPill);
+        LOG.debug("PowerPill generated: {}", nextPowerPill);
       }
     }
   }
 
   /** Called when out of lives or after last level */
-  private void gameOver() {
+  private void gameOver(boolean won) {
     stopPlaying();
     gameOver.set(true);
-    LOG.info("Game Over");
-    setChanged();
-    notifyObservers(new GameEvent(GameEventType.GAME_OVER));
+    if (won) {
+      LOG.info("Game Won");
+      setChanged();
+      notifyObservers(new GameEvent(GameEventType.GAME_WON));
+    } else {
+      LOG.info("Game Over");
+      setChanged();
+      notifyObservers(new GameEvent(GameEventType.GAME_OVER));
+    }
+    // new highscore (1st until 15th place)
+    if (highScoreManager.getList().size() < HIGHSCORE_MAX_PLACE - 1
+        || currentScore.get() > highScoreManager.getList().get(HIGHSCORE_MAX_PLACE - 1).score) {
+      HighScore.HighScoreEntry entry =
+          new HighScore.HighScoreEntry(
+              playerName.get(), currentScore.get(), currentLevel.get(), LocalDateTime.now());
+      highScoreManager.addEntryAndSave(entry);
+      setChanged();
+      notifyObservers(new GameEvent(GameEventType.NEW_HIGHSCORE, entry));
+    }
   }
 
   /**
@@ -1018,6 +1094,8 @@ public class GameModel extends Observable {
   /** adds a lives after score thresholds or Player PowerType */
   private void increaeRemainingLives() {
     currentRemainingLives.set(currentRemainingLives.get() + 1);
+    setChanged();
+    notifyObservers(new GameEvent(GameEventType.NEW_LIFE));
     LOG.info("Increased number of lives to {}", currentRemainingLives.get());
   }
 
@@ -1083,6 +1161,11 @@ public class GameModel extends Observable {
     LOG.info("Game paused");
   }
 
+  /** @return true of game is running */
+  public boolean isPlaying() {
+    return isPlaying.get();
+  }
+
   /** @return true if game is paused */
   public boolean isPaused() {
     return isPaused.get();
@@ -1114,6 +1197,10 @@ public class GameModel extends Observable {
     }
     if (paddleX.get() >= 0.0 && paddleX.get() + paddleWidth.get() <= playfieldWidth.get()) {
       paddleXProperty().set(x - halfPaddleWidth);
+    } else if (paddleX.get() < 0.0) {
+      paddleX.set(0);
+    } else if (paddleX.get() + paddleWidth.get() > playfieldWidth.get()) {
+      paddleX.set(playfieldWidth.get() - paddleWidth.get());
     }
   }
 
@@ -1171,6 +1258,18 @@ public class GameModel extends Observable {
     return currentScore.getReadOnlyProperty();
   }
 
+  public String getPlayerName() {
+    return playerName.get();
+  }
+
+  public StringProperty playerNameProperty() {
+    return playerName;
+  }
+
+  public void setPlayerName(final String playerName) {
+    this.playerName.set(playerName);
+  }
+
   public void setPaddleLeft(boolean b) {
     paddleLeft = b;
   }
@@ -1216,5 +1315,9 @@ public class GameModel extends Observable {
 
   public PowerPillType getActivePower() {
     return activePower.get();
+  }
+
+  public List<HighScore.HighScoreEntry> getHighScoreManager() {
+    return highScoreManager.getList();
   }
 }

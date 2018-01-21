@@ -1,0 +1,19 @@
+# Level 16
+---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
+---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
+---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
+---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- 
+---- ---- ---- ---- ---- ---- GONO ---- ---- ---- ---- ---- ----
+---- ---- ---- ---- GYNO GYNO ---- GYNO GYNO ---- ---- ---- ----
+---- ---- GYNO GYNO ---- ---- GONO ---- ---- GYNO GYNO ---- ----
+GYNO GYNO ---- ---- ORNO ORNO ---- ORNO ORNO ---- ---- GYNO GYNO
+---- ---- ORNO ORNO ---- ---- GONO ---- ---- ORNO ORNO ---- ----
+ORNO ORNO ---- ---- YENO YENO ---- YENO YENO ---- ---- ORNO ORNO
+---- ---- YENO YENO ---- ---- GONO ---- ---- YENO YENO ---- ----
+YENO YENO ---- ---- GRNO GRNO ---- GRNO GRNO ---- ---- YENO YENO
+---- ---- GRNO GRNO ---- ---- GONO ---- ---- GRNO GRNO ---- ----
+GRNO GRNO ---- ---- RENO RENO ---- RENO RENO ---- ---- GRNO GRNO
+---- ---- RENO RENO ---- ---- GONO ---- ---- RENO RENO ---- ----
+RENO RENO ---- ---- BLNO BLNO ---- BLNO BLNO ---- ---- RENO RENO
+---- ---- BLNO BLNO ---- ---- ---- ---- ---- BLNO BLNO ---- ----
+BLNO BLNO ---- ---- ---- ---- ---- ---- ---- ---- ---- BLNO BLNO

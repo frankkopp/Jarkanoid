@@ -1,22 +1,26 @@
-/**
+/*
  * MIT License
  *
- * <p>Copyright (c) 2018 Frank Kopp
+ * Copyright (c) 2018 Frank Kopp
  *
- * <p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software
- * and associated documentation files (the "Software"), to deal in the Software without restriction,
- * including without limitation the rights to use, copy, modify, merge, publish, distribute,
- * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * <p>The above copyright notice and this permission notice shall be included in all copies or
- * substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
  *
- * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
- * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
  */
 package fko.jarkanoid.controller;
 
@@ -25,6 +29,7 @@ import fko.jarkanoid.events.GameEvent;
 import fko.jarkanoid.model.*;
 import fko.jarkanoid.model.SoundManager.Clips;
 import fko.jarkanoid.recorder.Recorder;
+import fko.jarkanoid.view.HighScoreListView;
 import fko.jarkanoid.view.MainView;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ListChangeListener;
@@ -33,9 +38,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -85,9 +93,15 @@ public class MainController implements Initializable, Observer {
   @FXML private Rectangle rightWall;
   @FXML private Rectangle paddle;
   @FXML private Text gameOverSplash;
+  @FXML private VBox gamePreStartSplash;
+  @FXML private TableView highScoreTable;
+  @FXML private TextField playerNameTextField;
+
+  // to avoid keeping space pressed and therefore having rapid fire
+  private boolean spaceIsPressed = false;
 
   /**
-   * Creates the MainController
+   * Constructor the MainController
    *
    * @param model
    */
@@ -128,6 +142,9 @@ public class MainController implements Initializable, Observer {
         .bind(
             new SimpleStringProperty(tmpTitle + " (fps:")
                 .concat(model.fpsProperty().asString("%.2f"))
+                .concat(")")
+                .concat(" (Version: ")
+                .concat(Jarkanoid.VERSION)
                 .concat(")"));
 
     // add keyboard handlers
@@ -211,19 +228,42 @@ public class MainController implements Initializable, Observer {
     pointsLabel.textProperty().bind(model.currentScoreProperty().asString("%06d"));
 
     // game over splash text
-    // TODO: GAME_OVER vs. GAME_WIN
     gameOverSplash.visibleProperty().bind(model.gameOverProperty());
+
+    // pre start splash
+    gamePreStartSplash.visibleProperty().bind(model.isPlayingProperty().not());
+
+    // bind bidrectional playerName
+    playerNameTextField.textProperty().bindBidirectional(model.playerNameProperty());
+
+    // to not have focus on playerNameTextField
+    view.asParent().requestFocus();
   }
 
+  /**
+   * Called by a property binding to the active power property.
+   * Is used to accommodate animations when a new power gets acitve and
+   * the old power gets inactive. Not all powers have or need animations.
+   *
+   * @param oldPowerType
+   * @param newPowerType
+   */
   private void updateActivePower(
-      final PowerPillType oldPowerType, final PowerPillType newPowerType) {
+          final PowerPillType oldPowerType,
+          final PowerPillType newPowerType) {
 
     switch (oldPowerType) {
       case NONE:
         break;
       case LASER:
+        if (newPowerType != PowerPillType.LASER) {
+          view.laserPaddle(false);
+        }
         break;
       case ENLARGE:
+        if (newPowerType != PowerPillType.ENLARGE) {
+          sounds.playClip(Clips.POWER_S);
+        }
         break;
       case CATCH:
         break;
@@ -241,8 +281,10 @@ public class MainController implements Initializable, Observer {
       case NONE:
         break;
       case LASER:
+        view.laserPaddle(true);
         break;
       case ENLARGE:
+        sounds.playClip(Clips.POWER_E);
         break;
       case CATCH:
         break;
@@ -313,12 +355,6 @@ public class MainController implements Initializable, Observer {
       case GAME_OVER:
         gameOverSplash.setText("GAME OVER");
         break;
-      case LASER_ON:
-        view.laserPaddle(true);
-        break;
-      case LASER_OFF:
-        view.laserPaddle(false);
-        break;
       case LASER_HIT:
         view.getBrickLayoutView().draw(model.getBrickLayout());
         break;
@@ -332,8 +368,16 @@ public class MainController implements Initializable, Observer {
       case CAUGHT:
         sounds.playClip(Clips.CAUGHT);
         break;
-      case ENLARGE:
-        sounds.playClip(Clips.POWER_E);
+      case LASER_ON:
+        break;
+      case LASER_OFF:
+        break;
+      case NEW_LIFE:
+        sounds.playClip(Clips.NEW_LIFE);
+        break;
+      case NEW_HIGHSCORE:
+        view.getHighScoreListView().updateList((HighScore.HighScoreEntry)param[0]);
+        //showHighScoreEditor();
         break;
       default:
     }
@@ -364,11 +408,17 @@ public class MainController implements Initializable, Observer {
   private void keyPressedAction(KeyEvent event) {
     switch (event.getCode()) {
       // game control
+      case ESCAPE:
+      case ENTER:
       case N:
         startStopButtonAction(new ActionEvent());
         break;
       case SPACE:
         restartCaughtBallAction(new ActionEvent());
+        if (!spaceIsPressed) {
+          spaceIsPressed=true;
+          model.shootLaser();
+        }
         break;
       case P:
         pauseResumeButtonAction(new ActionEvent());
@@ -379,22 +429,64 @@ public class MainController implements Initializable, Observer {
       case R:
         recordingAction();
         break;
-      case Q:
+       case Q:
         if (event.isControlDown()) {
           model.skipLevelCheat();
         }
         break;
 
       // paddle control
+      case A:
       case LEFT:
         onPaddleLeftAction(true);
         break;
+      case D:
       case RIGHT:
         onPaddleRightAction(true);
         break;
       default:
     }
   }
+
+  /**
+   * Handles key released events
+   *
+   * @param event
+   */
+  private void keyReleasedAction(KeyEvent event) {
+    switch (event.getCode()) {
+      // paddle control
+      case A:
+      case LEFT:
+        onPaddleLeftAction(false);
+        break;
+      case D:
+      case RIGHT:
+        onPaddleRightAction(false);
+        break;
+      case SPACE:
+        spaceIsPressed=false;
+      default:
+    }
+  }
+
+  @FXML
+  void changePlayerNameAction(ActionEvent event) {
+    LOG.debug("Change player name action: {}", event);
+    // the value itself has a bidirectional binding to model property
+    // to not have focus on playerNameTextField
+    view.asParent().requestFocus();
+  }
+
+  @FXML
+  void playerNameTextFieldClickedAction(MouseEvent event) {
+    LOG.debug("Change player name field clicked action: {}", event);
+    // the value itself has a bidirectional binding to model property
+    // to not have focus on playerNameTextField
+    playerNameTextField.selectAll();
+  }
+
+
 
   @FXML
   void recordingAction(MouseEvent event) {
@@ -409,8 +501,7 @@ public class MainController implements Initializable, Observer {
       recordingIndicator.setFill(Color.GREEN);
     } else {
       LOG.info("User requested start Recording");
-      recorder.start(
-          playfieldPane, 1000, (int) playfieldPane.getWidth(), (int) playfieldPane.getHeight());
+      recorder.start(32);
       recordingIndicator.setFill(Color.RED);
     }
   }
@@ -423,6 +514,7 @@ public class MainController implements Initializable, Observer {
   private void mousePressedAction(final MouseEvent mouseEvent) {
     model.releaseCaughtBall();
     model.shootLaser();
+    view.asParent().requestFocus();
   }
 
   /**
@@ -460,7 +552,6 @@ public class MainController implements Initializable, Observer {
   /** Called when user wants to restart a caught Ball */
   private void restartCaughtBallAction(final ActionEvent actionEvent) {
     model.releaseCaughtBall();
-    model.shootLaser();
   }
 
   /**
@@ -496,24 +587,6 @@ public class MainController implements Initializable, Observer {
       LOG.info("User requested sound on");
       soundButton.setText("Sound Off");
       sounds.soundOn();
-    }
-  }
-
-  /**
-   * Handles key released events
-   *
-   * @param event
-   */
-  private void keyReleasedAction(KeyEvent event) {
-    switch (event.getCode()) {
-        // paddle control
-      case LEFT:
-        onPaddleLeftAction(false);
-        break;
-      case RIGHT:
-        onPaddleRightAction(false);
-        break;
-      default:
     }
   }
 

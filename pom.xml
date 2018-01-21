@@ -29,9 +29,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>Jarkanoid</groupId>
+    <groupId>fko.jarkanoid</groupId>
     <artifactId>Jarkanoid</artifactId>
-    <version>0.5-SNAPSHOT</version>
+    <version>0.6-SNAPSHOT</version>
 
     <dependencies>
         <!-- JUNIT -->
@@ -41,7 +41,7 @@
             <version>RELEASE</version>
         </dependency>
 
-        <!-- PngEncoder -->
+        <!-- PngEncoder
         <dependency>
             <groupId>com.objectplanet.image</groupId>
             <artifactId>PngEncoder</artifactId>
@@ -49,14 +49,7 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/src/main/resources/libs/com.objectplanet.image.PngEncoder.jar</systemPath>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.perf4j/perf4j -->
-        <dependency>
-            <groupId>org.perf4j</groupId>
-            <artifactId>perf4j</artifactId>
-            <version>0.9.16</version>
-            <scope>compile</scope>
-        </dependency>
+        -->
 
         <!-- LOGGING -->
         <!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
@@ -143,6 +136,5 @@
             </plugin>
         </plugins>
     </build>
-
 
 </project>

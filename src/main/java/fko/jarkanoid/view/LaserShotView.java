@@ -25,7 +25,6 @@
 
 package fko.jarkanoid.view;
 
-import fko.jarkanoid.model.GameModel;
 import fko.jarkanoid.model.LaserShot;
 import javafx.scene.shape.Rectangle;
 
@@ -36,9 +35,9 @@ public class LaserShotView extends Rectangle {
   /**
    * Creates a new Brick view which is an extension of a Rectangle
    *
-   * @param laserShot
+   * @param laserShot the model's lasershot for this view
    */
-  public LaserShotView(GameModel model, LaserShot laserShot) {
+  LaserShotView(LaserShot laserShot) {
     this.laserShot = laserShot;
 
     // let the CSS determine the look of the ball
@@ -69,6 +68,6 @@ public class LaserShotView extends Rectangle {
   }
 
   public void removed() {
-
+    // empty
   }
 }
