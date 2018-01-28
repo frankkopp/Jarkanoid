@@ -46,12 +46,9 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 /**
- * BreakOutModel
+ * GameModel
  *
- * <p>Handles the BreakOut game status, the main game loop and calculations.<br>
- *
- * <p>It has not yet its own Thread - could become necessary later if performance/rendering issue
- * occur.
+ * <p>Handles the Jarkanoid game status, the main game loop and calculations.<br>
  *
  * @author Frank Kopp
  */
@@ -396,8 +393,7 @@ public class GameModel extends Observable {
   /** Binds the ball to the paddle movement before start of the game */
   private void bindBallToPaddle(Ball ball, double xLocationOnPaddle) {
     // bind ball to paddle
-    ball.centerXProperty()
-        .bind(paddleX.add(xLocationOnPaddle)); // slightly to the right of the middle
+    ball.centerXProperty().bind(paddleX.add(xLocationOnPaddle));
     ball.centerYProperty().bind(paddleY.subtract(ball.getRadius()).subtract(1.0));
 
     // release the ball after a few seconds
@@ -708,7 +704,7 @@ public class GameModel extends Observable {
     }
   }
 
-  /** Grwos paddle over time */
+  /** Grows paddle over time */
   private void growPaddle() {
     paddleGrower.playFromStart();
   }
