@@ -116,6 +116,7 @@ public class GameModel extends Observable {
   private static final int NEXT_POWERUP_OFFSET = 3;
   // power up randomly after 0 to 10 destroyed bricks after offset
   private static final int POWER_UP_FREQUENCY = 8;
+  private static final double POWER_PILL_FALLING_SPEED = 5;
 
   // the maximum number the ball may bounce without hitting the paddle or destroying a brick
   // After this number the ball gets a random nudge in a different direction
@@ -398,13 +399,13 @@ public class GameModel extends Observable {
 
     // release the ball after a few seconds
     executor.schedule(
-            () -> {
-              // check if the game has been stopped while we were waiting
-              if (!isPlaying() || isPaused()) return;
-              ballCatchedFlag = false;
-            },
-            5000,
-            TimeUnit.MILLISECONDS);
+        () -> {
+          // check if the game has been stopped while we were waiting
+          if (!isPlaying() || isPaused()) return;
+          ballCatchedFlag = false;
+        },
+        5000,
+        TimeUnit.MILLISECONDS);
 
     LOG.debug("Ball bound to paddle for 5 sec");
   }
@@ -1024,7 +1025,8 @@ public class GameModel extends Observable {
                 brickLayout.getLeftBound(row, col),
                 brickLayout.getUpperBound(row, col),
                 brickLayout.getBrickWidth(),
-                brickLayout.getBrickHeight());
+                brickLayout.getBrickHeight(),
+                POWER_PILL_FALLING_SPEED);
         nextPowerUp = getNextPowerUp();
         LOG.debug("PowerPill generated: {}", nextPowerPill);
       }
@@ -1103,9 +1105,7 @@ public class GameModel extends Observable {
     return currentRemainingLives.get();
   }
 
-  /**
-   * Called by the <code>paddleMovementTimeline</code> animation event to move the paddles.
-   */
+  /** Called by the <code>paddleMovementTimeline</code> animation event to move the paddles. */
   private void paddleMovementLoop() {
     if (isPaused()) return; // no paddle movement when game is paused
     if (paddleLeft && paddleX.get() > 0.0) {
