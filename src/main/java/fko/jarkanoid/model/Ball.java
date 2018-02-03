@@ -44,19 +44,17 @@ public class Ball {
   private final DoubleProperty centerY;
 
   // for easier path calculations for collision checks
-
   private double previousCenterX;
   private double previousCenterY;
-  // ball speeds in each direction
 
+  // ball speeds in each direction
   private double vX;
   private double vY;
 
   // current total ball speed and angle - will be calculated whenever vX or vY change
-
   private double velocity;
-  // should this ball be removed
 
+  // should this ball be removed
   private boolean isMarkedForRemoval = false;
 
   /** Copy constructor for creating a new ball as a deep copy of an existing one.s */
