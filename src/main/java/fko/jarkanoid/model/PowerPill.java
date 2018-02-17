@@ -30,8 +30,6 @@ import javafx.beans.property.SimpleDoubleProperty;
 
 public class PowerPill {
 
-  private static final double FALLING_SPEED = 5;
-
   private final PowerPillType powerPillType;
 
   private final DoubleProperty x = new SimpleDoubleProperty(0);
@@ -39,7 +37,7 @@ public class PowerPill {
   private final DoubleProperty width = new SimpleDoubleProperty(0);
   private final DoubleProperty height = new SimpleDoubleProperty(0);
 
-  private double fallingSpeed = FALLING_SPEED;
+  private double fallingSpeed;
 
   /**
    * @param powerPillType
@@ -47,17 +45,19 @@ public class PowerPill {
    * @param y
    * @param width
    * @param height
+   * @param fallingSpeed
    */
-  public PowerPill(PowerPillType powerPillType, double x, double y, double width, double height) {
+  public PowerPill(PowerPillType powerPillType, double x, double y, double width, double height, double fallingSpeed) {
     this.powerPillType = powerPillType;
     this.x.set(x);
     this.y.set(y);
     this.width.set(width);
     this.height.set(height);
+    this.fallingSpeed = fallingSpeed;
   }
 
   public double fall() {
-    y.set(y.get() + FALLING_SPEED);
+    y.set(y.get() + fallingSpeed);
     return getY();
   }
 

@@ -46,12 +46,9 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 /**
- * BreakOutModel
+ * GameModel
  *
- * <p>Handles the BreakOut game status, the main game loop and calculations.<br>
- *
- * <p>It has not yet its own Thread - could become necessary later if performance/rendering issue
- * occur.
+ * <p>Handles the Jarkanoid game status, the main game loop and calculations.<br>
  *
  * @author Frank Kopp
  */
@@ -119,6 +116,7 @@ public class GameModel extends Observable {
   private static final int NEXT_POWERUP_OFFSET = 3;
   // power up randomly after 0 to 10 destroyed bricks after offset
   private static final int POWER_UP_FREQUENCY = 8;
+  private static final double POWER_PILL_FALLING_SPEED = 5;
 
   // the maximum number the ball may bounce without hitting the paddle or destroying a brick
   // After this number the ball gets a random nudge in a different direction
@@ -197,7 +195,7 @@ public class GameModel extends Observable {
       new SimpleObjectProperty<PowerPillType>(PowerPillType.NONE);
   private boolean ballCatchedFlag = false;
 
-  // count each time the game loop is called and some statistics
+  // count each time the game loop is called and some other statistics
   private long frameLoopCounter = 0;
   private long frameLoopCounterTimeStamp = System.nanoTime();
   private long lastloopTime;
@@ -396,19 +394,18 @@ public class GameModel extends Observable {
   /** Binds the ball to the paddle movement before start of the game */
   private void bindBallToPaddle(Ball ball, double xLocationOnPaddle) {
     // bind ball to paddle
-    ball.centerXProperty()
-        .bind(paddleX.add(xLocationOnPaddle)); // slightly to the right of the middle
+    ball.centerXProperty().bind(paddleX.add(xLocationOnPaddle));
     ball.centerYProperty().bind(paddleY.subtract(ball.getRadius()).subtract(1.0));
 
     // release the ball after a few seconds
     executor.schedule(
-            () -> {
-              // check if the game has been stopped while we were waiting
-              if (!isPlaying() || isPaused()) return;
-              ballCatchedFlag = false;
-            },
-            5000,
-            TimeUnit.MILLISECONDS);
+        () -> {
+          // check if the game has been stopped while we were waiting
+          if (!isPlaying() || isPaused()) return;
+          ballCatchedFlag = false;
+        },
+        5000,
+        TimeUnit.MILLISECONDS);
 
     LOG.debug("Ball bound to paddle for 5 sec");
   }
@@ -482,12 +479,12 @@ public class GameModel extends Observable {
   }
 
   private void updateLives() {
-    final int remainingLives = decreaseRemainingLives();
 
-    LOG.info("Decreased number of lives to {}", remainingLives);
+    currentRemainingLives.set(currentRemainingLives.get() - 1);
+    LOG.info("Decreased number of lives to {}", currentRemainingLives.get());
 
     // out of lives => game over
-    if (remainingLives < 0) {
+    if (currentRemainingLives.get() < 0) {
       currentRemainingLives.set(0);
       gameOver(false);
       return;
@@ -708,7 +705,7 @@ public class GameModel extends Observable {
     }
   }
 
-  /** Grwos paddle over time */
+  /** Grows paddle over time */
   private void growPaddle() {
     paddleGrower.playFromStart();
   }
@@ -736,7 +733,7 @@ public class GameModel extends Observable {
       setChanged();
       notifyObservers(new GameEvent(GameEventType.LEVEL_COMPLETE));
       // load new level or game over WON
-      increaseLevel();
+      currentLevel.set(currentLevel.get() + 1);
       LOG.info("increased level to {}", currentLevel.get());
       loadLevel(currentLevel.get());
       launchBall(SLEEP_BETWEEN_LEVELS);
@@ -754,7 +751,7 @@ public class GameModel extends Observable {
      * We us intermediate discrete (<1) steps to avoid "tunneling" through objects.
      * We use the last know ball position and we devide the the path from the last know position to the
      * current position (after the moveBall() step) into x parts (x=velocity of ball). With this we should get
-     * setps in X and Y direction which are smaller than 1 and therefore should detect collissions very
+     * steps in X and Y direction which are smaller than 1 and therefore should detect collissions very
      * accurately.
      */
 
@@ -808,12 +805,12 @@ public class GameModel extends Observable {
 
       /*
        * Instead of having an list of all bricks to check against we use the fact that bricks
-       * or poistion in a regular matrix of 13 columns and 18 rows. Collission could therefore
+       * are positioned in a regular matrix of 13 columns and 18 rows. Collission could therefore
        * be reduced to calculate the position of the ball within in this matrix. When the cell
        * the ball is in has a brick then there is a collision.
        * Problem is "tunneling" and multiple collissions at the same time. They could lead to
        * a false bouncing angle.
-       * This will be prevented be also checking where the ball is coming from a only allowing
+       * This will be prevented by also checking where the ball is coming from a only allowing
        * one collission at a time. Usually multiple collissions within the same step should be
        * rare as we have very small intermediate steps (<1 in each direction). In case they do
        * happen there should be no harm in ignoring one of them.
@@ -1028,7 +1025,8 @@ public class GameModel extends Observable {
                 brickLayout.getLeftBound(row, col),
                 brickLayout.getUpperBound(row, col),
                 brickLayout.getBrickWidth(),
-                brickLayout.getBrickHeight());
+                brickLayout.getBrickHeight(),
+                POWER_PILL_FALLING_SPEED);
         nextPowerUp = getNextPowerUp();
         LOG.debug("PowerPill generated: {}", nextPowerPill);
       }
@@ -1048,7 +1046,7 @@ public class GameModel extends Observable {
       setChanged();
       notifyObservers(new GameEvent(GameEventType.GAME_OVER));
     }
-    // new highscore (1st until 15th place)
+    // new highscore (1st to 15th place)
     if (highScoreManager.getList().size() < HIGHSCORE_MAX_PLACE - 1
         || currentScore.get() > highScoreManager.getList().get(HIGHSCORE_MAX_PLACE - 1).score) {
       HighScore.HighScoreEntry entry =
@@ -1072,7 +1070,7 @@ public class GameModel extends Observable {
     final int previousScore = currentScore.get();
     final int newScore = previousScore + hitBrickScore;
     currentScore.set(newScore);
-    // add new lives after 20.000 and after every other 60.000 points
+    // add new lives after 20.000 and after every 60.000 points
     if (previousScore < 20000 && newScore > 20000) {
       increaeRemainingLives();
     } else if (previousScore > 20000) {
@@ -1084,11 +1082,6 @@ public class GameModel extends Observable {
     }
   }
 
-  /** Increases level by 1 */
-  private void increaseLevel() {
-    currentLevel.set(currentLevel.get() + 1);
-  }
-
   /** adds a lives after score thresholds or Player PowerType */
   private void increaeRemainingLives() {
     currentRemainingLives.set(currentRemainingLives.get() + 1);
@@ -1097,19 +1090,7 @@ public class GameModel extends Observable {
     LOG.info("Increased number of lives to {}", currentRemainingLives.get());
   }
 
-  /**
-   * decreases the remaining lives after loosing a ball
-   *
-   * @return remaining lives
-   */
-  private int decreaseRemainingLives() {
-    currentRemainingLives.set(currentRemainingLives.get() - 1);
-    return currentRemainingLives.get();
-  }
-
-  /**
-   * Called by the <code>paddleMovementTimeline</code> animation event to move the paddles.
-   */
+  /** Called by the <code>paddleMovementTimeline</code> animation event to move the paddles. */
   private void paddleMovementLoop() {
     if (isPaused()) return; // no paddle movement when game is paused
     if (paddleLeft && paddleX.get() > 0.0) {

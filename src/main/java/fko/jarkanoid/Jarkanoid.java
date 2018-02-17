@@ -86,9 +86,6 @@ public class Jarkanoid extends Application {
     // set initial window title - will be extended in controller
     primaryStage.setTitle("Jarkanoid by Frank Kopp");
 
-    // bind view properties to model properties
-    controller.bindViewToModel(view);
-
     // setup window
     scene = new Scene(view.asParent());
     primaryStage.setScene(scene);
@@ -96,6 +93,9 @@ public class Jarkanoid extends Application {
     primaryStage.setResizable(false);
     // closeAction
     primaryStage.setOnCloseRequest(event -> exit());
+
+    // bind view properties to model properties
+    controller.bindViewToModel(view);
 
     // finally show window
     primaryStage.show();

@@ -133,34 +133,39 @@ public class HighScoreListView {
     return column;
   }
 
+  /**
+   * Called by the controller whenever the model's highscore list shall be updated
+   * @param newEntry
+   */
+  public void updateList(final HighScore.HighScoreEntry newEntry) {
+    newestEntry = newEntry;
+    updateList();
+  }
+
   private void updateList() {
     LOG.debug("Update HighScoreListView from model");
     observableList.clear();
 
     final AtomicInteger counter = new AtomicInteger(1);
     model
-        .getHighScoreManager()
-        .stream()
-        .limit(15)
-        .forEach(
-            entry -> observableList.add(
-                new TableRowBean(
-                    Integer.toString(counter.getAndIncrement()),
-                    entry.name,
-                    entry.score,
-                    entry.level,
-                    entry.date)));
+            .getHighScoreManager()
+            .stream()
+            .limit(15)
+            .forEach(
+                    entry -> observableList.add(
+                            new TableRowBean(
+                                    Integer.toString(counter.getAndIncrement()),
+                                    entry.name,
+                                    entry.score,
+                                    entry.level,
+                                    entry.date)));
 
     if (LOG.isDebugEnabled()) {
       LOG.debug("{}", observableList);
     }
   }
 
-  public void updateList(final HighScore.HighScoreEntry newEntry) {
-    newestEntry = newEntry;
-    updateList();
-  }
-
+  /** Represents on row of data to display in the high score table */
   public class TableRowBean {
 
     private final StringProperty place;
