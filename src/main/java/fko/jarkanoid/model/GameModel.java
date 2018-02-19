@@ -237,7 +237,7 @@ public class GameModel extends Observable {
     paddleMovementLoop.getKeyFrames().add(movePaddle);
     paddleMovementLoop.play();
 
-    // prepare ball movements (will be start in startGame())
+    // prepare ball movements (will be started in startGame())
     mainGameLoop.setCycleCount(Timeline.INDEFINITE);
     KeyFrame moveBall = new KeyFrame(Duration.millis(1000f / INITIAL_FRAMERATE), e -> gameLoop());
     mainGameLoop.getKeyFrames().add(moveBall);
@@ -245,8 +245,7 @@ public class GameModel extends Observable {
     // animation to grow the paddle slowly when we get an ENLARGE power
     // As we want to be able to move the paddle during the animation and also check if the
     // paddle grows out of the playing field we can't use normal property value timelines.
-    final int steps =
-        25; // do 25 intermediate steps - when at 10ms per step this is a 250ms animation
+    final int steps = 25; // do 25 intermediate steps - when at 10ms per step this is a 250ms animation
     paddleGrower.setCycleCount(steps);
     // larger
     final double lSteps = (PADDLE_ENLARGEMENT_FACTOR - 1) / steps;

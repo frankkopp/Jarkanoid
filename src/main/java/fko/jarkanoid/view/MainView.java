@@ -147,15 +147,6 @@ public class MainView {
     // combined animations
     paddleHitAnimation =
         new ParallelTransition(hitPaddleScaleTransition, hitPaddleStrokeTransition);
-
-    //      EXAMPLE for animations over arbitrary properties:
-    //      final Timeline timeline = new Timeline();
-    //      timeline.setCycleCount(Timeline.INDEFINITE);
-    //      timeline.setAutoReverse(true);
-    //      final KeyValue kv = new KeyValue(rectBasicTimeline.xProperty(), 300);
-    //      final KeyFrame kf = new KeyFrame(Duration.millis(500), kv);
-    //      timeline.getKeyFrames().add(kf);
-    //      timeline.play();
   }
 
   /**
