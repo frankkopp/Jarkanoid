@@ -47,7 +47,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * GameModel
- *
+ * <p>
  * <p>Handles the Jarkanoid game status, the main game loop and calculations.<br>
  *
  * @author Frank Kopp
@@ -109,7 +109,7 @@ public class GameModel extends Observable {
 
   // Template of a starting ball to copy when a new level starts
   private static final Ball BALL_TEMPLATE =
-      new Ball(BALL_INITIAL_X, BALL_INITIAL_Y, BALL_INITIAL_RADIUS, 0, BALL_INITIAL_SPEED);
+          new Ball(BALL_INITIAL_X, BALL_INITIAL_Y, BALL_INITIAL_RADIUS, 0, BALL_INITIAL_SPEED);
 
   // power up constants
   // how many destroyed bricks between power ups (needs to be >0)
@@ -135,15 +135,15 @@ public class GameModel extends Observable {
 
   // Playfield dimensions
   private final DoubleProperty playfieldWidth =
-      new SimpleDoubleProperty(PLAYFIELD_INITIAL_WIDTH); // see FXML 800 - 2 * 10 Walls
+          new SimpleDoubleProperty(PLAYFIELD_INITIAL_WIDTH); // see FXML 800 - 2 * 10 Walls
   private final DoubleProperty playfieldHeight =
-      new SimpleDoubleProperty(PLAYFIELD_INITIAL_HEIGHT); // see FXML 520 - 1 * 10 Wall
+          new SimpleDoubleProperty(PLAYFIELD_INITIAL_HEIGHT); // see FXML 520 - 1 * 10 Wall
 
   // Paddle dimensions and position
   private final DoubleProperty paddleWidth =
-      new SimpleDoubleProperty(PADDEL_INITIAL_WIDTH); // see FXML
+          new SimpleDoubleProperty(PADDEL_INITIAL_WIDTH); // see FXML
   private final DoubleProperty paddleHeight =
-      new SimpleDoubleProperty(PADDLE_INITIAL_HEIGHT); // see FXML
+          new SimpleDoubleProperty(PADDLE_INITIAL_HEIGHT); // see FXML
   private final DoubleProperty paddleX = new SimpleDoubleProperty(PADDLE_INITIAL_X); // see FXML
   private final DoubleProperty paddleY = new SimpleDoubleProperty(PADDLE_INITIAL_Y); // see FXML
 
@@ -155,7 +155,7 @@ public class GameModel extends Observable {
   // game statistics
   private final ReadOnlyIntegerWrapper currentLevel = new ReadOnlyIntegerWrapper(START_LEVEL);
   private final ReadOnlyIntegerWrapper currentRemainingLives =
-      new ReadOnlyIntegerWrapper(START_LIVES);
+          new ReadOnlyIntegerWrapper(START_LIVES);
   private final ReadOnlyIntegerWrapper currentScore = new ReadOnlyIntegerWrapper(0);
 
   // ball manager
@@ -178,7 +178,8 @@ public class GameModel extends Observable {
 
   // called when key is pressed/released to indicate paddle movement to movement animation
   private boolean paddleLeft;
-  private boolean paddleRight;;
+  private boolean paddleRight;
+  ;
 
   // to delay the start of the ball and to be able to stop a game before this timer delay runs out
   private ScheduledFuture scheduledStart;
@@ -192,7 +193,7 @@ public class GameModel extends Observable {
   private PowerPill nextPowerPill;
   private final ListProperty<PowerPill> fallingPowerPills = new SimpleListProperty<>();
   private final ObjectProperty<PowerPillType> activePower =
-      new SimpleObjectProperty<PowerPillType>(PowerPillType.NONE);
+          new SimpleObjectProperty<PowerPillType>(PowerPillType.NONE);
   private boolean ballCatchedFlag = false;
 
   // count each time the game loop is called and some other statistics
@@ -215,7 +216,9 @@ public class GameModel extends Observable {
   // player name property
   private final StringProperty playerName = new SimpleStringProperty("Unknown Player");
 
-  /** Constructor - prepares the brick layout and the game loops. */
+  /**
+   * Constructor - prepares the brick layout and the game loops.
+   */
   public GameModel() {
 
     // setup BrickLayout
@@ -233,7 +236,7 @@ public class GameModel extends Observable {
     // start the paddle movements
     paddleMovementLoop.setCycleCount(Timeline.INDEFINITE);
     KeyFrame movePaddle =
-        new KeyFrame(Duration.millis(1000f / PADDLE_INITIAL_FRAMERATE), e -> paddleMovementLoop());
+            new KeyFrame(Duration.millis(1000f / PADDLE_INITIAL_FRAMERATE), e -> paddleMovementLoop());
     paddleMovementLoop.getKeyFrames().add(movePaddle);
     paddleMovementLoop.play();
 
@@ -245,29 +248,32 @@ public class GameModel extends Observable {
     // animation to grow the paddle slowly when we get an ENLARGE power
     // As we want to be able to move the paddle during the animation and also check if the
     // paddle grows out of the playing field we can't use normal property value timelines.
-    final int steps = 25; // do 25 intermediate steps - when at 10ms per step this is a 250ms animation
+    final int steps =
+            25; // do 25 intermediate steps - when at 10ms per step this is a 250ms animation
     paddleGrower.setCycleCount(steps);
     // larger
     final double lSteps = (PADDLE_ENLARGEMENT_FACTOR - 1) / steps;
     // move to the left to make it look as if it grew from the middle
     final double xSteps = (((PADDLE_ENLARGEMENT_FACTOR - 1) / 2) * PADDEL_INITIAL_WIDTH) / steps;
     KeyFrame grow =
-        new KeyFrame(
-            Duration.millis(10),
-            (event) -> {
-              paddleWidth.set(paddleWidth.get() * (1.0 + lSteps));
-              paddleX.set(paddleX.get() - xSteps);
-              // push the paddle betweem the walls in case it was outside
-              if (paddleX.get() + paddleWidth.get() >= playfieldWidth.get()) {
-                paddleX.set(playfieldWidth.get() - paddleWidth.get());
-              } else if (paddleX.get() <= 0) {
-                paddleX.set(0);
-              }
-            });
+            new KeyFrame(
+                    Duration.millis(10),
+                    (event) -> {
+                      paddleWidth.set(paddleWidth.get() * (1.0 + lSteps));
+                      paddleX.set(paddleX.get() - xSteps);
+                      // push the paddle betweem the walls in case it was outside
+                      if (paddleX.get() + paddleWidth.get() >= playfieldWidth.get()) {
+                        paddleX.set(playfieldWidth.get() - paddleWidth.get());
+                      } else if (paddleX.get() <= 0) {
+                        paddleX.set(0);
+                      }
+                    });
     paddleGrower.getKeyFrames().addAll(grow);
   }
 
-  /** Starts a new game. */
+  /**
+   * Starts a new game.
+   */
   public void startPlaying() {
     if (isPlaying()) return;
 
@@ -315,7 +321,9 @@ public class GameModel extends Observable {
     notifyObservers(new GameEvent(GameEventType.LEVEL_START));
   }
 
-  /** stops the current game */
+  /**
+   * stops the current game
+   */
   public void stopPlaying() {
     if (!isPlaying()) return;
 
@@ -339,7 +347,9 @@ public class GameModel extends Observable {
     LOG.info("Game stopeed");
   }
 
-  /** Cleans up balls and pills */
+  /**
+   * Cleans up balls and pills
+   */
   private void cleanUpPlayfield() {
     // clear ball manager - delete all balls
     ballManager.clear();
@@ -377,20 +387,23 @@ public class GameModel extends Observable {
     // check if the game has been stopped while we were waiting
     // start the gameLoop
     scheduledStart =
-        executor.schedule(
-            () -> {
-              if (!isPlaying() || isPaused())
-                return; // check if the game has been stopped while we were waiting
-              unbindBallFromPaddle(newBall);
-              mainGameLoop.play(); // start the gameLoop
-            },
-            delay,
-            TimeUnit.MILLISECONDS);
+            executor.schedule(
+                    () -> {
+                      if (!isPlaying() || isPaused()) {
+                        return; // check if the game has been stopped while we were waiting
+                      }
+                      unbindBallFromPaddle(newBall);
+                      mainGameLoop.play(); // start the gameLoop
+                    },
+                    delay,
+                    TimeUnit.MILLISECONDS);
 
     LOG.debug("Ball launched");
   }
 
-  /** Binds the ball to the paddle movement before start of the game */
+  /**
+   * Binds the ball to the paddle movement before start of the game
+   */
   private void bindBallToPaddle(Ball ball, double xLocationOnPaddle) {
     // bind ball to paddle
     ball.centerXProperty().bind(paddleX.add(xLocationOnPaddle));
@@ -398,13 +411,13 @@ public class GameModel extends Observable {
 
     // release the ball after a few seconds
     executor.schedule(
-        () -> {
-          // check if the game has been stopped while we were waiting
-          if (!isPlaying() || isPaused()) return;
-          ballCatchedFlag = false;
-        },
-        5000,
-        TimeUnit.MILLISECONDS);
+            () -> {
+              // check if the game has been stopped while we were waiting
+              if (!isPlaying() || isPaused()) return;
+              ballCatchedFlag = false;
+            },
+            5000,
+            TimeUnit.MILLISECONDS);
 
     LOG.debug("Ball bound to paddle for 5 sec");
   }
@@ -436,7 +449,9 @@ public class GameModel extends Observable {
     updateFPS();
   }
 
-  /** Calculate some statistics */
+  /**
+   * Calculate some statistics
+   */
   private void updateFPS() {
     // frame loop counter
     if (++frameLoopCounter % 100 == 0) {
@@ -449,8 +464,8 @@ public class GameModel extends Observable {
       if (tLoop > tFrame) {
         if (LOG.isWarnEnabled()) {
           LOG.warn(
-              String.format(
-                  "FRAME LIMIT VIOLATION: %.6f ms (framelimit %.6f ms) %n", tLoop, tFrame));
+                  String.format(
+                          "FRAME LIMIT VIOLATION: %.6f ms (framelimit %.6f ms) %n", tLoop, tFrame));
         }
       }
 
@@ -533,7 +548,9 @@ public class GameModel extends Observable {
     }
   }
 
-  /** updates all balls, checks collisions fom balls with anything else and removes lost balls */
+  /**
+   * updates all balls, checks collisions fom balls with anything else and removes lost balls
+   */
   private void updateBalls() {
     // else loop over all balls
     ListIterator<Ball> listIterator = ballManager.listIterator();
@@ -570,7 +587,9 @@ public class GameModel extends Observable {
     }
   }
 
-  /** update power pills */
+  /**
+   * update power pills
+   */
   private void updatePowerPills() {
     // release next power up - no new powers when more than 1 ball in play
     if (nextPowerPill != null && ballManager.size() == 1) {
@@ -590,9 +609,9 @@ public class GameModel extends Observable {
       }
       // pill hits paddle
       else if (pill.getY() + pill.getHeight() >= paddleY.get()
-          && pill.getY() <= paddleY.get() + paddleHeight.get()
-          && pill.getX() + pill.getWidth() >= paddleX.get()
-          && pill.getX() <= paddleX.get() + paddleWidth.get()) {
+               && pill.getY() <= paddleY.get() + paddleHeight.get()
+               && pill.getX() + pill.getWidth() >= paddleX.get()
+               && pill.getX() <= paddleX.get() + paddleWidth.get()) {
 
         powerPillListIterator.remove();
 
@@ -601,7 +620,9 @@ public class GameModel extends Observable {
     }
   }
 
-  /** Activates the current power pill */
+  /**
+   * Activates the current power pill
+   */
   private void activatePowerPill(PowerPill pill) {
     if (activePower == null) {
       activePower.set(PowerPillType.NONE);
@@ -610,7 +631,9 @@ public class GameModel extends Observable {
     activatePower(newType);
   }
 
-  /** Activates the current power */
+  /**
+   * Activates the current power
+   */
   private void activatePower(final PowerPillType newType) {
     PowerPillType oldType = activePower.get();
 
@@ -704,12 +727,23 @@ public class GameModel extends Observable {
     }
   }
 
-  /** Grows paddle over time */
+  /**
+   * @return number of bricks to be destroyed until next power up
+   */
+  private int getNextPowerUp() {
+    return NEXT_POWERUP_OFFSET + (int) (Math.random() * POWER_UP_FREQUENCY);
+  }
+
+  /**
+   * Grows paddle over time
+   */
   private void growPaddle() {
     paddleGrower.playFromStart();
   }
 
-  /** shrink paddle over time */
+  /**
+   * shrink paddle over time
+   */
   private void shrinkPaddle() {
     // shrink the paddle slowly
     paddleShrinker.setCycleCount(1);
@@ -723,7 +757,9 @@ public class GameModel extends Observable {
     paddleShrinker.playFromStart();
   }
 
-  /** Checks if all bricks are gone and if so icreases level and launches new ball. */
+  /**
+   * Checks if all bricks are gone and if so icreases level and launches new ball.
+   */
   private void updateLevel() {
     if (brickLayout.getNumberOfBricks() == 0) {
       // pause game animation
@@ -748,7 +784,7 @@ public class GameModel extends Observable {
 
     /*
      * We us intermediate discrete (<1) steps to avoid "tunneling" through objects.
-     * We use the last know ball position and we devide the the path from the last know position to the
+     * We use the last know ball position and we divide the the path from the last know position to the
      * current position (after the moveBall() step) into x parts (x=velocity of ball). With this we should get
      * steps in X and Y direction which are smaller than 1 and therefore should detect collissions very
      * accurately.
@@ -773,9 +809,9 @@ public class GameModel extends Observable {
 
     if (LOG.isDebugEnabled()) { // to not even create the string when not logging
       LOG.debug(
-          String.format(
-              "FULL: vY: %6.2f  vX: %6.2f  v: %6.2f  CURRENT     : Y: %8.2f X: %8.2f PREVIOUS: Y: %8.2f X: %8.2f *** loop=%d",
-              vY, vX, ball.getVelocity(), bY, bX, bpY, bpX, maxLoopHitsCounter));
+              String.format(
+                      "FULL: vY: %6.2f  vX: %6.2f  v: %6.2f  CURRENT     : Y: %8.2f X: %8.2f PREVIOUS: Y: %8.2f X: %8.2f *** loop=%d",
+                      vY, vX, ball.getVelocity(), bY, bX, bpY, bpX, maxLoopHitsCounter));
       // DEBUG - because of floating numbers round this needs to be a fuzzy
       if (bY - vY - bpY > 0.01 && bY - vY - bpY < -0.01
           || bX - vX - bpX > 0.01
@@ -793,9 +829,9 @@ public class GameModel extends Observable {
 
       if (LOG.isDebugEnabled()) { // to not even create the string when not logging
         LOG.debug(
-            String.format(
-                "STEP: vY: %6.2f  vX: %6.2f  v: %6.2f  INTERMEDIATE: Y: %8.2f X: %8.2f",
-                stepY, stepX, stepV, cbY, cbX));
+                String.format(
+                        "STEP: vY: %6.2f  vX: %6.2f  v: %6.2f  INTERMEDIATE: Y: %8.2f X: %8.2f",
+                        stepY, stepX, stepV, cbY, cbX));
       }
 
       // ************************
@@ -1018,21 +1054,23 @@ public class GameModel extends Observable {
       nextPowerUp--;
       if (nextPowerUp == 0) {
         nextPowerPill =
-            new PowerPill(
-                //                PowerPillType.ENLARGE,
-                PowerPillType.getRandom(),
-                brickLayout.getLeftBound(row, col),
-                brickLayout.getUpperBound(row, col),
-                brickLayout.getBrickWidth(),
-                brickLayout.getBrickHeight(),
-                POWER_PILL_FALLING_SPEED);
+                new PowerPill(
+                        //                PowerPillType.ENLARGE,
+                        PowerPillType.getRandom(),
+                        brickLayout.getLeftBound(row, col),
+                        brickLayout.getUpperBound(row, col),
+                        brickLayout.getBrickWidth(),
+                        brickLayout.getBrickHeight(),
+                        POWER_PILL_FALLING_SPEED);
         nextPowerUp = getNextPowerUp();
         LOG.debug("PowerPill generated: {}", nextPowerPill);
       }
     }
   }
 
-  /** Called when out of lives or after last level */
+  /**
+   * Called when out of lives or after last level
+   */
   private void gameOver(boolean won) {
     stopPlaying();
     gameOver.set(true);
@@ -1049,8 +1087,8 @@ public class GameModel extends Observable {
     if (highScoreManager.getList().size() < HIGHSCORE_MAX_PLACE - 1
         || currentScore.get() > highScoreManager.getList().get(HIGHSCORE_MAX_PLACE - 1).score) {
       HighScore.HighScoreEntry entry =
-          new HighScore.HighScoreEntry(
-              playerName.get(), currentScore.get(), currentLevel.get(), LocalDateTime.now());
+              new HighScore.HighScoreEntry(
+                      playerName.get(), currentScore.get(), currentLevel.get(), LocalDateTime.now());
       highScoreManager.addEntryAndSave(entry);
       setChanged();
       notifyObservers(new GameEvent(GameEventType.NEW_HIGHSCORE, entry));
@@ -1081,7 +1119,9 @@ public class GameModel extends Observable {
     }
   }
 
-  /** adds a lives after score thresholds or Player PowerType */
+  /**
+   * adds a lives after score thresholds or Player PowerType
+   */
   private void increaeRemainingLives() {
     currentRemainingLives.set(currentRemainingLives.get() + 1);
     setChanged();
@@ -1089,9 +1129,11 @@ public class GameModel extends Observable {
     LOG.info("Increased number of lives to {}", currentRemainingLives.get());
   }
 
-  /** Called by the <code>paddleMovementTimeline</code> animation event to move the paddles. */
+  /**
+   * Called by the <code>paddleMovementTimeline</code> animation event to move the paddles.
+   */
   private void paddleMovementLoop() {
-    if (isPaused()) return; // no paddle movement when game is paused
+    if (isPaused() || !isPlaying()) return; // no paddle movement when game is paused
     if (paddleLeft && paddleX.get() > 0.0) {
       paddleX.setValue(paddleX.getValue() - PADDLE_MOVE_STEPS);
     }
@@ -1103,19 +1145,19 @@ public class GameModel extends Observable {
   public void shootLaser() {
     if (isPlaying() && !isPaused() && activePower.get().equals(PowerPillType.LASER)) {
       LaserShot ls1 =
-          new LaserShot(
-              paddleX.get() + LASER_EDGE_OFFSET,
-              paddleY.get(),
-              LASER_WIDTH,
-              LASER_HEIGHT,
-              LASER_SPEED);
+              new LaserShot(
+                      paddleX.get() + LASER_EDGE_OFFSET,
+                      paddleY.get(),
+                      LASER_WIDTH,
+                      LASER_HEIGHT,
+                      LASER_SPEED);
       LaserShot ls2 =
-          new LaserShot(
-              paddleX.get() + paddleWidth.get() - LASER_EDGE_OFFSET,
-              paddleY.get(),
-              LASER_WIDTH,
-              LASER_HEIGHT,
-              LASER_SPEED);
+              new LaserShot(
+                      paddleX.get() + paddleWidth.get() - LASER_EDGE_OFFSET,
+                      paddleY.get(),
+                      LASER_WIDTH,
+                      LASER_HEIGHT,
+                      LASER_SPEED);
 
       laserShotManager.addAll(ls1, ls2);
 
@@ -1124,14 +1166,18 @@ public class GameModel extends Observable {
     }
   }
 
-  /** is called when a user restarts a catched ball by pressing a key or mouse button * */
+  /**
+   * is called when a user restarts a catched ball by pressing a key or mouse button *
+   */
   public void releaseCaughtBall() {
     if (ballCatchedFlag) {
       ballCatchedFlag = false;
     }
   }
 
-  /** pauses a running game */
+  /**
+   * pauses a running game
+   */
   public void pausePlaying() {
     if (!isPlaying()) return; // ignore if not playing
     isPaused.set(true);
@@ -1139,17 +1185,23 @@ public class GameModel extends Observable {
     LOG.info("Game paused");
   }
 
-  /** @return true of game is running */
+  /**
+   * @return true of game is running
+   */
   public boolean isPlaying() {
     return isPlaying.get();
   }
 
-  /** @return true if game is paused */
+  /**
+   * @return true if game is paused
+   */
   public boolean isPaused() {
     return isPaused.get();
   }
 
-  /** resumes a paused running game */
+  /**
+   * resumes a paused running game
+   */
   public void resumePlaying() {
     if (!isPlaying() && !isPaused()) return; // ignore if not playing
     isPaused.set(false);
@@ -1165,7 +1217,7 @@ public class GameModel extends Observable {
    * @param mouseX
    */
   public void setMouseXPosition(double mouseX) {
-    if (isPaused()) return;
+    if (isPaused() || !isPlaying()) return;
     double x = mouseX;
     double halfPaddleWidth = paddleWidthProperty().get() / 2;
     if (x - halfPaddleWidth < 0.0) {
@@ -1182,7 +1234,9 @@ public class GameModel extends Observable {
     }
   }
 
-  /** Cheat to skip a level even if it is not finished */
+  /**
+   * Cheat to skip a level even if it is not finished
+   */
   public void skipLevelCheat() {
     brickLayout.resetMatrix();
     LOG.info("Cheat: Skip Level");
@@ -1276,19 +1330,18 @@ public class GameModel extends Observable {
     return laserShotManager;
   }
 
-  /** @return the current brick layout */
+  /**
+   * @return the current brick layout
+   */
   public BrickLayout getBrickLayout() {
     return brickLayout;
   }
 
-  /** @return the current fps */
+  /**
+   * @return the current fps
+   */
   public double getFps() {
     return fps.get();
-  }
-
-  /** @return number of bricks to be destroyed until next power up */
-  private int getNextPowerUp() {
-    return NEXT_POWERUP_OFFSET + (int) (Math.random() * POWER_UP_FREQUENCY);
   }
 
   public PowerPillType getActivePower() {

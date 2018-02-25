@@ -57,19 +57,6 @@ public class Ball {
   // should this ball be removed
   private boolean isMarkedForRemoval = false;
 
-  /** Copy constructor for creating a new ball as a deep copy of an existing one.s */
-  public Ball(Ball toCopy) {
-    this(
-        toCopy.centerXProperty().get(),
-        toCopy.centerYProperty().get(),
-        toCopy.radiusProperty().get(),
-        toCopy.vX,
-        toCopy.vY);
-    this.isMarkedForRemoval = toCopy.isMarkedForRemoval;
-    this.previousCenterX = toCopy.previousCenterX;
-    this.previousCenterY = toCopy.previousCenterY;
-  }
-
   /**
    * Creates a new ball
    *
@@ -85,6 +72,19 @@ public class Ball {
     this.centerY = new SimpleDoubleProperty(centerY);
     this.radius = new SimpleDoubleProperty(radius);
     setXYVelocity(vXball, vYball);
+  }
+
+  /** Copy constructor for creating a new ball as a deep copy of an existing one.s */
+  public Ball(Ball toCopy) {
+    this(
+            toCopy.centerXProperty().get(),
+            toCopy.centerYProperty().get(),
+            toCopy.radiusProperty().get(),
+            toCopy.vX,
+            toCopy.vY);
+    this.isMarkedForRemoval = toCopy.isMarkedForRemoval;
+    this.previousCenterX = toCopy.previousCenterX;
+    this.previousCenterY = toCopy.previousCenterY;
   }
 
   /**
