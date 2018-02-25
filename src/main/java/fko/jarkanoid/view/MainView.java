@@ -90,8 +90,6 @@ public class MainView {
   private StrokeTransition hitPaddleStrokeTransition;
   private ParallelTransition paddleHitAnimation;
 
-
-
   /**
    * @param model the model instance this view will be bound to
    * @param controller the controller this view uses to forward user input to

@@ -67,16 +67,16 @@ public class GameModel extends Observable {
   // debugging constants / for normal playing these have to be all false
   private static final boolean BOUNCING_FLOOR = false;
 
-  /*
-   * Constants for game dimensions and other relevant settings.
-   * Need to be aligned with FXML UI Design.
-   */
   private static final int START_LEVEL = 1;
   private static final int START_LIVES = 3;
 
   private static final long SLEEP_BETWEEN_LIVES = 2000; // in ms
   private static final long SLEEP_BETWEEN_LEVELS = 3000; // in ms
 
+  /*
+   * Constants for game dimensions and other relevant settings.
+   * Need to be aligned with FXML UI Design.
+   */
   private static final double PLAYFIELD_INITIAL_HEIGHT = 710;
   private static final double PLAYFIELD_INITIAL_WIDTH = 780;
 
@@ -179,7 +179,6 @@ public class GameModel extends Observable {
   // called when key is pressed/released to indicate paddle movement to movement animation
   private boolean paddleLeft;
   private boolean paddleRight;
-  ;
 
   // to delay the start of the ball and to be able to stop a game before this timer delay runs out
   private ScheduledFuture scheduledStart;
@@ -248,8 +247,7 @@ public class GameModel extends Observable {
     // animation to grow the paddle slowly when we get an ENLARGE power
     // As we want to be able to move the paddle during the animation and also check if the
     // paddle grows out of the playing field we can't use normal property value timelines.
-    final int steps =
-            25; // do 25 intermediate steps - when at 10ms per step this is a 250ms animation
+    final int steps = 25; // do 25 intermediate steps - when at 10ms per step this is a 250ms animation
     paddleGrower.setCycleCount(steps);
     // larger
     final double lSteps = (PADDLE_ENLARGEMENT_FACTOR - 1) / steps;
@@ -512,7 +510,7 @@ public class GameModel extends Observable {
   }
 
   private void updateLaser() {
-    // else loop over all laser shots
+    // loop over all laser shots
     ListIterator<LaserShot> listIterator = laserShotManager.listIterator();
     while (listIterator.hasNext()) {
       LaserShot ls = listIterator.next();
@@ -803,9 +801,9 @@ public class GameModel extends Observable {
     double cbX = bpX; // current
 
     // step sizes
-    final double stepY = vY / 10;
-    final double stepX = vX / 10;
-    final double stepV = ball.getVelocity() / 10;
+    final double stepY = vY / ball.getVelocity();
+    final double stepX = vX / ball.getVelocity();
+    final double stepV = 1;
 
     if (LOG.isDebugEnabled()) { // to not even create the string when not logging
       LOG.debug(
@@ -1048,14 +1046,13 @@ public class GameModel extends Observable {
     increaseScore(brickType, hitBrickScore);
     // count destroyed bricks
     if (hitBrickScore > 0) {
-      // relevant Hit?
+      // relevant Hit
       maxLoopHitsCounter = MAX_NUMBER_OF_LOOP_HITS;
       destroyedBricksCounter++;
       nextPowerUp--;
       if (nextPowerUp == 0) {
         nextPowerPill =
                 new PowerPill(
-                        //                PowerPillType.ENLARGE,
                         PowerPillType.getRandom(),
                         brickLayout.getLeftBound(row, col),
                         brickLayout.getUpperBound(row, col),

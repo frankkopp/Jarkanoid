@@ -29,6 +29,8 @@ import javafx.animation.FillTransition;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * BrickVew
@@ -42,12 +44,11 @@ import javafx.util.Duration;
  */
 public class BrickView extends Rectangle {
 
+  private static final Logger LOG = LoggerFactory.getLogger(BrickView.class);
+
   private final FillTransition solidBrickHitTimeline;
 
   private final Brick brick;
-
-  //  private static final InnerShadow effect = new InnerShadow(BlurType.ONE_PASS_BOX, Color.WHITE,
-  //          2.0, 0.0, 1.0, 1.0);
 
   /**
    * Creates a new Brick view which is an extension of a Rectangle
@@ -79,7 +80,7 @@ public class BrickView extends Rectangle {
     solidBrickHitTimeline.setShape(this);
   }
 
-  /** Called from Controller after BRICK_LOST event to stop any animation still running */
+  /** Called from Controller when a brick is hit and the brick is not destroyed */
   public void hit() {
     solidBrickHitTimeline.playFromStart();
   }
