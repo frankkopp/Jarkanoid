@@ -67,6 +67,7 @@ public class GameModel extends Observable {
   // debugging constants / for normal playing these have to be all false
   private static final boolean BOUNCING_FLOOR = false;
 
+  // game constants
   private static final int START_LEVEL = 1;
   private static final int START_LIVES = 3;
 

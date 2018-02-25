@@ -26,6 +26,8 @@ package fko.jarkanoid.model;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Ball
@@ -37,6 +39,8 @@ import javafx.beans.property.SimpleDoubleProperty;
  * @author Frank Kopp
  */
 public class Ball {
+
+  private static final Logger LOG = LoggerFactory.getLogger(Ball.class);
 
   // ball size and position properties
   private final DoubleProperty radius;
