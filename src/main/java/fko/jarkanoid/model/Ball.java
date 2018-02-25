@@ -108,7 +108,7 @@ public class Ball {
   }
 
   public void setVelocity(final double newSpeed) {
-    final double ratio = newSpeed / velocity;
+    final double ratio = Math.abs(newSpeed / velocity);
     setXYVelocity(vX * ratio, vY * ratio);
   }
 
