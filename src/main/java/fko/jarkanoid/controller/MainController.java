@@ -57,7 +57,7 @@ import java.util.ResourceBundle;
 
 /**
  * MainController
- *
+ * <p>
  * <p>The Controller sets up additional ui elements after the FXML loader has done its
  * initialization. The FXML loader calls the Controller's initialize() method.<br>
  * The Controller also receives all input and events from the user interface and the model and
@@ -182,61 +182,54 @@ public class MainController implements Initializable, Observer {
 
     // update handler for ball manager
     //noinspection unchecked
-    model
-            .getBallManager()
-            .addListener(
-                    (ListChangeListener.Change<?> change) -> view.updateBallList((Change<Ball>) change));
+    model.getBallManager()
+         .addListener(
+                 (ListChangeListener.Change<?> change) -> view.updateBallList((Change<Ball>) change));
 
     // update handler for laser shot manager
     //noinspection unchecked
-    model
-            .getLaserShotManager()
-            .addListener(
-                    (ListChangeListener.Change<?> change) ->
-                            view.updateLaserShotList((Change<LaserShot>) change));
+    model.getLaserShotManager()
+         .addListener(
+                 (ListChangeListener.Change<?> change) ->
+                         view.updateLaserShotList((Change<LaserShot>) change));
 
     // update handler for fallingPills
     //noinspection unchecked
-    model
-            .fallingPowerPillsProperty()
-            .addListener(
-                    (ListChangeListener.Change<?> change) ->
-                            view.updateFallingPillList((Change<PowerPill>) change));
+    model.fallingPowerPillsProperty()
+         .addListener(
+                 (ListChangeListener.Change<?> change) ->
+                         view.updateFallingPillList((Change<PowerPill>) change));
 
     // update handler for active power ups
     //noinspection unchecked
-    model
-            .activePowerProperty()
-            .addListener((observable, oldValue, newValue) -> updateActivePower(oldValue, newValue));
+    model.activePowerProperty()
+         .addListener((observable, oldValue, newValue) -> updateActivePower(oldValue, newValue));
 
     // startstopButton text updater
-    model
-            .isPlayingProperty()
-            .addListener(
-                    (observable, oldValue, newValue) -> {
-                      if (newValue) {
-                        startStopButton.setText("Stop");
-                      } else {
-                        startStopButton.setText("Play");
-                      }
-                    });
+    model.isPlayingProperty()
+         .addListener(
+                 (observable, oldValue, newValue) -> {
+                   if (newValue) {
+                     startStopButton.setText("Stop");
+                   } else {
+                     startStopButton.setText("Play");
+                   }
+                 });
 
     // pauseResumeButton text updater
-    model
-            .isPausedProperty()
-            .addListener(
-                    (observable, oldValue, newValue) -> {
-                      if (newValue) {
-                        pauseResumeButton.setText("Resume");
-                      } else {
-                        pauseResumeButton.setText("Pause");
-                      }
-                    });
+    model.isPausedProperty()
+         .addListener(
+                 (observable, oldValue, newValue) -> {
+                   if (newValue) {
+                     pauseResumeButton.setText("Resume");
+                   } else {
+                     pauseResumeButton.setText("Pause");
+                   }
+                 });
 
     // Level text
-    levelLabel
-            .textProperty()
-            .bind(new SimpleStringProperty("Level ").concat(model.currentLevelProperty()));
+    levelLabel.textProperty()
+              .bind(new SimpleStringProperty("Level ").concat(model.currentLevelProperty()));
     // remaining lives text
     livesLabel.textProperty().bind(model.currentRemainingLivesProperty().asString());
     // score text

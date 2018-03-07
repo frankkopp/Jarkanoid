@@ -90,20 +90,6 @@ public final class LevelLoader {
     return instance;
   }
 
-  /**
-   * For Unit Testing only.
-   *
-   * @param folder
-   * @param preFix
-   * @param fileType
-   * @return returns a new instance for the purpose of unit testing
-   */
-  protected static LevelLoader getNewInstanceForUnitTest(
-      String folder, String preFix, String fileType) {
-    LOG.info("LevelLoader instantiated");
-    return new LevelLoader(folder, preFix, fileType);
-  }
-
   /** Private constructor to create the singleton instance. */
   private LevelLoader() {
     LOG.info("LevelLoader initializing...");
@@ -174,7 +160,7 @@ public final class LevelLoader {
     List<String> files = null;
 
     /*
-     * This is really SUPER ugly but I haven' found another way yet to get all
+     * This is really SUPER ugly but I haven't found another way yet to get all
      * files from a resource directory when running from IDE AND running from JAR file.
      */
     final File jarFile =
@@ -219,10 +205,10 @@ public final class LevelLoader {
 
       try {
 
-        String platformIndependedPathString = folderURL.getPath().replaceFirst("^/(.:/)", "$1");
+        String platformIndependentPathString = folderURL.getPath().replaceFirst("^/(.:/)", "$1");
 
         files =
-            Files.list(FileSystems.getDefault().getPath(platformIndependedPathString))
+            Files.list(FileSystems.getDefault().getPath(platformIndependentPathString))
                 .map(m -> m.toFile().getName())
                 .filter(f -> f.lastIndexOf(filterString) >= 0) // match "Level-"
                 .filter(f -> f.endsWith(fileType)) // match "*.txt"
@@ -286,11 +272,11 @@ public final class LevelLoader {
     int validLineCounter = 0;
     for (int row = 0; row < lines.size(); row++) {
 
-      if (lines.get(row).isEmpty()
-          || // remove empty lines
+      if (lines.get(row).isEmpty() || // remove empty lines
           lines.get(row).startsWith("#")) { // remove comment lines
         continue;
       }
+
       validLineCounter++;
       String[] rowItems = lines.get(row).split(" ");
       if (rowItems.length != BrickLayout.COLUMNS) { // check if 13 columns
@@ -335,13 +321,13 @@ public final class LevelLoader {
     // ignore the empty string
     if (string.length() != 4 || string.equals("----")) return null;
 
-    String bricktype = string.substring(0, 2);
-    String powertype = string.substring(2, 4);
+    String brickType = string.substring(0, 2);
+    String powerType = string.substring(2, 4);
 
     BrickType bt;
     PowerPillType bpt;
 
-    switch (bricktype) {
+    switch (brickType) {
       case "GY":
         bt = BrickType.GREY;
         break;
@@ -373,10 +359,10 @@ public final class LevelLoader {
         bt = BrickType.GOLD;
         break;
       default:
-        throw new LevelLoaderFormatException(String.format("Unkwon brick type: %s", bricktype));
+        throw new LevelLoaderFormatException(String.format("Unkwon brick type: %s", brickType));
     }
 
-    switch (powertype) {
+    switch (powerType) {
       case "NO":
         bpt = PowerPillType.NONE;
         break;
@@ -403,9 +389,23 @@ public final class LevelLoader {
         break;
       default:
         throw new LevelLoaderFormatException(
-            String.format("Unkwon brick powertype: %s", powertype));
+            String.format("Unkwon brick powertype: %s", powerType));
     }
 
     return new Brick(bt, bpt);
+  }
+
+  /**
+   * For Unit Testing only.
+   *
+   * @param folder
+   * @param preFix
+   * @param fileType
+   * @return returns a new instance for the purpose of unit testing
+   */
+  protected static LevelLoader getNewInstanceForUnitTest(
+          String folder, String preFix, String fileType) {
+    LOG.info("LevelLoader instantiated");
+    return new LevelLoader(folder, preFix, fileType);
   }
 }
