@@ -26,6 +26,8 @@ package fko.jarkanoid.model;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Ball
@@ -37,6 +39,8 @@ import javafx.beans.property.SimpleDoubleProperty;
  * @author Frank Kopp
  */
 public class Ball {
+
+  private static final Logger LOG = LoggerFactory.getLogger(Ball.class);
 
   // ball size and position properties
   private final DoubleProperty radius;
@@ -57,19 +61,6 @@ public class Ball {
   // should this ball be removed
   private boolean isMarkedForRemoval = false;
 
-  /** Copy constructor for creating a new ball as a deep copy of an existing one.s */
-  public Ball(Ball toCopy) {
-    this(
-        toCopy.centerXProperty().get(),
-        toCopy.centerYProperty().get(),
-        toCopy.radiusProperty().get(),
-        toCopy.vX,
-        toCopy.vY);
-    this.isMarkedForRemoval = toCopy.isMarkedForRemoval;
-    this.previousCenterX = toCopy.previousCenterX;
-    this.previousCenterY = toCopy.previousCenterY;
-  }
-
   /**
    * Creates a new ball
    *
@@ -85,6 +76,19 @@ public class Ball {
     this.centerY = new SimpleDoubleProperty(centerY);
     this.radius = new SimpleDoubleProperty(radius);
     setXYVelocity(vXball, vYball);
+  }
+
+  /** Copy constructor for creating a new ball as a deep copy of an existing one.s */
+  public Ball(Ball toCopy) {
+    this(
+            toCopy.centerXProperty().get(),
+            toCopy.centerYProperty().get(),
+            toCopy.radiusProperty().get(),
+            toCopy.vX,
+            toCopy.vY);
+    this.isMarkedForRemoval = toCopy.isMarkedForRemoval;
+    this.previousCenterX = toCopy.previousCenterX;
+    this.previousCenterY = toCopy.previousCenterY;
   }
 
   /**
@@ -108,7 +112,7 @@ public class Ball {
   }
 
   public void setVelocity(final double newSpeed) {
-    final double ratio = newSpeed / velocity;
+    final double ratio = Math.abs(newSpeed / velocity);
     setXYVelocity(vX * ratio, vY * ratio);
   }
 

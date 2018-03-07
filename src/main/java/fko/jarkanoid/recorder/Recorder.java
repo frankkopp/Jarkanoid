@@ -42,7 +42,7 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * Recorder
  *
- * <p>Records screenshot from node of JavaFX in ficed intervalls
+ * <p>Records screenshot from node of JavaFX in fixed intervalls
  *
  * @author Frank Kopp
  */

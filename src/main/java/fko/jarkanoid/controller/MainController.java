@@ -57,7 +57,7 @@ import java.util.ResourceBundle;
 
 /**
  * MainController
- *
+ * <p>
  * <p>The Controller sets up additional ui elements after the FXML loader has done its
  * initialization. The FXML loader calls the Controller's initialize() method.<br>
  * The Controller also receives all input and events from the user interface and the model and
@@ -65,8 +65,8 @@ import java.util.ResourceBundle;
  * The model signals via the Observer Interface and Property Bindings that the model has changed and
  * the UI should update its views.
  *
- * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
  * @author Frank Kopp
+ * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
  */
 public class MainController implements Initializable, Observer {
 
@@ -79,22 +79,38 @@ public class MainController implements Initializable, Observer {
   private MainView view;
 
   // FXML injected fields
-  @FXML private Circle recordingIndicator;
-  @FXML private Button startStopButton;
-  @FXML private Button pauseResumeButton;
-  @FXML private Button soundButton;
-  @FXML private Text levelLabel;
-  @FXML private Text livesLabel;
-  @FXML private Text pointsLabel;
-  @FXML private Pane playfieldPane;
-  @FXML private Rectangle ceilingWall;
-  @FXML private Rectangle leftWall;
-  @FXML private Rectangle rightWall;
-  @FXML private Rectangle paddle;
-  @FXML private Text gameOverSplash;
-  @FXML private VBox gamePreStartSplash;
-  @FXML private TableView highScoreTable;
-  @FXML private TextField playerNameTextField;
+  @FXML
+  private Circle recordingIndicator;
+  @FXML
+  private Button startStopButton;
+  @FXML
+  private Button pauseResumeButton;
+  @FXML
+  private Button soundButton;
+  @FXML
+  private Text levelLabel;
+  @FXML
+  private Text livesLabel;
+  @FXML
+  private Text pointsLabel;
+  @FXML
+  private Pane playfieldPane;
+  @FXML
+  private Rectangle ceilingWall;
+  @FXML
+  private Rectangle leftWall;
+  @FXML
+  private Rectangle rightWall;
+  @FXML
+  private Rectangle paddle;
+  @FXML
+  private Text gameOverSplash;
+  @FXML
+  private VBox gamePreStartSplash;
+  @FXML
+  private TableView highScoreTable;
+  @FXML
+  private TextField playerNameTextField;
 
   // to avoid keeping space pressed and therefore having rapid fire
   private boolean spaceIsPressed = false;
@@ -137,14 +153,14 @@ public class MainController implements Initializable, Observer {
     // scene title
     String tmpTitle = Jarkanoid.getPrimaryStage().getTitle();
     Jarkanoid.getPrimaryStage()
-        .titleProperty()
-        .bind(
-            new SimpleStringProperty(tmpTitle + " (fps:")
-                .concat(model.fpsProperty().asString("%.2f"))
-                .concat(")")
-                .concat(" (Version: ")
-                .concat(Jarkanoid.VERSION)
-                .concat(")"));
+             .titleProperty()
+             .bind(
+                     new SimpleStringProperty(tmpTitle + " (fps:")
+                             .concat(model.fpsProperty().asString("%.2f"))
+                             .concat(")")
+                             .concat(" (Version: ")
+                             .concat(Jarkanoid.VERSION)
+                             .concat(")"));
 
     // add keyboard handlers
     view.asParent().getScene().setOnKeyPressed(this::keyPressedAction);
@@ -166,61 +182,54 @@ public class MainController implements Initializable, Observer {
 
     // update handler for ball manager
     //noinspection unchecked
-    model
-        .getBallManager()
-        .addListener(
-            (ListChangeListener.Change<?> change) -> view.updateBallList((Change<Ball>) change));
+    model.getBallManager()
+         .addListener(
+                 (ListChangeListener.Change<?> change) -> view.updateBallList((Change<Ball>) change));
 
     // update handler for laser shot manager
     //noinspection unchecked
-    model
-        .getLaserShotManager()
-        .addListener(
-            (ListChangeListener.Change<?> change) ->
-                view.updateLaserShotList((Change<LaserShot>) change));
+    model.getLaserShotManager()
+         .addListener(
+                 (ListChangeListener.Change<?> change) ->
+                         view.updateLaserShotList((Change<LaserShot>) change));
 
     // update handler for fallingPills
     //noinspection unchecked
-    model
-        .fallingPowerPillsProperty()
-        .addListener(
-            (ListChangeListener.Change<?> change) ->
-                view.updateFallingPillList((Change<PowerPill>) change));
+    model.fallingPowerPillsProperty()
+         .addListener(
+                 (ListChangeListener.Change<?> change) ->
+                         view.updateFallingPillList((Change<PowerPill>) change));
 
     // update handler for active power ups
     //noinspection unchecked
-    model
-        .activePowerProperty()
-        .addListener((observable, oldValue, newValue) -> updateActivePower(oldValue, newValue));
+    model.activePowerProperty()
+         .addListener((observable, oldValue, newValue) -> updateActivePower(oldValue, newValue));
 
     // startstopButton text updater
-    model
-        .isPlayingProperty()
-        .addListener(
-            (observable, oldValue, newValue) -> {
-              if (newValue) {
-                startStopButton.setText("Stop");
-              } else {
-                startStopButton.setText("Play");
-              }
-            });
+    model.isPlayingProperty()
+         .addListener(
+                 (observable, oldValue, newValue) -> {
+                   if (newValue) {
+                     startStopButton.setText("Stop");
+                   } else {
+                     startStopButton.setText("Play");
+                   }
+                 });
 
     // pauseResumeButton text updater
-    model
-        .isPausedProperty()
-        .addListener(
-            (observable, oldValue, newValue) -> {
-              if (newValue) {
-                pauseResumeButton.setText("Resume");
-              } else {
-                pauseResumeButton.setText("Pause");
-              }
-            });
+    model.isPausedProperty()
+         .addListener(
+                 (observable, oldValue, newValue) -> {
+                   if (newValue) {
+                     pauseResumeButton.setText("Resume");
+                   } else {
+                     pauseResumeButton.setText("Pause");
+                   }
+                 });
 
     // Level text
-    levelLabel
-        .textProperty()
-        .bind(new SimpleStringProperty("Level ").concat(model.currentLevelProperty()));
+    levelLabel.textProperty()
+              .bind(new SimpleStringProperty("Level ").concat(model.currentLevelProperty()));
     // remaining lives text
     livesLabel.textProperty().bind(model.currentRemainingLivesProperty().asString());
     // score text
@@ -232,7 +241,7 @@ public class MainController implements Initializable, Observer {
     // pre start splash
     gamePreStartSplash.visibleProperty().bind(model.isPlayingProperty().not());
 
-    // bind bidrectional playerName
+    // bind bidirectional playerName
     playerNameTextField.textProperty().bindBidirectional(model.playerNameProperty());
 
     // to not have focus on playerNameTextField
@@ -241,15 +250,14 @@ public class MainController implements Initializable, Observer {
 
   /**
    * Called by a property binding to the active power property.
-   * Is used to accommodate animations when a new power gets acitve and
+   * Is used to accommodate animations when a new power gets active and
    * the old power gets inactive. Not all powers have or need animations.
    *
    * @param oldPowerType
    * @param newPowerType
    */
-  private void updateActivePower(
-          final PowerPillType oldPowerType,
-          final PowerPillType newPowerType) {
+  private void updateActivePower(final PowerPillType oldPowerType,
+                                 final PowerPillType newPowerType) {
 
     switch (oldPowerType) {
       case NONE:
@@ -363,7 +371,7 @@ public class MainController implements Initializable, Observer {
       case GAME_WON:
         sounds.playClip(Clips.FINAL);
         gameOverSplash.setText("  THE END");
-      break;
+        break;
       case CAUGHT:
         sounds.playClip(Clips.CAUGHT);
         break;
@@ -375,14 +383,16 @@ public class MainController implements Initializable, Observer {
         sounds.playClip(Clips.NEW_LIFE);
         break;
       case NEW_HIGHSCORE:
-        view.getHighScoreListView().updateList((HighScore.HighScoreEntry)param[0]);
+        view.getHighScoreListView().updateList((HighScore.HighScoreEntry) param[0]);
         //showHighScoreEditor();
         break;
       default:
     }
   }
 
-  /** @param event */
+  /**
+   * @param event
+   */
   private void handleHitBrickEvent(GameEvent event) {
     if (event.getEventParameter() != null) {
       final Object[] param = (Object[]) event.getEventParameter();
@@ -414,8 +424,8 @@ public class MainController implements Initializable, Observer {
         break;
       case SPACE:
         restartCaughtBallAction(new ActionEvent());
-        if (!spaceIsPressed) {
-          spaceIsPressed=true;
+        if (!spaceIsPressed) { // to avoid auto keyboard repeat for laser
+          spaceIsPressed = true;
           model.shootLaser();
         }
         break;
@@ -428,7 +438,7 @@ public class MainController implements Initializable, Observer {
       case R:
         recordingAction();
         break;
-       case Q:
+      case Q:
         if (event.isControlDown()) {
           model.skipLevelCheat();
         }
@@ -464,7 +474,7 @@ public class MainController implements Initializable, Observer {
         onPaddleRightAction(false);
         break;
       case SPACE:
-        spaceIsPressed=false;
+        spaceIsPressed = false;
       default:
     }
   }
@@ -520,8 +530,11 @@ public class MainController implements Initializable, Observer {
    * @param b
    */
   private void onPaddleLeftAction(boolean b) {
-    if (b) model.setPaddleLeft(true);
-    else model.setPaddleLeft(false);
+    if (b) {
+      model.setPaddleLeft(true);
+    } else {
+      model.setPaddleLeft(false);
+    }
   }
 
   /**
@@ -530,11 +543,16 @@ public class MainController implements Initializable, Observer {
    * @param b
    */
   private void onPaddleRightAction(boolean b) {
-    if (b) model.setPaddleRight(true);
-    else model.setPaddleRight(false);
+    if (b) {
+      model.setPaddleRight(true);
+    } else {
+      model.setPaddleRight(false);
+    }
   }
 
-  /** Toggles Start/Stop game */
+  /**
+   * Toggles Start/Stop game
+   */
   @FXML
   private void startStopButtonAction(ActionEvent event) {
     if (model.isPlaying()) {
@@ -546,7 +564,9 @@ public class MainController implements Initializable, Observer {
     }
   }
 
-  /** Called when user wants to restart a caught Ball */
+  /**
+   * Called when user wants to restart a caught Ball
+   */
   private void restartCaughtBallAction(final ActionEvent actionEvent) {
     model.releaseCaughtBall();
   }
@@ -587,7 +607,9 @@ public class MainController implements Initializable, Observer {
     }
   }
 
-  /** Mouse action */
+  /**
+   * Mouse action
+   */
   private void mouseMovedAction(MouseEvent event) {
     model.setMouseXPosition(event.getX());
   }

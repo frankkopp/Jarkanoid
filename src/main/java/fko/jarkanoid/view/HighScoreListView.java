@@ -127,7 +127,7 @@ public class HighScoreListView {
       // getReorderable()
       // for TableColumnBase such as TableColumn to be used for set Reorderable,
     } catch (NoSuchMethodError ignore) { // happens in Java9
-      LOG.info("impl_setReorderable not available - probably Java9?");
+      LOG.warn("impl_setReorderable not available - probably Java9?");
     }
 
     return column;
