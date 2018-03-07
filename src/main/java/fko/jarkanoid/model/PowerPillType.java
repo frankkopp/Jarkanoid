@@ -36,7 +36,7 @@ public enum PowerPillType {
   NONE (Color.WHITE, "N"),
 
   /**
-   *  	Collect the red capsule to transform the Vaus into its Laser-firing configuration. In this
+   *  Collect the red capsule to transform the Vaus into its Laser-firing configuration. In this
    *  form, you can fire lasers at the top of the screen by pushing the fire button. Lasers can be
    *  used against every brick except Gold bricks, and against enemies. Silver bricks can only be
    *  destroyed by lasers when they are hit the required number of times.
@@ -103,8 +103,8 @@ public enum PowerPillType {
     if (random >= 5  && random <   20) return DISRUPTION;
     if (random >= 20 && random <   40) return SLOW;
     if (random >= 40 && random <   60) return CATCH;
-    if (random >= 60 && random <   90) return ENLARGE;
-    if (random >= 90 && random <= 100) return LASER;
+    if (random >= 60 && random <   85) return ENLARGE;
+    if (random >= 85 && random <= 100) return LASER;
     return NONE;
   }
 
