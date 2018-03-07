@@ -407,8 +407,8 @@ public class MainController implements Initializable, Observer {
   private void keyPressedAction(KeyEvent event) {
     switch (event.getCode()) {
       // game control
-      case ESCAPE:
-      case ENTER:
+      case ESCAPE: // fall through
+      case ENTER: // fall through
       case N:
         startStopButtonAction(new ActionEvent());
         break;
@@ -435,11 +435,11 @@ public class MainController implements Initializable, Observer {
         break;
 
       // paddle control
-      case A:
+      case A: // fall through
       case LEFT:
         onPaddleLeftAction(true);
         break;
-      case D:
+      case D: // fall through
       case RIGHT:
         onPaddleRightAction(true);
         break;
