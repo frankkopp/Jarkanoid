@@ -177,7 +177,8 @@ public class GameModel extends Observable {
   // the brick layout holds all bricks and its positions of the games
   private final BrickLayout brickLayout;
 
-  // called when key is pressed/released to indicate paddle movement to movement animation
+  // set to true when key is pressed/released to indicate paddle
+  // movement to movement animation
   private boolean paddleLeft;
   private boolean paddleRight;
 
@@ -203,7 +204,7 @@ public class GameModel extends Observable {
   private long commulativeLoopTime;
   private final DoubleProperty fps = new SimpleDoubleProperty(INITIAL_FRAMERATE);
 
-  // grower and skrinker timeline of paddles
+  // grower and shrinker timeline of paddles
   private final Timeline paddleGrower = new Timeline();
   private final Timeline paddleShrinker = new Timeline();
 
@@ -1039,8 +1040,7 @@ public class GameModel extends Observable {
    */
   private void brickHit(final int row, final int col) {
     // which type
-    Brick brick = brickLayout.getBrick(row, col);
-    BrickType brickType = brick.getType();
+    BrickType brickType = brickLayout.getBrick(row, col).getType();
     // hit the brick / get points for every destroyed brick
     final int hitBrickScore = brickLayout.hitBrick(row, col);
     // increase score
@@ -1084,7 +1084,7 @@ public class GameModel extends Observable {
     // new highscore (1st to 15th place)
     if (highScoreManager.getList().size() < HIGHSCORE_MAX_PLACE - 1
         || currentScore.get() > highScoreManager.getList().get(HIGHSCORE_MAX_PLACE - 1).score) {
-      HighScore.HighScoreEntry entry =
+      final HighScore.HighScoreEntry entry =
               new HighScore.HighScoreEntry(
                       playerName.get(), currentScore.get(), currentLevel.get(), LocalDateTime.now());
       highScoreManager.addEntryAndSave(entry);
