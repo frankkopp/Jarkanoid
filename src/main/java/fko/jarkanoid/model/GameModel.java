@@ -481,7 +481,7 @@ public class GameModel extends Observable {
     if (ballManager.isEmpty()) {
 
       LOG.info("Lost last ball");
-      updateLives();
+      decreaseLives();
 
     } else { // still at least one ball in play
 
@@ -492,7 +492,7 @@ public class GameModel extends Observable {
     }
   }
 
-  private void updateLives() {
+  private void decreaseLives() {
 
     currentRemainingLives.set(currentRemainingLives.get() - 1);
     LOG.info("Decreased number of lives to {}", currentRemainingLives.get());
@@ -783,7 +783,7 @@ public class GameModel extends Observable {
   private void checkBallCollisions(Ball ball) {
 
     /*
-     * We us intermediate discrete (<1) steps to avoid "tunneling" through objects.
+     * We use intermediate discrete (<1) steps to avoid "tunneling" through objects.
      * We use the last know ball position and we divide the the path from the last know position to the
      * current position (after the moveBall() step) into x parts (x=velocity of ball). With this we should get
      * steps in X and Y direction which are smaller than 1 and therefore should detect collissions very
@@ -1118,7 +1118,7 @@ public class GameModel extends Observable {
   }
 
   /**
-   * adds a lives after score thresholds or Player PowerType
+   * adds a live after score thresholds or Player PowerType
    */
   private void increaeRemainingLives() {
     currentRemainingLives.set(currentRemainingLives.get() + 1);
