@@ -103,7 +103,12 @@ public class Ball {
     this.velocity = Math.sqrt(vX * vX + vY * vY);
   }
 
-  /** Moves the ball one step further. Expected to be called by the game loop once per frame. */
+  /**
+   * Moves the ball one step further.
+   * Expected to be called by the game loop once per frame.
+   * This uses a prefixed distance per step vX and vY.
+   * It is not a function of elapsed time as usual in game loops-
+   */
   public void moveStep() {
     previousCenterX = centerX.get();
     centerX.set(previousCenterX + vX);
