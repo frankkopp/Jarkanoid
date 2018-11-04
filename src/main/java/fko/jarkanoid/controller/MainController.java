@@ -315,8 +315,9 @@ public class MainController implements Initializable, Observer {
   @Override
   public void update(Observable o, Object e) {
     if (!(e instanceof GameEvent)) {
-      LOG.error("Unknown event type. Event is not of type GameEvent");
-      throw new RuntimeException("Unknown event type. Event is not of type GameEvent");
+      final String msg = "Unknown event type. Event is not of type GameEvent";
+      LOG.error(msg);
+      throw new RuntimeException(msg);
     }
 
     GameEvent gameEvent = (GameEvent) e;
