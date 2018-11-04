@@ -601,8 +601,11 @@ public class GameModel extends Observable {
     ListIterator<PowerPill> powerPillListIterator = fallingPowerPills.listIterator();
     while (powerPillListIterator.hasNext()) {
       PowerPill pill = powerPillListIterator.next();
+
       // move the pill down
       pill.fall();
+
+      // check collisions
       // pill is lost -> erase it
       if (pill.getY() >= playfieldHeight.get()) {
         powerPillListIterator.remove();
@@ -879,7 +882,7 @@ public class GameModel extends Observable {
       }
 
       // hit above
-      if (vY < 0 && brickLayout.getBrick(ballUpperRow, ballCenterCol) != null) {
+      if (Integer.lowestOneBit(hitCounter) == 1) {
         brickHit(ballUpperRow, ballCenterCol);
         setChanged();
         notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballUpperRow, ballCenterCol, ball));
@@ -893,7 +896,7 @@ public class GameModel extends Observable {
       }
 
       // hit right
-      if (vX >= 0 && brickLayout.getBrick(ballCenterRow, ballRightCol) != null) {
+      if (Integer.lowestOneBit(hitCounter) == 2) {
         brickHit(ballCenterRow, ballRightCol);
         setChanged();
         notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballCenterRow, ballRightCol, ball));
@@ -907,7 +910,7 @@ public class GameModel extends Observable {
       }
 
       // hit left
-      if (vX < 0 && brickLayout.getBrick(ballCenterRow, ballLeftCol) != null) {
+      if (Integer.lowestOneBit(hitCounter) == 4) {
         brickHit(ballCenterRow, ballLeftCol);
         setChanged();
         notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballCenterRow, ballLeftCol, ball));
@@ -921,7 +924,7 @@ public class GameModel extends Observable {
       }
 
       // hit below
-      if (vY > 0 && brickLayout.getBrick(ballLowerRow, ballCenterCol) != null) {
+      if (Integer.lowestOneBit(hitCounter) == 8) {
         brickHit(ballLowerRow, ballCenterCol);
         setChanged();
         notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballLowerRow, ballCenterCol, ball));
