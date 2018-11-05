@@ -88,7 +88,7 @@ public class GameModel extends Observable {
   private static final double PADDLE_INITIAL_X = 315;
   private static final double PADDEL_INITIAL_WIDTH = 150; // 150;
   private static final double PADDLE_INITIAL_HEIGHT = 20;
-  private static final float PADDLE_ENLARGEMENT_FACTOR = 1.4f;
+  private static final float  PADDLE_ENLARGEMENT_FACTOR = 1.4f;
 
   // Ball constants
   private static final double BALL_INITIAL_RADIUS = 6;
@@ -97,16 +97,18 @@ public class GameModel extends Observable {
   private static final double BALL_INITIAL_Y = PADDLE_INITIAL_Y - BALL_INITIAL_RADIUS;
 
   // Absolute speed of ball, when vertical equals px in y, when horizontal equals px in x
-  private static final double BALL_INITIAL_SPEED = 10.0;
+  private static final double BALL_INITIAL_SPEED = 10; // at 60fps this is 600px/sec
 
   // Framerate for game loop
   private static final double INITIAL_FRAMERATE = 60;
+  private static final double maxDeltaTime = 1f/10f;
 
   // Laser constants
   private static final double LASER_EDGE_OFFSET = 45;
   private static final double LASER_WIDTH = 5;
   private static final double LASER_HEIGHT = 15;
-  private static final double LASER_SPEED = 15;
+  private static final double LASER_SPEED = 900; // 15px at 60fps this is 900px/sec
+                                                 // must be more than brick heigth (23,666px or 1.400px/sec)
 
   // Template of a starting ball to copy when a new level starts
   private static final Ball BALL_TEMPLATE =
@@ -117,7 +119,7 @@ public class GameModel extends Observable {
   private static final int NEXT_POWERUP_OFFSET = 3;
   // power up randomly after 0 to 10 destroyed bricks after offset
   private static final int POWER_UP_FREQUENCY = 8;
-  private static final double POWER_PILL_FALLING_SPEED = 5;
+  private static final double POWER_PILL_FALLING_SPEED = 5; // at 60fps this is 300px/sec
 
   // the maximum number the ball may bounce without hitting the paddle or destroying a brick
   // After this number the ball gets a random nudge in a different direction
@@ -167,6 +169,8 @@ public class GameModel extends Observable {
 
   // main Game Loop / moves ball(s) and handles collisions
   private final Timeline mainGameLoop = new Timeline();
+  // time from last game loop call to calculate delta
+  private long previousTime;
 
   // paddle movements have their own game loop so we can move it outside of a running game
   private final Timeline paddleMovementLoop = new Timeline();
@@ -441,7 +445,7 @@ public class GameModel extends Observable {
 
     long startLoopTime = System.nanoTime();
 
-    updateGameState();
+    updateGameState(startLoopTime);
 
     lastloopTime = System.nanoTime() - startLoopTime;
     commulativeLoopTime += lastloopTime;
@@ -475,7 +479,12 @@ public class GameModel extends Observable {
     }
   }
 
-  private void updateGameState() {
+  /**
+   * Updates the model for the game. Currently based on discrete steps independed from time elapsed
+   * TODO: refactor using time elapsed instead of fixed step sizes
+   * @param startLoopTime
+   */
+  private void updateGameState(final long currentTime) {
 
     // if no more balls we lost a live
     if (ballManager.isEmpty()) {
@@ -485,10 +494,21 @@ public class GameModel extends Observable {
 
     } else { // still at least one ball in play
 
-      updatePowerPills();
-      updateLaser();
-      updateBalls();
-      updateLevel();
+      if (previousTime == 0) {
+        previousTime = currentTime;
+        return;
+      }
+
+      double deltaTime = (currentTime - previousTime) / 1e9f;
+      double deltaTimeCapped = Math.min(deltaTime, maxDeltaTime);
+      previousTime = currentTime;
+
+      System.out.format("Elapsed: %f Capped: %f Now: %d %n", deltaTime, deltaTimeCapped, currentTime);
+
+      updatePowerPills(deltaTimeCapped);
+      updateLaser(deltaTimeCapped);
+      updateBalls(deltaTimeCapped);
+      updateLevel(deltaTimeCapped);
     }
   }
 
@@ -511,7 +531,7 @@ public class GameModel extends Observable {
     launchBall(SLEEP_BETWEEN_LIVES);
   }
 
-  private void updateLaser() {
+  private void updateLaser(final double deltaTimeCapped) {
     // loop over all laser shots
     ListIterator<LaserShot> listIterator = laserShotManager.listIterator();
     while (listIterator.hasNext()) {
@@ -522,7 +542,7 @@ public class GameModel extends Observable {
         continue;
       }
       // move the laser shot up
-      ls.moveStep();
+      ls.moveStep(deltaTimeCapped);
       // check collisions from the ball(s) with anything else
       checkLaserCollisions(ls);
     }
@@ -550,8 +570,9 @@ public class GameModel extends Observable {
 
   /**
    * updates all balls, checks collisions fom balls with anything else and removes lost balls
+   * @param deltaTimeCapped
    */
-  private void updateBalls() {
+  private void updateBalls(final double deltaTimeCapped) {
     // else loop over all balls
     ListIterator<Ball> listIterator = ballManager.listIterator();
     while (listIterator.hasNext()) {
@@ -589,8 +610,9 @@ public class GameModel extends Observable {
 
   /**
    * update power pills
+   * @param deltaTimeCapped
    */
-  private void updatePowerPills() {
+  private void updatePowerPills(final double deltaTimeCapped) {
     // release next power up - no new powers when more than 1 ball in play
     if (nextPowerPill != null && ballManager.size() == 1) {
       fallingPowerPills.add(nextPowerPill);
@@ -762,8 +784,9 @@ public class GameModel extends Observable {
 
   /**
    * Checks if all bricks are gone and if so icreases level and launches new ball.
+   * @param deltaTimeCapped
    */
-  private void updateLevel() {
+  private void updateLevel(final double deltaTimeCapped) {
     if (brickLayout.getNumberOfBricks() == 0) {
       // pause game animation
       mainGameLoop.pause();
