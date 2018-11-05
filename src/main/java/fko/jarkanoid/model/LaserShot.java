@@ -63,7 +63,7 @@ public class LaserShot {
   /** Moves the laser one step further. Expected to be called by the game loop once per frame.
    * @param deltaTimeCapped*/
   public void moveStep(final double deltaTimeCapped) {
-    final double px = this.vY * deltaTimeCapped; //(1.0/60.0); // with fixed 60fps
+    final double px = this.vY * deltaTimeCapped;
     y.set(y.get() - px);
   }
 

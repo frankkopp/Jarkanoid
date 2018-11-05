@@ -65,7 +65,7 @@ public class GameModel extends Observable {
   // IDEAS: Special: flying aliens, flying powers, ball catcher, ball beamer, ball warper
 
   // debugging constants / for normal playing these have to be all false
-  private static final boolean BOUNCING_FLOOR = false;
+  private static final boolean BOUNCING_FLOOR = true;
 
   // game constants
   private static final int START_LEVEL = 1;
@@ -119,7 +119,8 @@ public class GameModel extends Observable {
   private static final int NEXT_POWERUP_OFFSET = 3;
   // power up randomly after 0 to 10 destroyed bricks after offset
   private static final int POWER_UP_FREQUENCY = 8;
-  private static final double POWER_PILL_FALLING_SPEED = 5; // at 60fps this is 300px/sec
+  private static final double POWER_PILL_FALLING_SPEED = 300; // 5px at 60fps this is 300px/sec
+                                                              // if too fast will tunnel through paddle
 
   // the maximum number the ball may bounce without hitting the paddle or destroying a brick
   // After this number the ball gets a random nudge in a different direction
@@ -508,7 +509,8 @@ public class GameModel extends Observable {
       updatePowerPills(deltaTimeCapped);
       updateLaser(deltaTimeCapped);
       updateBalls(deltaTimeCapped);
-      updateLevel(deltaTimeCapped);
+
+      updateLevel();
     }
   }
 
@@ -625,7 +627,7 @@ public class GameModel extends Observable {
       PowerPill pill = powerPillListIterator.next();
 
       // move the pill down
-      pill.fall();
+      pill.fall(deltaTimeCapped);
 
       // check collisions
       // pill is lost -> erase it
@@ -786,7 +788,7 @@ public class GameModel extends Observable {
    * Checks if all bricks are gone and if so icreases level and launches new ball.
    * @param deltaTimeCapped
    */
-  private void updateLevel(final double deltaTimeCapped) {
+  private void updateLevel() {
     if (brickLayout.getNumberOfBricks() == 0) {
       // pause game animation
       mainGameLoop.pause();

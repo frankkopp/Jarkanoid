@@ -56,8 +56,9 @@ public class PowerPill {
     this.fallingSpeed = fallingSpeed;
   }
 
-  public double fall() {
-    y.set(y.get() + fallingSpeed);
+  public double fall(final double deltaTimeCapped) {
+    final double px = this.fallingSpeed * deltaTimeCapped;
+    y.set(y.get() + px);
     return getY();
   }
 
