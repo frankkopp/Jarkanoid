@@ -83,7 +83,7 @@ public final class SoundManager {
   private final Map<Clips, AudioClip> _sounds;
 
   // sound on/off
-  private boolean soundOn = true;
+  private boolean soundOn = false;
 
   /**
    * Get theSounds instance with all main.resources.sounds available
