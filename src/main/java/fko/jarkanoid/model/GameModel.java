@@ -97,7 +97,7 @@ public class GameModel extends Observable {
   private static final double BALL_INITIAL_Y = PADDLE_INITIAL_Y - BALL_INITIAL_RADIUS;
 
   // Absolute speed of ball, when vertical equals px in y, when horizontal equals px in x
-  private static final double BALL_INITIAL_SPEED = 10; // at 60fps this is 600px/sec
+  private static final double BALL_INITIAL_SPEED = 10; // 10px at 60fps this is 600px/sec
 
   // Framerate for game loop
   private static final double INITIAL_FRAMERATE = 60;
@@ -504,7 +504,7 @@ public class GameModel extends Observable {
       double deltaTimeCapped = Math.min(deltaTime, maxDeltaTime);
       previousTime = currentTime;
 
-      System.out.format("Elapsed: %f Capped: %f Now: %d %n", deltaTime, deltaTimeCapped, currentTime);
+      //System.out.format("Elapsed: %f Capped: %f Now: %d %n", deltaTime, deltaTimeCapped, currentTime);
 
       updatePowerPills(deltaTimeCapped);
       updateLaser(deltaTimeCapped);
@@ -571,7 +571,7 @@ public class GameModel extends Observable {
   }
 
   /**
-   * updates all balls, checks collisions fom balls with anything else and removes lost balls
+   * updates all balls, checks collisions from balls with anything else and removes lost balls
    * @param deltaTimeCapped
    */
   private void updateBalls(final double deltaTimeCapped) {
@@ -595,7 +595,7 @@ public class GameModel extends Observable {
       // move the ball
       if (!ballCatchedFlag) {
         unbindBallFromPaddle(ball);
-        ball.moveStep();
+        ball.moveStep(deltaTimeCapped);
       }
 
       // check collisions from the ball(s) with anything else

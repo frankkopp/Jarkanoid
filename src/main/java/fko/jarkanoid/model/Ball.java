@@ -108,8 +108,9 @@ public class Ball {
    * Expected to be called by the game loop once per frame.
    * This uses a prefixed distance per step vX and vY.
    * It is not a function of elapsed time as usual in game loops-
+   * @param deltaTimeCapped
    */
-  public void moveStep() {
+  public void moveStep(final double deltaTimeCapped) {
     previousCenterX = centerX.get();
     centerX.set(previousCenterX + vX);
     previousCenterY = centerY.get();
