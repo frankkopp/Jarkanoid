@@ -483,7 +483,7 @@ public class GameModel extends Observable {
   /**
    * Updates the model for the game. Currently based on discrete steps independed from time elapsed
    * TODO: refactor using time elapsed instead of fixed step sizes
-   * @param startLoopTime
+   * @param currentTime
    */
   private void updateGameState(final long currentTime) {
 
@@ -786,7 +786,6 @@ public class GameModel extends Observable {
 
   /**
    * Checks if all bricks are gone and if so icreases level and launches new ball.
-   * @param deltaTimeCapped
    */
   private void updateLevel() {
     if (brickLayout.getNumberOfBricks() == 0) {
