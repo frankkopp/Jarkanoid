@@ -26,9 +26,10 @@ package fko.jarkanoid.model;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 /**
@@ -37,6 +38,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author Frank Kopp
  */
 public class BallTest {
+
+  private static final Logger LOG = LoggerFactory.getLogger(BallTest.class);
 
   /**
    * @throws java.lang.Exception
@@ -50,7 +53,7 @@ public class BallTest {
     Ball b;
     b = new Ball(100, 100, 5, -1, 1);
 
-    assertTrue(b!=null);
+    assertNotNull(b);
     assertEquals(b.getCenterX(), 100, 0.001);
     assertEquals(b.getCenterY(), 100, 0.001);
     assertEquals(b.getRadius(), 5, 0.001);

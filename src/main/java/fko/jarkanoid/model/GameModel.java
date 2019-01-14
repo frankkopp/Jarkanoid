@@ -47,7 +47,9 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * GameModel
+ *
  * <p>
+ *
  * <p>Handles the Jarkanoid game status, the main game loop and calculations.<br>
  *
  * @author Frank Kopp
@@ -71,7 +73,7 @@ public class GameModel extends Observable {
   private static final int START_LEVEL = 1;
   private static final int START_LIVES = 3;
 
-  private static final long SLEEP_BETWEEN_LIVES = 2000; // in ms
+  private static final long SLEEP_BETWEEN_LIVES  = 2000; // in ms
   private static final long SLEEP_BETWEEN_LEVELS = 3000; // in ms
 
   /*
@@ -79,48 +81,48 @@ public class GameModel extends Observable {
    * Need to be aligned with FXML UI Design.
    */
   private static final double PLAYFIELD_INITIAL_HEIGHT = 710;
-  private static final double PLAYFIELD_INITIAL_WIDTH = 780;
+  private static final double PLAYFIELD_INITIAL_WIDTH  = 780;
 
   // paddle constants
-  private static final double PADDLE_INITIAL_FRAMERATE = 120; // Framerate for paddle movements
-  private static final double PADDLE_MOVE_STEPS = 5.0; // steps per animation cycle
-  private static final double PADDLE_INITIAL_Y = 670;
-  private static final double PADDLE_INITIAL_X = 315;
-  private static final double PADDEL_INITIAL_WIDTH = 150; // 150;
-  private static final double PADDLE_INITIAL_HEIGHT = 20;
+  private static final double PADDLE_INITIAL_FRAMERATE  = 120; // Framerate for paddle movements
+  private static final double PADDLE_MOVE_STEPS         = 5.0; // steps per animation cycle
+  private static final double PADDLE_INITIAL_Y          = 670;
+  private static final double PADDLE_INITIAL_X          = 315;
+  private static final double PADDEL_INITIAL_WIDTH      = 150; // 150;
+  private static final double PADDLE_INITIAL_HEIGHT     = 20;
   private static final float  PADDLE_ENLARGEMENT_FACTOR = 1.4f;
 
   // Ball constants
   private static final double BALL_INITIAL_RADIUS = 6;
-  private static final double BALL_MAX_ANGLE = 60;
-  private static final double BALL_INITIAL_X = 390;
-  private static final double BALL_INITIAL_Y = PADDLE_INITIAL_Y - BALL_INITIAL_RADIUS;
+  private static final double BALL_MAX_ANGLE      = 60;
+  private static final double BALL_INITIAL_X      = 390;
+  private static final double BALL_INITIAL_Y      = PADDLE_INITIAL_Y - BALL_INITIAL_RADIUS;
 
   // Absolute speed of ball, when vertical equals px in y, when horizontal equals px in x
   private static final double BALL_INITIAL_SPEED = 10; // 10px at 60fps this is 600px/sec
 
   // Framerate for game loop
   private static final double INITIAL_FRAMERATE = 60;
-  private static final double maxDeltaTime = 1f/10f;
+  private static final double maxDeltaTime      = 1f / 10f;
 
   // Laser constants
   private static final double LASER_EDGE_OFFSET = 45;
-  private static final double LASER_WIDTH = 5;
-  private static final double LASER_HEIGHT = 15;
-  private static final double LASER_SPEED = 900; // 15px at 60fps this is 900px/sec
-                                                 // must be more than brick heigth (23,666px or 1.400px/sec)
+  private static final double LASER_WIDTH       = 5;
+  private static final double LASER_HEIGHT      = 15;
+  private static final double LASER_SPEED       = 900; // 15px at 60fps this is 900px/sec
+  // must be more than brick heigth (23,666px or 1.400px/sec)
 
   // Template of a starting ball to copy when a new level starts
   private static final Ball BALL_TEMPLATE =
-          new Ball(BALL_INITIAL_X, BALL_INITIAL_Y, BALL_INITIAL_RADIUS, 0, BALL_INITIAL_SPEED);
+    new Ball(BALL_INITIAL_X, BALL_INITIAL_Y, BALL_INITIAL_RADIUS, 0, BALL_INITIAL_SPEED);
 
   // power up constants
   // how many destroyed bricks between power ups (needs to be >0)
-  private static final int NEXT_POWERUP_OFFSET = 3;
+  private static final int    NEXT_POWERUP_OFFSET      = 3;
   // power up randomly after 0 to 10 destroyed bricks after offset
-  private static final int POWER_UP_FREQUENCY = 8;
+  private static final int    POWER_UP_FREQUENCY       = 8;
   private static final double POWER_PILL_FALLING_SPEED = 300; // 5px at 60fps this is 300px/sec
-                                                              // if too fast will tunnel through paddle
+  // if too fast will tunnel through paddle
 
   // the maximum number the ball may bounce without hitting the paddle or destroying a brick
   // After this number the ball gets a random nudge in a different direction
@@ -138,29 +140,32 @@ public class GameModel extends Observable {
    */
 
   // Playfield dimensions
-  private final DoubleProperty playfieldWidth =
-          new SimpleDoubleProperty(PLAYFIELD_INITIAL_WIDTH); // see FXML 800 - 2 * 10 Walls
-  private final DoubleProperty playfieldHeight =
-          new SimpleDoubleProperty(PLAYFIELD_INITIAL_HEIGHT); // see FXML 520 - 1 * 10 Wall
+  private final DoubleProperty playfieldWidth  = new SimpleDoubleProperty(PLAYFIELD_INITIAL_WIDTH);
+    // see FXML 800 - 2 * 10 Walls
+  private final DoubleProperty playfieldHeight = new SimpleDoubleProperty(PLAYFIELD_INITIAL_HEIGHT);
+    // see FXML 520 - 1 * 10 Wall
 
   // Paddle dimensions and position
-  private final DoubleProperty paddleWidth =
-          new SimpleDoubleProperty(PADDEL_INITIAL_WIDTH); // see FXML
-  private final DoubleProperty paddleHeight =
-          new SimpleDoubleProperty(PADDLE_INITIAL_HEIGHT); // see FXML
-  private final DoubleProperty paddleX = new SimpleDoubleProperty(PADDLE_INITIAL_X); // see FXML
-  private final DoubleProperty paddleY = new SimpleDoubleProperty(PADDLE_INITIAL_Y); // see FXML
+  private final DoubleProperty paddleWidth  = new SimpleDoubleProperty(PADDEL_INITIAL_WIDTH);
+    // see FXML
+  private final DoubleProperty paddleHeight = new SimpleDoubleProperty(PADDLE_INITIAL_HEIGHT);
+    // see FXML
+  private final DoubleProperty paddleX      = new SimpleDoubleProperty(PADDLE_INITIAL_X);
+    // see FXML
+  private final DoubleProperty paddleY      = new SimpleDoubleProperty(PADDLE_INITIAL_Y);
+    // see FXML
 
   // game status
   private final ReadOnlyBooleanWrapper isPlaying = new ReadOnlyBooleanWrapper(false);
-  private final ReadOnlyBooleanWrapper isPaused = new ReadOnlyBooleanWrapper(false);
-  private final ReadOnlyBooleanWrapper gameOver = new ReadOnlyBooleanWrapper(false);
+  private final ReadOnlyBooleanWrapper isPaused  = new ReadOnlyBooleanWrapper(false);
+  private final ReadOnlyBooleanWrapper gameOver  = new ReadOnlyBooleanWrapper(false);
 
   // game statistics
-  private final ReadOnlyIntegerWrapper currentLevel = new ReadOnlyIntegerWrapper(START_LEVEL);
+  private final ReadOnlyIntegerWrapper currentLevel          =
+    new ReadOnlyIntegerWrapper(START_LEVEL);
   private final ReadOnlyIntegerWrapper currentRemainingLives =
-          new ReadOnlyIntegerWrapper(START_LIVES);
-  private final ReadOnlyIntegerWrapper currentScore = new ReadOnlyIntegerWrapper(0);
+    new ReadOnlyIntegerWrapper(START_LIVES);
+  private final ReadOnlyIntegerWrapper currentScore          = new ReadOnlyIntegerWrapper(0);
 
   // ball manager
   private final ListProperty<Ball> ballManager = new SimpleListProperty<>();
@@ -171,7 +176,7 @@ public class GameModel extends Observable {
   // main Game Loop / moves ball(s) and handles collisions
   private final Timeline mainGameLoop = new Timeline();
   // time from last game loop call to calculate delta
-  private long previousTime;
+  private       long     previousTime;
 
   // paddle movements have their own game loop so we can move it outside of a running game
   private final Timeline paddleMovementLoop = new Timeline();
@@ -194,23 +199,24 @@ public class GameModel extends Observable {
   private int destroyedBricksCounter = 0;
 
   // power ups
-  private int lastPowerUp = 0;
-  private int nextPowerUp = getNextPowerUp();
-  private PowerPill nextPowerPill;
-  private final ListProperty<PowerPill> fallingPowerPills = new SimpleListProperty<>();
-  private final ObjectProperty<PowerPillType> activePower =
-          new SimpleObjectProperty<PowerPillType>(PowerPillType.NONE);
-  private boolean ballCatchedFlag = false;
+  private       int                           lastPowerUp       = 0;
+  private       int                           nextPowerUp       = getNextPowerUp();
+  private       PowerPill                     nextPowerPill;
+  private final ListProperty<PowerPill>       fallingPowerPills = new SimpleListProperty<>();
+  private final ObjectProperty<PowerPillType> activePower       =
+    new SimpleObjectProperty<PowerPillType>(PowerPillType.NONE);
+  private       boolean                       ballCatchedFlag   = false;
 
   // count each time the game loop is called and some other statistics
-  private long frameLoopCounter = 0;
-  private long frameLoopCounterTimeStamp = System.nanoTime();
-  private long lastloopTime;
-  private long commulativeLoopTime;
-  private final DoubleProperty fps = new SimpleDoubleProperty(INITIAL_FRAMERATE);
+  private       long           frameLoopCounter          = 0;
+  private       long           frameLoopCounterTimeStamp = System.nanoTime();
+  private       long           lastloopTime;
+  private       long           commulativeLoopTime;
+  private final DoubleProperty fps                       =
+    new SimpleDoubleProperty(INITIAL_FRAMERATE);
 
   // grower and shrinker timeline of paddles
-  private final Timeline paddleGrower = new Timeline();
+  private final Timeline paddleGrower   = new Timeline();
   private final Timeline paddleShrinker = new Timeline();
 
   // counter since last paddle or brick hit to detect endless loops with gold bricks
@@ -242,7 +248,7 @@ public class GameModel extends Observable {
     // start the paddle movements
     paddleMovementLoop.setCycleCount(Timeline.INDEFINITE);
     KeyFrame movePaddle =
-            new KeyFrame(Duration.millis(1000f / PADDLE_INITIAL_FRAMERATE), e -> paddleMovementLoop());
+      new KeyFrame(Duration.millis(1000f / PADDLE_INITIAL_FRAMERATE), e -> paddleMovementLoop());
     paddleMovementLoop.getKeyFrames().add(movePaddle);
     paddleMovementLoop.play();
 
@@ -254,25 +260,23 @@ public class GameModel extends Observable {
     // animation to grow the paddle slowly when we get an ENLARGE power
     // As we want to be able to move the paddle during the animation and also check if the
     // paddle grows out of the playing field we can't use normal property value timelines.
-    final int steps = 25; // do 25 intermediate steps - when at 10ms per step this is a 250ms animation
+    final int steps =
+      25; // do 25 intermediate steps - when at 10ms per step this is a 250ms animation
     paddleGrower.setCycleCount(steps);
     // larger
     final double lSteps = (PADDLE_ENLARGEMENT_FACTOR - 1) / steps;
     // move to the left to make it look as if it grew from the middle
     final double xSteps = (((PADDLE_ENLARGEMENT_FACTOR - 1) / 2) * PADDEL_INITIAL_WIDTH) / steps;
-    KeyFrame grow =
-            new KeyFrame(
-                    Duration.millis(10),
-                    (event) -> {
-                      paddleWidth.set(paddleWidth.get() * (1.0 + lSteps));
-                      paddleX.set(paddleX.get() - xSteps);
-                      // push the paddle betweem the walls in case it was outside
-                      if (paddleX.get() + paddleWidth.get() >= playfieldWidth.get()) {
-                        paddleX.set(playfieldWidth.get() - paddleWidth.get());
-                      } else if (paddleX.get() <= 0) {
-                        paddleX.set(0);
-                      }
-                    });
+    KeyFrame grow = new KeyFrame(Duration.millis(10), (event) -> {
+      paddleWidth.set(paddleWidth.get() * (1.0 + lSteps));
+      paddleX.set(paddleX.get() - xSteps);
+      // push the paddle betweem the walls in case it was outside
+      if (paddleX.get() + paddleWidth.get() >= playfieldWidth.get()) {
+        paddleX.set(playfieldWidth.get() - paddleWidth.get());
+      } else if (paddleX.get() <= 0) {
+        paddleX.set(0);
+      }
+    });
     paddleGrower.getKeyFrames().addAll(grow);
   }
 
@@ -391,17 +395,13 @@ public class GameModel extends Observable {
     // show the ball for a short time then start the animation
     // check if the game has been stopped while we were waiting
     // start the gameLoop
-    scheduledStart =
-            executor.schedule(
-                    () -> {
-                      if (!isPlaying() || isPaused()) {
-                        return; // check if the game has been stopped while we were waiting
-                      }
-                      unbindBallFromPaddle(newBall);
-                      mainGameLoop.play(); // start the gameLoop
-                    },
-                    delay,
-                    TimeUnit.MILLISECONDS);
+    scheduledStart = executor.schedule(() -> {
+      if (!isPlaying() || isPaused()) {
+        return; // check if the game has been stopped while we were waiting
+      }
+      unbindBallFromPaddle(newBall);
+      mainGameLoop.play(); // start the gameLoop
+    }, delay, TimeUnit.MILLISECONDS);
 
     LOG.debug("Ball launched");
   }
@@ -415,14 +415,11 @@ public class GameModel extends Observable {
     ball.centerYProperty().bind(paddleY.subtract(ball.getRadius()).subtract(1.0));
 
     // release the ball after a few seconds
-    executor.schedule(
-            () -> {
-              // check if the game has been stopped while we were waiting
-              if (!isPlaying() || isPaused()) return;
-              ballCatchedFlag = false;
-            },
-            5000,
-            TimeUnit.MILLISECONDS);
+    executor.schedule(() -> {
+      // check if the game has been stopped while we were waiting
+      if (!isPlaying() || isPaused()) return;
+      ballCatchedFlag = false;
+    }, 5000, TimeUnit.MILLISECONDS);
 
     LOG.debug("Ball bound to paddle for 5 sec");
   }
@@ -469,8 +466,7 @@ public class GameModel extends Observable {
       if (tLoop > tFrame) {
         if (LOG.isWarnEnabled()) {
           LOG.warn(
-                  String.format(
-                          "FRAME LIMIT VIOLATION: %.6f ms (framelimit %.6f ms) %n", tLoop, tFrame));
+            String.format("FRAME LIMIT VIOLATION: %.6f ms (framelimit %.6f ms) %n", tLoop, tFrame));
         }
       }
 
@@ -483,6 +479,7 @@ public class GameModel extends Observable {
   /**
    * Updates the model for the game. Currently based on discrete steps independed from time elapsed
    * TODO: refactor using time elapsed instead of fixed step sizes
+   *
    * @param currentTime
    */
   private void updateGameState(final long currentTime) {
@@ -504,7 +501,8 @@ public class GameModel extends Observable {
       double deltaTimeCapped = Math.min(deltaTime, maxDeltaTime);
       previousTime = currentTime;
 
-      //System.out.format("Elapsed: %f Capped: %f Now: %d %n", deltaTime, deltaTimeCapped, currentTime);
+      // System.out.format("Elapsed: %f Capped: %f Now: %d %n", deltaTime, deltaTimeCapped,
+      // currentTime);
 
       updatePowerPills(deltaTimeCapped);
       updateLaser(deltaTimeCapped);
@@ -572,6 +570,7 @@ public class GameModel extends Observable {
 
   /**
    * updates all balls, checks collisions from balls with anything else and removes lost balls
+   *
    * @param deltaTimeCapped
    */
   private void updateBalls(final double deltaTimeCapped) {
@@ -612,6 +611,7 @@ public class GameModel extends Observable {
 
   /**
    * update power pills
+   *
    * @param deltaTimeCapped
    */
   private void updatePowerPills(final double deltaTimeCapped) {
@@ -635,10 +635,10 @@ public class GameModel extends Observable {
         powerPillListIterator.remove();
       }
       // pill hits paddle
-      else if (pill.getY() + pill.getHeight() >= paddleY.get()
-               && pill.getY() <= paddleY.get() + paddleHeight.get()
-               && pill.getX() + pill.getWidth() >= paddleX.get()
-               && pill.getX() <= paddleX.get() + paddleWidth.get()) {
+      else if (pill.getY() + pill.getHeight() >= paddleY.get() &&
+               pill.getY() <= paddleY.get() + paddleHeight.get() &&
+               pill.getX() + pill.getWidth() >= paddleX.get() &&
+               pill.getX() <= paddleX.get() + paddleWidth.get()) {
 
         powerPillListIterator.remove();
 
@@ -835,14 +835,12 @@ public class GameModel extends Observable {
     final double stepV = 1;
 
     if (LOG.isDebugEnabled()) { // to not even create the string when not logging
-      LOG.debug(
-              String.format(
-                      "FULL: vY: %6.2f  vX: %6.2f  v: %6.2f  CURRENT     : Y: %8.2f X: %8.2f PREVIOUS: Y: %8.2f X: %8.2f *** loop=%d",
-                      vY, vX, ball.getVelocity(), bY, bX, bpY, bpX, maxLoopHitsCounter));
+      LOG.debug(String.format(
+        "FULL: vY: %6.2f  vX: %6.2f  v: %6.2f  CURRENT     : Y: %8.2f X: %8.2f PREVIOUS: Y: %8.2f X: %8.2f *** loop=%d",
+        vY, vX, ball.getVelocity(), bY, bX, bpY, bpX, maxLoopHitsCounter));
       // DEBUG - because of floating numbers round this needs to be a fuzzy
-      if (bY - vY - bpY > 0.01 && bY - vY - bpY < -0.01
-          || bX - vX - bpX > 0.01
-          || bX - vX - bpX < -0.01) {
+      if (bY - vY - bpY > 0.01 && bY - vY - bpY < -0.01 || bX - vX - bpX > 0.01 ||
+          bX - vX - bpX < -0.01) {
         LOG.warn("WARP ERROR");
       }
     }
@@ -856,8 +854,7 @@ public class GameModel extends Observable {
 
       if (LOG.isDebugEnabled()) { // to not even create the string when not logging
         LOG.debug(
-                String.format(
-                        "STEP: vY: %6.2f  vX: %6.2f  v: %6.2f  INTERMEDIATE: Y: %8.2f X: %8.2f",
+          String.format("STEP: vY: %6.2f  vX: %6.2f  v: %6.2f  INTERMEDIATE: Y: %8.2f X: %8.2f",
                         stepY, stepX, stepV, cbY, cbX));
       }
 
@@ -981,8 +978,7 @@ public class GameModel extends Observable {
         ball.bounceFromPaddle(newAngle);
 
         // check if we should catch the ball
-        if (activePower.get().equals(PowerPillType.CATCH)
-            && !ballCatchedFlag // not already catched
+        if (activePower.get().equals(PowerPillType.CATCH) && !ballCatchedFlag // not already catched
             && ballManager.size() == 1) { // only when only one ball in play
           ballCatchedFlag = true;
           bindBallToPaddle(ball, hitPointAbsolute);
@@ -1079,14 +1075,10 @@ public class GameModel extends Observable {
       destroyedBricksCounter++;
       nextPowerUp--;
       if (nextPowerUp == 0) {
-        nextPowerPill =
-                new PowerPill(
-                        PowerPillType.getRandom(),
-                        brickLayout.getLeftBound(row, col),
-                        brickLayout.getUpperBound(row, col),
-                        brickLayout.getBrickWidth(),
-                        brickLayout.getBrickHeight(),
-                        POWER_PILL_FALLING_SPEED);
+        nextPowerPill = new PowerPill(PowerPillType.getRandom(), brickLayout.getLeftBound(row, col),
+                                      brickLayout.getUpperBound(row, col),
+                                      brickLayout.getBrickWidth(), brickLayout.getBrickHeight(),
+                                      POWER_PILL_FALLING_SPEED);
         nextPowerUp = getNextPowerUp();
         LOG.debug("PowerPill generated: {}", nextPowerPill);
       }
@@ -1109,11 +1101,11 @@ public class GameModel extends Observable {
       notifyObservers(new GameEvent(GameEventType.GAME_OVER));
     }
     // new highscore (1st to 15th place)
-    if (highScoreManager.getList().size() < HIGHSCORE_MAX_PLACE - 1
-        || currentScore.get() > highScoreManager.getList().get(HIGHSCORE_MAX_PLACE - 1).score) {
+    if (highScoreManager.getList().size() < HIGHSCORE_MAX_PLACE - 1 ||
+        currentScore.get() > highScoreManager.getList().get(HIGHSCORE_MAX_PLACE - 1).score) {
       final HighScore.HighScoreEntry entry =
-              new HighScore.HighScoreEntry(
-                      playerName.get(), currentScore.get(), currentLevel.get(), LocalDateTime.now());
+        new HighScore.HighScoreEntry(playerName.get(), currentScore.get(), currentLevel.get(),
+                                     LocalDateTime.now());
       highScoreManager.addEntryAndSave(entry);
       setChanged();
       notifyObservers(new GameEvent(GameEventType.NEW_HIGHSCORE, entry));
@@ -1170,19 +1162,11 @@ public class GameModel extends Observable {
   public void shootLaser() {
     if (isPlaying() && !isPaused() && activePower.get().equals(PowerPillType.LASER)) {
       LaserShot ls1 =
-              new LaserShot(
-                      paddleX.get() + LASER_EDGE_OFFSET,
-                      paddleY.get(),
-                      LASER_WIDTH,
-                      LASER_HEIGHT,
+        new LaserShot(paddleX.get() + LASER_EDGE_OFFSET, paddleY.get(), LASER_WIDTH, LASER_HEIGHT,
                       LASER_SPEED);
       LaserShot ls2 =
-              new LaserShot(
-                      paddleX.get() + paddleWidth.get() - LASER_EDGE_OFFSET,
-                      paddleY.get(),
-                      LASER_WIDTH,
-                      LASER_HEIGHT,
-                      LASER_SPEED);
+        new LaserShot(paddleX.get() + paddleWidth.get() - LASER_EDGE_OFFSET, paddleY.get(),
+                      LASER_WIDTH, LASER_HEIGHT, LASER_SPEED);
 
       laserShotManager.addAll(ls1, ls2);
 
