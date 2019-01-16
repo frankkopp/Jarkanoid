@@ -119,6 +119,7 @@ public class HighScoreListView {
     //    column.setCellValueFactory(new PropertyValueFactory<>(property));
     column.setCellValueFactory(cellData -> property.apply(cellData.getValue()));
 
+    //column.setReorderable(false);
     try {
       column.impl_setReorderable(false);
       // In Java 9 the above codes would break because of removal of impl_.
