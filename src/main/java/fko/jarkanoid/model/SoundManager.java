@@ -74,7 +74,7 @@ public final class SoundManager {
   }
 
   // Singleton instance
-  private static SoundManager instance = null;
+  private static SoundManager instance = new SoundManager();
 
   // folder to all sound files
   private static final String SOUND_FOLDER = "/sounds/";
@@ -88,10 +88,7 @@ public final class SoundManager {
   /**
    * Get theSounds instance with all main.resources.sounds available
    */
-  public synchronized static SoundManager getInstance() {
-    if (instance == null) {
-      instance = new SoundManager();
-    }
+  public static SoundManager getInstance() {
     return instance;
   }
 
@@ -103,13 +100,13 @@ public final class SoundManager {
     // for all defined values in ENUM Clips
     // read in the Clip and store them in the Map
     Arrays.stream(Clips.values())
-    .forEach(c -> {
-      final String filename = SOUND_FOLDER + c._name+".wav";
+    .forEach(clips -> {
+      final String filename = SOUND_FOLDER + clips._name+".wav";
       final URL url = Jarkanoid.class.getResource(filename);
       // create AudioInputStream object
       if (url != null) {
         AudioClip clip = new AudioClip(url.toExternalForm());
-        _sounds.put(c, clip);
+        _sounds.put(clips, clip);
       } else {
         LOG.warn("Sound file {} cannot be loaded!", filename);
       }
