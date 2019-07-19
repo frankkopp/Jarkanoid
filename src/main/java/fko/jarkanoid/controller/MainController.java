@@ -168,6 +168,8 @@ public class MainController implements Initializable, Observer {
 
     // add mouse handlers
     view.asParent().getScene().setOnMouseMoved(this::mouseMovedAction);
+    // to move paddle even when mouse is clicked, e.g. shooting laser
+    view.asParent().getScene().setOnMouseDragged(this::mouseMovedAction);
     view.asParent().getScene().setOnMousePressed(this::mousePressedAction);
 
     // playfield dimensions

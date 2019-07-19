@@ -31,7 +31,12 @@
 
   <groupId>fko.jarkanoid</groupId>
   <artifactId>Jarkanoid</artifactId>
-  <version>0.6-SNAPSHOT</version>
+  <version>0.7</version>
+
+  <properties>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
+  </properties>
 
   <dependencies>
     <!-- JUNIT -->
@@ -59,18 +64,30 @@
       <version>1.2.3</version>
       <scope>compile</scope>
     </dependency>
+
+    <!--
     <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-api</artifactId>
-      <version>RELEASE</version>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-fxml</artifactId>
+      <version>11.0.1</version>
+     </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-controls</artifactId>
+      <version>11.0.1</version>
     </dependency>
-
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-media</artifactId>
+      <version>11.0.1</version>
+    </dependency>
+    -->
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-base</artifactId>
+      <version>11.0.1</version>
+    </dependency>
   </dependencies>
-
-  <properties>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
-  </properties>
 
   <build>
     <plugins>
@@ -92,7 +109,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.10.4</version>
+        <version>3.1.1</version>
         <configuration>
           <show>protected</show>
         </configuration>
@@ -134,7 +151,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>3.1.0</version>
+        <version>3.2.1</version>
         <executions>
           <execution>
             <phase>package</phase>

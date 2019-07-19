@@ -65,7 +65,7 @@ public class GameModel extends Observable {
   // IDEAS: Special: flying aliens, flying powers, ball catcher, ball beamer, ball warper
 
   // debugging constants / for normal playing these have to be all false
-  private static final boolean BOUNCING_FLOOR = false;
+  private static final boolean BOUNCING_FLOOR = true;
 
   // game constants
   private static final int START_LEVEL = 1;

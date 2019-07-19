@@ -119,16 +119,17 @@ public class HighScoreListView {
     //    column.setCellValueFactory(new PropertyValueFactory<>(property));
     column.setCellValueFactory(cellData -> property.apply(cellData.getValue()));
 
-    try {
-      column.impl_setReorderable(false);
-      // In Java 9 the above codes would break because of removal of impl_.
-      // Despite these changes, it introduces convenient public methods that you can use which are:
-      // setReorderable(boolean value)
-      // getReorderable()
-      // for TableColumnBase such as TableColumn to be used for set Reorderable,
-    } catch (NoSuchMethodError ignore) { // happens in Java9
-      LOG.warn("impl_setReorderable not available - probably Java9?");
-    }
+    column.setReorderable(false); // only Java9+
+    //try {
+    //  column.impl_setReorderable(false);
+    //  // In Java 9 the above codes would break because of removal of impl_.
+    //  // Despite these changes, it introduces convenient public methods that you can use which are:
+    //  // setReorderable(boolean value)
+    //  // getReorderable()
+    //  // for TableColumnBase such as TableColumn to be used for set Reorderable,
+    //} catch (NoSuchMethodError ignore) { // happens in Java9
+    //  LOG.warn("impl_setReorderable not available - probably Java9?");
+    //}
 
     return column;
   }
