@@ -203,7 +203,6 @@ public class MainController implements Initializable, Observer {
                          view.updateFallingPillList((Change<PowerPill>) change));
 
     // update handler for active power ups
-    //noinspection unchecked
     model.activePowerProperty()
          .addListener((observable, oldValue, newValue) -> updateActivePower(oldValue, newValue));
 
