@@ -58,7 +58,7 @@ public class BrickLayoutView extends Group {
     if (brickLayout == null) {
       this.getChildren().clear();
       return;
-    } 
+    }
 
     // create a store for all BrickViews
     if (allBricks == null) {
@@ -67,7 +67,7 @@ public class BrickLayoutView extends Group {
 
     // readability
     final double brickWidth = brickLayout.getBrickWidth();
-    final double brickHeight = brickLayout.getBrickHeight(); 
+    final double brickHeight = brickLayout.getBrickHeight();
 
     // add all bricks according to the model brickLayout
     for (int row=0; row<BrickLayout.ROWS; row++) {
@@ -79,7 +79,7 @@ public class BrickLayoutView extends Group {
         if (brickLayout.getBrick(row, col) != null
             && allBricks[row][col] == null) {
 
-          allBricks[row][col] = new BrickView(x, y, 
+          allBricks[row][col] = new BrickView(x, y,
               brickWidth, brickHeight, brickLayout.getBrick(row, col));
 
           this.getChildren().add(allBricks[row][col]);
@@ -94,11 +94,11 @@ public class BrickLayoutView extends Group {
         // brick exists in view and model but are not of same type
         } else if (brickLayout.getBrick(row, col) != null && allBricks[row][col] != null
             && brickLayout.getBrick(row, col).getType() != allBricks[row][col].getBrick().getType()) {
-          
+
           // remove old brick
           this.getChildren().remove(allBricks[row][col]);
           // create new
-          allBricks[row][col] = new BrickView(x, y, 
+          allBricks[row][col] = new BrickView(x, y,
               brickWidth, brickHeight, brickLayout.getBrick(row, col));
           // add to view
           this.getChildren().add(allBricks[row][col]);

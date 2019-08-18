@@ -59,7 +59,7 @@ public class GameModel extends Observable {
   // TODO: add acceleration
   // TODO: create all levels
   // IDEAS: Powers: multiball (star), Trasher (no bouncing on bricks detroyed), extra wide, smaller
-  // IDEAS :paddle, thehered paddle,
+  // IDEAS: paddle, tethered paddle,
   // IDEAS: Powers: upside down, reverse control, cloaked, power not falling in straight line
   // IDEAS: Bricks: moving bricks, zombi bricks - come back to life, shield for bricks
   // IDEAS: Special: flying aliens, flying powers, ball catcher, ball beamer, ball warper
@@ -327,7 +327,7 @@ public class GameModel extends Observable {
   public void stopPlaying() {
     if (!isPlaying()) return;
 
-    // incase we already started a game
+    // in case we already started a game
     scheduledStart.cancel(true);
 
     // set status
