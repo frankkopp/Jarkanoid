@@ -50,9 +50,9 @@ import javafx.scene.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.net.URL;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.ResourceBundle;
 
 /**
@@ -68,7 +68,7 @@ import java.util.ResourceBundle;
  * @author Frank Kopp
  * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
  */
-public class MainController implements Initializable, Observer {
+public class MainController implements Initializable, PropertyChangeListener {
 
   private static final Logger LOG = LoggerFactory.getLogger(MainController.class);
 
@@ -147,8 +147,8 @@ public class MainController implements Initializable, Observer {
 
     this.view = view;
 
-    // add controller as listener of model for GameEvents
-    model.addObserver(this);
+    // new observer model
+    model.addPropertyChangeListener(this);
 
     // scene title
     String tmpTitle = Jarkanoid.getPrimaryStage().getTitle();
@@ -308,20 +308,17 @@ public class MainController implements Initializable, Observer {
   }
 
   /**
-   * We use the Observable notification for certain events to enable animations and sound. Most
-   * other model changes are handled through Property Bindings.
-   *
-   * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+   * We use the bean property change notification for certain events to enable
+   * animations and sound. Most other model changes are handled through Property Bindings.
    */
   @Override
-  public void update(Observable o, Object e) {
-    if (!(e instanceof GameEvent)) {
-      final String msg = "Unknown event type. Event is not of type GameEvent";
-      LOG.error(msg);
-      throw new RuntimeException(msg);
-    }
+  public void propertyChange(PropertyChangeEvent evt) {
+    assert evt.getNewValue() instanceof GameEvent : "Unknown event type. Event is not of type GameEvent";
+    handleGameEvent((GameEvent) evt.getNewValue());
+  }
 
-    GameEvent gameEvent = (GameEvent) e;
+  private void handleGameEvent(GameEvent gameEvent) {
+    LOG.info("View received game event: {}", gameEvent);
 
     final Object[] param = (Object[]) gameEvent.getEventParameter();
 
@@ -625,4 +622,5 @@ public class MainController implements Initializable, Observer {
   void paddleMouseReleasedAction(MouseEvent event) {
     // not used
   }
+
 }

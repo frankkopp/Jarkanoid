@@ -35,11 +35,12 @@ import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Observable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -52,7 +53,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author Frank Kopp
  */
-public class GameModel extends Observable {
+public class GameModel {
 
   private static final Logger LOG = LoggerFactory.getLogger(GameModel.class);
 
@@ -217,6 +218,17 @@ public class GameModel extends Observable {
   // player name property
   private final StringProperty playerName = new SimpleStringProperty("Unknown Player");
 
+  // new event support using PropertyChangeSupport
+  private PropertyChangeSupport beanEvent = new PropertyChangeSupport(this); ;
+  private GameEvent lastEvent = new GameEvent(GameEventType.NONE);
+  public void addPropertyChangeListener(PropertyChangeListener pcl) {
+    beanEvent.addPropertyChangeListener(pcl);
+  }
+  private void fireEvent(GameEvent event) {
+    beanEvent.firePropertyChange("lastEvent", this.lastEvent, event);
+    this.lastEvent = event;
+  }
+
   /**
    * Constructor - prepares the brick layout and the game loops.
    */
@@ -289,13 +301,13 @@ public class GameModel extends Observable {
     currentScore.set(0);
     brickLayout.resetMatrix();
     destroyedBricksCounter = 0;
-    setChanged();
-    notifyObservers(new GameEvent(GameEventType.GAME_START));
+    fireEvent(new GameEvent(GameEventType.GAME_START));
 
     loadLevel(currentLevel.get());
 
     launchBall(SLEEP_BETWEEN_LIVES);
   }
+
 
   /**
    * Loads a level and sets the brick matrix
@@ -317,8 +329,7 @@ public class GameModel extends Observable {
     brickLayout.setMatrix(newLevel);
 
     // Level done
-    setChanged();
-    notifyObservers(new GameEvent(GameEventType.LEVEL_START));
+    fireEvent(new GameEvent(GameEventType.LEVEL_START));
   }
 
   /**
@@ -341,8 +352,7 @@ public class GameModel extends Observable {
     // clean up
     cleanUpPlayfield();
     brickLayout.resetMatrix();
-    setChanged();
-    notifyObservers(new GameEvent(GameEventType.GAME_STOPPED));
+    fireEvent(new GameEvent(GameEventType.GAME_STOPPED));
 
     LOG.info("Game stopeed");
   }
@@ -543,8 +553,7 @@ public class GameModel extends Observable {
     if (brickLayout.getBrick(lsRow, lsCol) != null) {
       brickHit(lsRow, lsCol);
       ls.markForRemoval();
-      setChanged();
-      notifyObservers(new GameEvent(GameEventType.LASER_HIT, lsRow, lsCol, ls));
+      fireEvent(new GameEvent(GameEventType.LASER_HIT, lsRow, lsCol, ls));
     }
   }
 
@@ -560,11 +569,9 @@ public class GameModel extends Observable {
       if (ball.isMarkedForRemoval()) {
         listIterator.remove();
         if (ballManager.isEmpty()) { // lost last ball
-          setChanged();
-          notifyObservers(new GameEvent(GameEventType.LAST_BALL_LOST, ball));
+          fireEvent(new GameEvent(GameEventType.LAST_BALL_LOST, ball));
         } else {
-          setChanged();
-          notifyObservers(new GameEvent(GameEventType.BALL_LOST, ball));
+          fireEvent(new GameEvent(GameEventType.BALL_LOST, ball));
         }
         continue;
       }
@@ -648,8 +655,7 @@ public class GameModel extends Observable {
         break;
       case LASER:
         if (!newType.equals(PowerPillType.LASER)) {
-          setChanged();
-          notifyObservers(new GameEvent(GameEventType.LASER_OFF));
+          fireEvent(new GameEvent(GameEventType.LASER_OFF));
         }
         break;
       case ENLARGE:
@@ -689,8 +695,7 @@ public class GameModel extends Observable {
       case NONE:
         break;
       case LASER:
-        setChanged();
-        notifyObservers(new GameEvent(GameEventType.LASER_ON));
+        fireEvent(new GameEvent(GameEventType.LASER_ON));
         break;
       case ENLARGE:
         // if we are not already large we growing big
@@ -768,8 +773,7 @@ public class GameModel extends Observable {
       // pause game animation
       mainGameLoop.pause();
       // Level done
-      setChanged();
-      notifyObservers(new GameEvent(GameEventType.LEVEL_COMPLETE));
+      fireEvent(new GameEvent(GameEventType.LEVEL_COMPLETE));
       // load new level or game over WON
       currentLevel.set(currentLevel.get() + 1);
       LOG.info("increased level to {}", currentLevel.get());
@@ -884,8 +888,7 @@ public class GameModel extends Observable {
       // hit above
       if (Integer.lowestOneBit(hitCounter) == 1) {
         brickHit(ballUpperRow, ballCenterCol);
-        setChanged();
-        notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballUpperRow, ballCenterCol, ball));
+        fireEvent(new GameEvent(GameEventType.HIT_BRICK, ballUpperRow, ballCenterCol, ball));
         ball.inverseYdirection();
         // actually set the ball exactly onto the intermediate location and return for the next step
         ball.setCenterX(cbX - stepX);
@@ -898,8 +901,7 @@ public class GameModel extends Observable {
       // hit right
       if (Integer.lowestOneBit(hitCounter) == 2) {
         brickHit(ballCenterRow, ballRightCol);
-        setChanged();
-        notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballCenterRow, ballRightCol, ball));
+        fireEvent(new GameEvent(GameEventType.HIT_BRICK, ballCenterRow, ballRightCol, ball));
         ball.inverseXdirection();
         // actually set the ball exactly onto the intermediate location and return for the next step
         ball.setCenterX(cbX - stepX);
@@ -912,8 +914,7 @@ public class GameModel extends Observable {
       // hit left
       if (Integer.lowestOneBit(hitCounter) == 4) {
         brickHit(ballCenterRow, ballLeftCol);
-        setChanged();
-        notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballCenterRow, ballLeftCol, ball));
+        fireEvent(new GameEvent(GameEventType.HIT_BRICK, ballCenterRow, ballLeftCol, ball));
         ball.inverseXdirection();
         // actually set the ball exactly onto the intermediate location and return for the next step
         ball.setCenterX(cbX - stepX);
@@ -926,8 +927,7 @@ public class GameModel extends Observable {
       // hit below
       if (Integer.lowestOneBit(hitCounter) == 8) {
         brickHit(ballLowerRow, ballCenterCol);
-        setChanged();
-        notifyObservers(new GameEvent(GameEventType.HIT_BRICK, ballLowerRow, ballCenterCol, ball));
+        fireEvent(new GameEvent(GameEventType.HIT_BRICK, ballLowerRow, ballCenterCol, ball));
         ball.inverseYdirection();
         // actually set the ball exactly onto the intermediate location and return for the next step
         ball.setCenterX(cbX - stepX);
@@ -962,11 +962,9 @@ public class GameModel extends Observable {
             && ballManager.size() == 1) { // only when only one ball in play
           ballCatchedFlag = true;
           bindBallToPaddle(ball, hitPointAbsolute);
-          setChanged();
-          notifyObservers(new GameEvent(GameEventType.CAUGHT));
+          fireEvent(new GameEvent(GameEventType.CAUGHT));
         } else {
-          setChanged();
-          notifyObservers(new GameEvent(GameEventType.HIT_PADDLE, ball));
+          fireEvent(new GameEvent(GameEventType.HIT_PADDLE, ball));
           // actually set the ball exactly onto the intermediate location and return for the next
           // step
           ball.setCenterX(cbX);
@@ -980,8 +978,7 @@ public class GameModel extends Observable {
       // ****************************
 
       if (ball.getLeftBound() <= 0) { // left
-        setChanged();
-        notifyObservers(new GameEvent(GameEventType.HIT_WALL, ball));
+        fireEvent(new GameEvent(GameEventType.HIT_WALL, ball));
         ball.inverseXdirection();
         // actually set the ball exactly onto the intermediate location and return for the next step
         ball.setCenterX(cbX);
@@ -990,8 +987,7 @@ public class GameModel extends Observable {
         maxLoopHitsCounter--;
         return;
       } else if (ball.getRightBound() >= playfieldWidth.get()) { // right
-        setChanged();
-        notifyObservers(new GameEvent(GameEventType.HIT_WALL, ball));
+        fireEvent(new GameEvent(GameEventType.HIT_WALL, ball));
         ball.inverseXdirection();
         // actually set the ball exactly onto the intermediate location and return for the next step
         ball.setCenterX(cbX);
@@ -1005,8 +1001,7 @@ public class GameModel extends Observable {
       //  Collossion Check TOP WALL
       // **************************
       if (ball.getUpperBound() <= 0) {
-        setChanged();
-        notifyObservers(new GameEvent(GameEventType.HIT_WALL, ball));
+        fireEvent(new GameEvent(GameEventType.HIT_WALL, ball));
         ball.inverseYdirection();
         // actually set the ball exactly onto the intermediate location and return for the next step
         ball.setCenterX(cbX);
@@ -1077,12 +1072,10 @@ public class GameModel extends Observable {
     gameOver.set(true);
     if (won) {
       LOG.info("Game Won");
-      setChanged();
-      notifyObservers(new GameEvent(GameEventType.GAME_WON));
+      fireEvent(new GameEvent(GameEventType.GAME_WON));
     } else {
       LOG.info("Game Over");
-      setChanged();
-      notifyObservers(new GameEvent(GameEventType.GAME_OVER));
+      fireEvent(new GameEvent(GameEventType.GAME_OVER));
     }
     // new highscore (1st to 15th place)
     if (highScoreManager.getList().size() < HIGHSCORE_MAX_PLACE - 1
@@ -1091,8 +1084,7 @@ public class GameModel extends Observable {
               new HighScore.HighScoreEntry(
                       playerName.get(), currentScore.get(), currentLevel.get(), LocalDateTime.now());
       highScoreManager.addEntryAndSave(entry);
-      setChanged();
-      notifyObservers(new GameEvent(GameEventType.NEW_HIGHSCORE, entry));
+      fireEvent(new GameEvent(GameEventType.NEW_HIGHSCORE, entry));
     }
   }
 
@@ -1125,8 +1117,7 @@ public class GameModel extends Observable {
    */
   private void increaeRemainingLives() {
     currentRemainingLives.set(currentRemainingLives.get() + 1);
-    setChanged();
-    notifyObservers(new GameEvent(GameEventType.NEW_LIFE));
+    fireEvent(new GameEvent(GameEventType.NEW_LIFE));
     LOG.info("Increased number of lives to {}", currentRemainingLives.get());
   }
 
@@ -1162,8 +1153,7 @@ public class GameModel extends Observable {
 
       laserShotManager.addAll(ls1, ls2);
 
-      setChanged();
-      notifyObservers(new GameEvent(GameEventType.LASER_SHOT, ls1, ls2));
+      fireEvent(new GameEvent(GameEventType.LASER_SHOT, ls1, ls2));
     }
   }
 
