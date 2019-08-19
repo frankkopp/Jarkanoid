@@ -221,7 +221,11 @@ public class GameModel {
   // new event support using PropertyChangeSupport
   private PropertyChangeSupport beanEvent = new PropertyChangeSupport(this); ;
   private GameEvent lastEvent = new GameEvent(GameEventType.NONE);
-  public void addPropertyChangeListener(PropertyChangeListener pcl) {
+  /**
+   * Register a listener for game events - used by UI to show animations and play sounds
+   * @param pcl
+   */
+  public void registerGameEventListener(PropertyChangeListener pcl) {
     beanEvent.addPropertyChangeListener(pcl);
   }
   private void fireEvent(GameEvent event) {

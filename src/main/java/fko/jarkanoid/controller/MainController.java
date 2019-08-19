@@ -62,11 +62,11 @@ import java.util.ResourceBundle;
  * initialization. The FXML loader calls the Controller's initialize() method.<br>
  * The Controller also receives all input and events from the user interface and the model and
  * executes the appropriate ui updates and model actions. The UI calls the actions methods directly.
- * The model signals via the Observer Interface and Property Bindings that the model has changed and
- * the UI should update its views.
+ * The model signals via the PropertyChangeSupport Interface (Observer Pattern) and Property Bindings
+ * that the model has changed and the UI should update its views.
  *
  * @author Frank Kopp
- * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+ * @see java.beans.PropertyChangeSupport
  */
 public class MainController implements Initializable, PropertyChangeListener {
 
@@ -136,8 +136,6 @@ public class MainController implements Initializable, PropertyChangeListener {
 
   /**
    * Bind views to model data mostly through property bindings but also through Observer pattern.
-   * <br>
-   * See update()
    *
    * @param view
    */
@@ -148,7 +146,7 @@ public class MainController implements Initializable, PropertyChangeListener {
     this.view = view;
 
     // new observer model
-    model.addPropertyChangeListener(this);
+    model.registerGameEventListener(this);
 
     // scene title
     String tmpTitle = Jarkanoid.getPrimaryStage().getTitle();
@@ -383,7 +381,6 @@ public class MainController implements Initializable, PropertyChangeListener {
         break;
       case NEW_HIGHSCORE:
         view.getHighScoreListView().updateList((HighScore.HighScoreEntry) param[0]);
-        //showHighScoreEditor();
         break;
       default:
     }
