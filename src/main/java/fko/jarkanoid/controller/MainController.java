@@ -50,8 +50,6 @@ import javafx.scene.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -68,7 +66,7 @@ import java.util.ResourceBundle;
  * @author Frank Kopp
  * @see java.beans.PropertyChangeSupport
  */
-public class MainController implements Initializable, PropertyChangeListener {
+public class MainController implements Initializable {
 
   private static final Logger LOG = LoggerFactory.getLogger(MainController.class);
 
@@ -146,7 +144,8 @@ public class MainController implements Initializable, PropertyChangeListener {
     this.view = view;
 
     // new observer model
-    model.registerGameEventListener(this);
+    model.lastEventProperty().addListener(
+      (observable, oldValue, newValue) -> gameEventHandler(oldValue, newValue));
 
     // scene title
     String tmpTitle = Jarkanoid.getPrimaryStage().getTitle();
@@ -309,19 +308,13 @@ public class MainController implements Initializable, PropertyChangeListener {
    * We use the bean property change notification for certain events to enable
    * animations and sound. Most other model changes are handled through Property Bindings.
    */
-  @Override
-  public void propertyChange(PropertyChangeEvent evt) {
-    assert evt.getNewValue() instanceof GameEvent : "Unknown event type. Event is not of type GameEvent";
-    handleGameEvent((GameEvent) evt.getNewValue());
-  }
+  private void gameEventHandler(GameEvent oldEvent, GameEvent newEvent) {
+    LOG.info("View received game event: {}", newEvent);
 
-  private void handleGameEvent(GameEvent gameEvent) {
-    LOG.info("View received game event: {}", gameEvent);
-
-    final Object[] param = (Object[]) gameEvent.getEventParameter();
+    final Object[] param = (Object[]) newEvent.getEventParameter();
 
     // define actions for different events
-    switch (gameEvent.getEventType()) {
+    switch (newEvent.getEventType()) {
       case NONE:
         break;
       case HIT_PADDLE:
@@ -333,7 +326,7 @@ public class MainController implements Initializable, PropertyChangeListener {
         // main.resources.sounds.playClip(Clips.WALL);
         break;
       case HIT_BRICK:
-        handleHitBrickEvent(gameEvent);
+        handleHitBrickEvent(newEvent);
         view.getBrickLayoutView().draw(model.getBrickLayout());
         break;
       case LAST_BALL_LOST:

@@ -84,21 +84,19 @@ public class Recorder implements Runnable {
     try {
       robot = new Robot();
     } catch (AWTException e) {
-      LOG.error("" + e);
+      LOG.error("{}", e.toString());
     }
   }
 
   /** @param period the intervall of capturing in ms */
   public void start(int period) {
-    if (recorderThread != null) throw new IllegalStateException("Thread excists. Not stopped yet.");
+    if (recorderThread != null) throw new IllegalStateException("Thread exists. Not stopped yet.");
     if (robot == null) throw new RuntimeException("Robot is not initialized.");
 
     recorderThread = new Thread(this, "Recorder Thread");
     recorderThread.setDaemon(false);
 
     this.period = period;
-    this.width = width;
-    this.height = height;
 
     recorderThread.start();
   }
@@ -130,7 +128,7 @@ public class Recorder implements Runnable {
         "Recording started - storing screenshots in {} every {} ms", SCREENSHOTS_FOLDER, period);
 
     genExecutor.scheduleAtFixedRate(
-        () -> takeScreenShotAndQueue(), 0, period, TimeUnit.MILLISECONDS);
+      this::takeScreenShotAndQueue, 0, period, TimeUnit.MILLISECONDS);
 
     while (!(isStopped.get() && queue.isEmpty())) {
       try {
@@ -184,16 +182,6 @@ public class Recorder implements Runnable {
     String format = "jpg";
 
     // write the encoded image to disk
-
-    // DEPENDENCY: PnGEncoder
-    //    try {
-    //      final FileOutputStream fout =
-    //          new FileOutputStream(SCREENSHOTS_FOLDER + startTime + "_Screenshot.png");
-    //        encoder.encode(image, fout);
-    //    } catch (IOException e) {
-    //      e.printStackTrace();
-    //    }
-
     File file = new File("screenshots/" + startTime + "_Screenshot." + format);
     try {
       ImageIO.write(image, format, file);

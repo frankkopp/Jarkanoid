@@ -35,8 +35,6 @@ import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -219,19 +217,7 @@ public class GameModel {
   private final StringProperty playerName = new SimpleStringProperty("Unknown Player");
 
   // new event support using PropertyChangeSupport
-  private PropertyChangeSupport beanEvent = new PropertyChangeSupport(this); ;
-  private GameEvent lastEvent = new GameEvent(GameEventType.NONE);
-  /**
-   * Register a listener for game events - used by UI to show animations and play sounds
-   * @param pcl
-   */
-  public void registerGameEventListener(PropertyChangeListener pcl) {
-    beanEvent.addPropertyChangeListener(pcl);
-  }
-  private void fireEvent(GameEvent event) {
-    beanEvent.firePropertyChange("lastEvent", this.lastEvent, event);
-    this.lastEvent = event;
-  }
+  private ObjectProperty<GameEvent> lastEventProperty = new SimpleObjectProperty<GameEvent>();
 
   /**
    * Constructor - prepares the brick layout and the game loops.
@@ -797,7 +783,7 @@ public class GameModel {
      * We use intermediate discrete (<1) steps to avoid "tunneling" through objects.
      * We use the last know ball position and we divide the the path from the last know position to the
      * current position (after the moveBall() step) into x parts (x=velocity of ball). With this we should get
-     * steps in X and Y direction which are smaller than 1 and therefore should detect collissions very
+     * steps in X and Y direction which are smaller than 1 and therefore should detect collisions very
      * accurately.
      */
 
@@ -846,18 +832,18 @@ public class GameModel {
       }
 
       // ************************
-      //  Collossion Check Bricks
+      //  Collision Check Bricks
       // ************************
 
       /*
        * Instead of having an list of all bricks to check against we use the fact that bricks
-       * are positioned in a regular matrix of 13 columns and 18 rows. Collission could therefore
+       * are positioned in a regular matrix of 13 columns and 18 rows. Collision could therefore
        * be reduced to calculate the position of the ball within in this matrix. When the cell
        * the ball is in has a brick then there is a collision.
-       * Problem is "tunneling" and multiple collissions at the same time. They could lead to
+       * Problem is "tunneling" and multiple collisions at the same time. They could lead to
        * a false bouncing angle.
        * This will be prevented by also checking where the ball is coming from a only allowing
-       * one collission at a time. Usually multiple collissions within the same step should be
+       * one collision at a time. Usually multiple collisions within the same step should be
        * rare as we have very small intermediate steps (<1 in each direction). In case they do
        * happen there should be no harm in ignoring one of them.
        */
@@ -872,25 +858,28 @@ public class GameModel {
       final int ballLeftCol = (int) ((cbX - radius) / brickLayout.getBrickWidth());
       final int ballRightCol = (int) ((cbX + radius) / brickLayout.getBrickWidth());
 
-      int hitCounter = 0;
+      // determine where we had a collision and add it to a bit map
+      int hitBitmap = 0;
       if (vY < 0 && brickLayout.getBrick(ballUpperRow, ballCenterCol) != null) {
-        hitCounter |= 1; // top
+        hitBitmap |= 1; // top
       }
       if (vX >= 0 && brickLayout.getBrick(ballCenterRow, ballRightCol) != null) {
-        hitCounter |= 2; // right
+        hitBitmap |= 2; // right
       }
       if (vX < 0 && brickLayout.getBrick(ballCenterRow, ballLeftCol) != null) {
-        hitCounter |= 4; // left
+        hitBitmap |= 4; // left
       }
       if (vY > 0 && brickLayout.getBrick(ballLowerRow, ballCenterCol) != null) {
-        hitCounter |= 8; // bottom
+        hitBitmap |= 8; // bottom
       }
-      if (Integer.bitCount(hitCounter) > 1) {
-        LOG.info("MULTIPLE HIT trlb={}", Integer.toBinaryString(hitCounter));
+
+      // log the rare cases of multiple hits in one step
+      if (Integer.bitCount(hitBitmap) > 1) {
+        LOG.info("MULTIPLE HIT trlb={}", Integer.toBinaryString(hitBitmap));
       }
 
       // hit above
-      if (Integer.lowestOneBit(hitCounter) == 1) {
+      if (Integer.lowestOneBit(hitBitmap) == 1) {
         brickHit(ballUpperRow, ballCenterCol);
         fireEvent(new GameEvent(GameEventType.HIT_BRICK, ballUpperRow, ballCenterCol, ball));
         ball.inverseYdirection();
@@ -903,7 +892,7 @@ public class GameModel {
       }
 
       // hit right
-      if (Integer.lowestOneBit(hitCounter) == 2) {
+      if (Integer.lowestOneBit(hitBitmap) == 2) {
         brickHit(ballCenterRow, ballRightCol);
         fireEvent(new GameEvent(GameEventType.HIT_BRICK, ballCenterRow, ballRightCol, ball));
         ball.inverseXdirection();
@@ -916,7 +905,7 @@ public class GameModel {
       }
 
       // hit left
-      if (Integer.lowestOneBit(hitCounter) == 4) {
+      if (Integer.lowestOneBit(hitBitmap) == 4) {
         brickHit(ballCenterRow, ballLeftCol);
         fireEvent(new GameEvent(GameEventType.HIT_BRICK, ballCenterRow, ballLeftCol, ball));
         ball.inverseXdirection();
@@ -929,7 +918,7 @@ public class GameModel {
       }
 
       // hit below
-      if (Integer.lowestOneBit(hitCounter) == 8) {
+      if (Integer.lowestOneBit(hitBitmap) == 8) {
         brickHit(ballLowerRow, ballCenterCol);
         fireEvent(new GameEvent(GameEventType.HIT_BRICK, ballLowerRow, ballCenterCol, ball));
         ball.inverseYdirection();
@@ -942,7 +931,7 @@ public class GameModel {
       }
 
       // ************************
-      //  Collossion Check Paddle
+      //  Collision Check Paddle
       // ************************
 
       if (ball.intersects(paddleX.get(), paddleY.get(), paddleWidth.get(), paddleHeight.get())) {
@@ -978,7 +967,7 @@ public class GameModel {
       }
 
       // ****************************
-      //  Collossion Check Side Walls
+      //  Collision Check Side Walls
       // ****************************
 
       if (ball.getLeftBound() <= 0) { // left
@@ -1002,7 +991,7 @@ public class GameModel {
       }
 
       // **************************
-      //  Collossion Check TOP WALL
+      //  Collision Check TOP WALL
       // **************************
       if (ball.getUpperBound() <= 0) {
         fireEvent(new GameEvent(GameEventType.HIT_WALL, ball));
@@ -1016,7 +1005,7 @@ public class GameModel {
       }
 
       // ************************
-      //  Collossion Check Bottom
+      //  Collision Check Bottom
       // ************************
 
       if (ball.getUpperBound() >= playfieldHeight.get()) {
@@ -1095,6 +1084,7 @@ public class GameModel {
   /**
    * Increases score and adds lives at certain score main.resources.levels
    *
+   * @param brickType
    * @param hitBrickScore
    */
   private void increaseScore(final BrickType brickType, int hitBrickScore) {
@@ -1138,6 +1128,18 @@ public class GameModel {
     }
   }
 
+  /**
+   * Is called when we want to signal an event to the ui to do animations or sounds.
+   *
+   * @param event
+   */
+  private void fireEvent(GameEvent event) {
+    this.lastEventProperty.setValue(event);
+  }
+
+  /**
+   * Creates a laser shot (actually 2 bullets)
+   */
   public void shootLaser() {
     if (isPlaying() && !isPaused() && activePower.get().equals(PowerPillType.LASER)) {
       LaserShot ls1 =
@@ -1325,16 +1327,14 @@ public class GameModel {
     return laserShotManager;
   }
 
-  /**
-   * @return the current brick layout
-   */
+  public ObjectProperty<GameEvent> lastEventProperty() {
+    return lastEventProperty;
+  }
+
   public BrickLayout getBrickLayout() {
     return brickLayout;
   }
 
-  /**
-   * @return the current fps
-   */
   public double getFps() {
     return fps.get();
   }
