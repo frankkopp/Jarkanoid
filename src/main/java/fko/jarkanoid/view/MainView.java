@@ -24,11 +24,11 @@
  */
 package fko.jarkanoid.view;
 
-import java.io.IOException;
-import java.util.HashMap;
-
 import fko.jarkanoid.controller.MainController;
-import fko.jarkanoid.model.*;
+import fko.jarkanoid.model.Ball;
+import fko.jarkanoid.model.GameModel;
+import fko.jarkanoid.model.LaserShot;
+import fko.jarkanoid.model.PowerPill;
 import javafx.animation.ParallelTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.StrokeTransition;
@@ -44,6 +44,9 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.HashMap;
 
 
 /**
@@ -117,7 +120,8 @@ public class MainView {
 
     // HighScore View
     highScoreListView = new HighScoreListView(
-        model, controller, (TableView) fxmlLoader.getNamespace().get("highScoreTable"));
+        model, controller,
+        (TableView<HighScoreListView.TableRowBean>) fxmlLoader.getNamespace().get("highScoreTable"));
 
     prepareAnimations(paddle);
   }

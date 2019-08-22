@@ -1,4 +1,5 @@
 module Jarkanoid {
+
   requires slf4j.api;
   requires java.desktop;
 

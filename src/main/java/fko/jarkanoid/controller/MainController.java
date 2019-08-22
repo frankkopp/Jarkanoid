@@ -309,7 +309,7 @@ public class MainController implements Initializable {
    * animations and sound. Most other model changes are handled through Property Bindings.
    */
   private void gameEventHandler(GameEvent oldEvent, GameEvent newEvent) {
-    LOG.info("View received game event: {}", newEvent);
+    LOG.debug("View received game event: {}", newEvent);
 
     final Object[] param = (Object[]) newEvent.getEventParameter();
 
