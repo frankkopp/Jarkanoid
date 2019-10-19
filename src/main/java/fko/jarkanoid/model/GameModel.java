@@ -64,7 +64,7 @@ public class GameModel {
   // IDEAS: Special: flying aliens, flying powers, ball catcher, ball beamer, ball warper
 
   // debugging constants / for normal playing these have to be all false
-  private static final boolean BOUNCING_FLOOR = true;
+  private static final boolean BOUNCING_FLOOR = false;
 
   // game constants
   private static final int START_LEVEL = 1;
@@ -81,13 +81,13 @@ public class GameModel {
   private static final double PLAYFIELD_INITIAL_WIDTH = 780;
 
   // paddle constants
-  private static final double PADDLE_INITIAL_FRAMERATE = 120; // Framerate for paddle movements
-  private static final double PADDLE_MOVE_STEPS = 5.0; // steps per animation cycle
-  private static final double PADDLE_INITIAL_Y = 670;
-  private static final double PADDLE_INITIAL_X = 315;
-  private static final double PADDEL_INITIAL_WIDTH = 150; // 150;
-  private static final double PADDLE_INITIAL_HEIGHT = 20;
-  private static final float PADDLE_ENLARGEMENT_FACTOR = 1.4f;
+  private static final double PADDLE_INITIAL_FRAMERATE  = 120; // Framerate for paddle movements
+  private static final double PADDLE_MOVE_STEPS         = 5.0; // steps per animation cycle
+  private static final double PADDLE_INITIAL_Y          = 670;
+  private static final double PADDLE_INITIAL_X          = 315;
+  private static final double PADDLE_INITIAL_WIDTH      = 150; // 150;
+  private static final double PADDLE_INITIAL_HEIGHT     = 20;
+  private static final float  PADDLE_ENLARGEMENT_FACTOR = 1.4f;
 
   // Ball constants
   private static final double BALL_INITIAL_RADIUS = 6;
@@ -141,7 +141,7 @@ public class GameModel {
 
   // Paddle dimensions and position
   private final DoubleProperty paddleWidth =
-          new SimpleDoubleProperty(PADDEL_INITIAL_WIDTH); // see FXML
+          new SimpleDoubleProperty(PADDLE_INITIAL_WIDTH); // see FXML
   private final DoubleProperty paddleHeight =
           new SimpleDoubleProperty(PADDLE_INITIAL_HEIGHT); // see FXML
   private final DoubleProperty paddleX = new SimpleDoubleProperty(PADDLE_INITIAL_X); // see FXML
@@ -256,7 +256,7 @@ public class GameModel {
     // larger
     final double lSteps = (PADDLE_ENLARGEMENT_FACTOR - 1) / steps;
     // move to the left to make it look as if it grew from the middle
-    final double xSteps = (((PADDLE_ENLARGEMENT_FACTOR - 1) / 2) * PADDEL_INITIAL_WIDTH) / steps;
+    final double xSteps = (((PADDLE_ENLARGEMENT_FACTOR - 1) / 2) * PADDLE_INITIAL_WIDTH) / steps;
     KeyFrame grow =
             new KeyFrame(
                     Duration.millis(10),
@@ -746,9 +746,9 @@ public class GameModel {
     // shrink the paddle slowly
     paddleShrinker.setCycleCount(1);
     // smaller
-    double smallerSize = PADDEL_INITIAL_WIDTH;
+    double smallerSize = PADDLE_INITIAL_WIDTH;
     // move to the left to make it look as if it grew from the middle
-    double newLeftX = paddleX.get() + ((PADDLE_ENLARGEMENT_FACTOR - 1) / 2) * PADDEL_INITIAL_WIDTH;
+    double newLeftX = paddleX.get() + ((PADDLE_ENLARGEMENT_FACTOR - 1) / 2) * PADDLE_INITIAL_WIDTH;
     KeyFrame shrinkR = new KeyFrame(Duration.millis(250), new KeyValue(paddleWidth, smallerSize));
     KeyFrame shrinkL = new KeyFrame(Duration.millis(250), new KeyValue(paddleX, newLeftX));
     paddleShrinker.getKeyFrames().addAll(shrinkL, shrinkR);
