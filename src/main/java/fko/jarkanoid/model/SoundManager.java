@@ -48,10 +48,10 @@ public final class SoundManager {
    */
   public enum Clips {
     // ENUM		Filename w/o .wav
-    PADDLE 		("PaddleHit"),
-    BRICK		("BrickHit"),
-    BRICK_S 	("BrickHitSolid"),
-    BALL_LOST	("Ball_Lost"),
+    PADDLE 	  	("PaddleHit16b"),
+    BRICK		    ("BrickHit16b"),
+    BRICK_S 	  ("BrickHitSolid16b"),
+    BALL_LOST	  ("Ball_Lost16b"),
     CAUGHT      ("Caught"),
     FINAL       ("FinalMusic"),
     HIT_ALIEN   ("HitAlien"),
@@ -60,9 +60,9 @@ public final class SoundManager {
     KILL_BOSS   ("KillBoss"),
     LASER       ("Laser"),
     NEW_LEVEL   ("NewLevel"),
-    NEW_LIFE    ("NewLife"),
-    PADDLE_HIT  ("PaddleHit"),
-    POWER_E     ("Power_Enlarge"),
+    NEW_LIFE    ("NewLife16b"),
+    PADDLE_HIT  ("PaddleHit16b"),
+    POWER_E     ("Power_Enlarge16b"),
     POWER_S     ("Power_Enlarge_Shrink"),
     WALL_HIT    ("WallHit");
 
