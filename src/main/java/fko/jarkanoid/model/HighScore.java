@@ -31,10 +31,8 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
-import java.nio.file.Path;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,82 +43,75 @@ public class HighScore {
 
   private static final Logger LOG = LoggerFactory.getLogger(HighScore.class);
 
-  // Singleton
-  private static HighScore _instance = null;
-
   // max number of entry to be written in db
   private static final int MAX_ENTRIES = 15;
 
   /* default value for folder */
   private static final String folderPathPlain = "./var/";
   private static final String fileNamePlain = "highscore.csv";
-  private final Path _folderPath = FileSystems.getDefault().getPath(folderPathPlain);
-  private final Path _filePath = FileSystems.getDefault().getPath(folderPathPlain, fileNamePlain);
+  private Path _folderPath = FileSystems.getDefault().getPath(folderPathPlain);
+  private Path _filePath = FileSystems.getDefault().getPath(folderPathPlain, fileNamePlain);
 
   // the highscore list
   private List<HighScoreEntry> _list;
 
-  /**
-   * Return singleton instance of HighScoreData
-   *
-   * @return
-   */
-  public static HighScore getInstance() {
-    if (HighScore._instance == null) {
-      HighScore._instance = new HighScore();
-    }
-    return _instance;
-  }
-
   /*
-   * Private constructor because of Singleton pattern.
    * Reads the file and adds the entries to _list
    */
-  private HighScore() {
+  public HighScore() {
+    load();
+  }
 
+  public HighScore(String folderPathPlain, String fileNamePlain) {
+    _folderPath = FileSystems.getDefault().getPath(folderPathPlain);
+    _filePath = FileSystems.getDefault().getPath(folderPathPlain, fileNamePlain);
+    load();
+  }
+
+  private void load() {
     LOG.info("Reading Highscore from file {}", _filePath);
 
     // Check if folder exists and if not try to create it.
     if (!Files.exists(_folderPath, LinkOption.NOFOLLOW_LINKS)) {
       LOG.warn(
-          "While reading high score file: Path {} could not be found. Trying to create it.",
-          _folderPath.toString());
+        "While reading high score file: Path {} could not be found. Trying to create it.",
+        _folderPath.toString());
       try {
         Files.createDirectories(_folderPath);
       } catch (IOException e) {
         LOG.error(
-            String.format(
-                "While reading high score file: Path %s could not be created.",
-                _folderPath.toString()),
-            e);
+          String.format(
+            "While reading high score file: Path %s could not be created.",
+            _folderPath.toString()),
+          e);
       }
     }
 
     // Check if file exists and if not create a empty file
     if (Files.notExists(_filePath, LinkOption.NOFOLLOW_LINKS)) {
       LOG.warn(
-          "While reading high score file: File {} could not be found. Trying to create it.",
-          _filePath.getFileName().toString());
+        "While reading high score file: File {} could not be found. Trying to create it.",
+        _filePath.getFileName().toString());
       try {
         Files.createFile(_filePath);
       } catch (IOException e) {
         LOG.error(
-            String.format(
-                "While reading high score file: File %s could not be found. Trying to create it.",
-                _filePath.getFileName().toString()),
-            e);
+          String.format(
+            "While reading high score file: File %s could not be found. Trying to create it.",
+            _filePath.getFileName().toString()),
+          e);
       }
     }
 
     // read all lines from file
-    Charset charset = Charset.forName("ISO-8859-1");
+    Charset charset = StandardCharsets.ISO_8859_1;
     List<String> lines = null;
     try {
       lines = Files.readAllLines(_filePath, charset);
     } catch (CharacterCodingException e) {
       LOG.error(
-          "Highscore file '{}' has wrong charset (needs to be ISO-8859-1) - not loaded!",
-          _filePath);
+        "Highscore file '{}' has wrong charset (needs to be ISO-8859-1) - not loaded!",
+        _filePath);
     } catch (IOException e) {
       LOG.error("Highscore file '{}' could not be loaded!", _filePath);
     }
@@ -129,23 +120,24 @@ public class HighScore {
       // create list of high score entries
       _list = Collections.synchronizedList(new ArrayList<HighScoreEntry>(lines.size()));
       lines
-          .parallelStream()
-          .forEach(
-              line -> {
-                String[] parts = line.split(";");
-                _list.add(
-                    new HighScoreEntry(
-                        parts[0].trim(),
-                        Integer.parseInt(parts[1]),
-                        Integer.parseInt(parts[2]),
-                        LocalDateTime.parse(parts[3].trim())));
-              });
+        .parallelStream()
+        .forEach(
+          line -> {
+            String[] parts = line.split(";");
+            _list.add(
+              new HighScoreEntry(
+                parts[0].trim(),
+                Integer.parseInt(parts[1]),
+                Integer.parseInt(parts[2]),
+                LocalDateTime.parse(parts[3].trim())));
+          });
 
       sortList();
 
       LOG.info("Read {} entries from highscore file", _list.size());
     }
   }
+
 
   /**
    * Return the highscore list as unmodifiable list
@@ -157,19 +149,22 @@ public class HighScore {
   }
 
   /**
-   * Put a new entry into the highscore table
-   *
-   * @param name, score, date
+   * Test if given score would make high score
    */
-  public void addEntry(
-      String name, int score, int level, LocalDateTime date) {
+  public boolean isHighScore(int score) {
+    if (_list.size() < MAX_ENTRIES) return true;
+    else return score > _list.get(MAX_ENTRIES-1).score;
+  }
+
+  /**
+   * Put a new entry into the highscore table
+   */
+  public void addEntry(String name, int score, int level, LocalDateTime date) {
     this.addEntry(new HighScoreEntry(name, score, level, date));
   }
 
   /**
    * Put a new entry into the highscore table
-   *
-   * @param newEntry
    */
   public void addEntry(HighScoreEntry newEntry) {
     _list.add(newEntry);
@@ -178,8 +173,6 @@ public class HighScore {
 
   /**
    * Put a new entry into the highscore table
-   *
-   * @param name, score, date
    */
   public void addEntryAndSave(
       String name, int score, int level, LocalDateTime date) {
@@ -193,8 +186,7 @@ public class HighScore {
    * @return true if save was successful, false otherwise
    */
   public boolean addEntryAndSave(HighScoreEntry newEntry) {
-    _list.add(newEntry);
-    sortList();
+    addEntry(newEntry);
     return saveFile();
   }
 
@@ -207,13 +199,21 @@ public class HighScore {
     return saveFile();
   }
 
+  /**
+   * Clears all entries from list.
+   * Should only be used in unit tests.
+   */
+  public void clear() {
+    _list.clear();
+  }
+
   /*
    * Save _list to file. Max MAX_ENTRIES are written.
    */
   private boolean saveFile() {
     Charset charset = Charset.forName("ISO-8859-1");
     // Use try-with-resource to get auto-closeable writer instance
-    try (BufferedWriter writer = Files.newBufferedWriter(_filePath, charset)) {
+    try (BufferedWriter writer = Files.newBufferedWriter(_filePath, charset, StandardOpenOption.TRUNCATE_EXISTING)) {
       _list
           .stream()
           .limit(MAX_ENTRIES)
@@ -251,12 +251,6 @@ public class HighScore {
     public final LocalDateTime date;
     public final int level;
 
-    /**
-     * @param name
-     * @param score
-     * @param level
-     * @param date
-     */
     public HighScoreEntry(
         String name, int score, int level, LocalDateTime date) {
       this.name = name;
@@ -265,7 +259,6 @@ public class HighScore {
       this.date = date;
     }
 
-    /** @see Object#toString() */
     @Override
     public String toString() {
       return name

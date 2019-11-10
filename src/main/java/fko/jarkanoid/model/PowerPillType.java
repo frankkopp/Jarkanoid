@@ -98,14 +98,21 @@ public enum PowerPillType {
    */
   public static PowerPillType getRandom() {
     double random = Math.random() * 100;
-    if (random <  1                  ) return BREAK;
-    if (random >= 1  && random <    5) return PLAYER;
-    if (random >= 5  && random <   20) return DISRUPTION;
-    if (random >= 20 && random <   40) return SLOW;
-    if (random >= 40 && random <   60) return CATCH;
-    if (random >= 60 && random <   85) return ENLARGE;
-    if (random >= 85 && random <= 100) return LASER;
-    return NONE;
+    if (random >= 85) return LASER;
+    if (random >= 60) return ENLARGE;
+    if (random >= 40) return CATCH;
+    if (random >= 20) return SLOW;
+    if (random >= 5) return DISRUPTION;
+    if (random >= 1) return PLAYER;
+    return BREAK;
+    //if (random <  1                  ) return BREAK;
+    //if (random >= 1  && random <    5) return PLAYER;
+    //if (random >= 5  && random <   20) return DISRUPTION;
+    //if (random >= 20 && random <   40) return SLOW;
+    //if (random >= 40 && random <   60) return CATCH;
+    //if (random >= 60 && random <   85) return ENLARGE;
+    //if (random >= 85 && random <= 100) return LASER;
+    //return NONE;
   }
 
   @Override

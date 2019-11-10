@@ -64,7 +64,9 @@ public class GameModel {
   // IDEAS: Special: flying aliens, flying powers, ball catcher, ball beamer, ball warper
 
   // debugging constants / for normal playing these have to be all false
-  private static final boolean BOUNCING_FLOOR = false;
+  private static final boolean BOUNCING_FLOOR = true;
+  private static final boolean DISABLE_CATCH = true;
+  private static final boolean DISABLE_SLOW = true;
 
   // game constants
   private static final int START_LEVEL = 1;
@@ -95,17 +97,18 @@ public class GameModel {
   private static final double BALL_INITIAL_X = 390;
   private static final double BALL_INITIAL_Y = PADDLE_INITIAL_Y - BALL_INITIAL_RADIUS;
 
-  // Absolute speed of ball, when vertical equals px in y, when horizontal equals px in x
-  private static final double BALL_INITIAL_SPEED = 10.0;
-
-  // Framerate for game loop
-  private static final double INITIAL_FRAMERATE = 60;
-
   // Laser constants
   private static final double LASER_EDGE_OFFSET = 45;
   private static final double LASER_WIDTH = 5;
   private static final double LASER_HEIGHT = 15;
-  private static final double LASER_SPEED = 15;
+
+  // Frame rate for ball game loop
+  private static final double INITIAL_BALL_FRAMERATE = 120;
+
+  // Speeds of items - these are all dependent on ball frame rate
+  private static final double BALL_INITIAL_SPEED = 5.0;
+  private static final double LASER_SPEED = 5;
+  private static final double POWER_PILL_FALLING_SPEED = 2;
 
   // Template of a starting ball to copy when a new level starts
   private static final Ball BALL_TEMPLATE =
@@ -116,14 +119,10 @@ public class GameModel {
   private static final int NEXT_POWERUP_OFFSET = 3;
   // power up randomly after 0 to 10 destroyed bricks after offset
   private static final int POWER_UP_FREQUENCY = 8;
-  private static final double POWER_PILL_FALLING_SPEED = 5;
 
   // the maximum number the ball may bounce without hitting the paddle or destroying a brick
   // After this number the ball gets a random nudge in a different direction
   private static final int MAX_NUMBER_OF_LOOP_HITS = 25;
-
-  // the maximal entries in the highscore list
-  private static final int HIGHSCORE_MAX_PLACE = 15;
 
   /*
    * These values determine the size and dimension of elements in Breakout.
@@ -201,7 +200,7 @@ public class GameModel {
   private long frameLoopCounterTimeStamp = System.nanoTime();
   private long lastloopTime;
   private long commulativeLoopTime;
-  private final DoubleProperty fps = new SimpleDoubleProperty(INITIAL_FRAMERATE);
+  private final DoubleProperty fps = new SimpleDoubleProperty(INITIAL_BALL_FRAMERATE);
 
   // grower and shrinker timeline of paddles
   private final Timeline paddleGrower = new Timeline();
@@ -211,7 +210,7 @@ public class GameModel {
   private int maxLoopHitsCounter = MAX_NUMBER_OF_LOOP_HITS;
 
   // highscore manager
-  private final HighScore highScoreManager = HighScore.getInstance();
+  private final HighScore highScoreManager = new HighScore();
 
   // player name property
   private final StringProperty playerName = new SimpleStringProperty("Unknown Player");
@@ -245,7 +244,7 @@ public class GameModel {
 
     // prepare ball movements (will be started in startGame())
     mainGameLoop.setCycleCount(Timeline.INDEFINITE);
-    KeyFrame moveBall = new KeyFrame(Duration.millis(1000f / INITIAL_FRAMERATE), e -> gameLoop());
+    KeyFrame moveBall = new KeyFrame(Duration.millis(1000f / INITIAL_BALL_FRAMERATE), e -> gameLoop());
     mainGameLoop.getKeyFrames().add(moveBall);
 
     // animation to grow the paddle slowly when we get an ENLARGE power
@@ -263,7 +262,7 @@ public class GameModel {
                     (event) -> {
                       paddleWidth.set(paddleWidth.get() * (1.0 + lSteps));
                       paddleX.set(paddleX.get() - xSteps);
-                      // push the paddle betweem the walls in case it was outside
+                      // push the paddle between the walls in case it was outside
                       if (paddleX.get() + paddleWidth.get() >= playfieldWidth.get()) {
                         paddleX.set(playfieldWidth.get() - paddleWidth.get());
                       } else if (paddleX.get() <= 0) {
@@ -459,7 +458,7 @@ public class GameModel {
       fps.set(1e9f * (frameLoopCounter / timeSinceLastFPS));
 
       double tLoop = ((commulativeLoopTime / frameLoopCounter) / 1e6f);
-      double tFrame = 1000 / INITIAL_FRAMERATE;
+      double tFrame = 1000 / INITIAL_BALL_FRAMERATE;
       // System.out.printf("Avg. Time for loop: %.6f ms (framelimit %.6f ms) %n", tLoop, tFrame);
       if (tLoop > tFrame) {
         if (LOG.isWarnEnabled()) {
@@ -548,10 +547,10 @@ public class GameModel {
   }
 
   /**
-   * updates all balls, checks collisions fom balls with anything else and removes lost balls
+   * updates all balls, checks collisions from balls with anything else and removes lost balls
    */
   private void updateBalls() {
-    // else loop over all balls
+    // loop over all balls
     ListIterator<Ball> listIterator = ballManager.listIterator();
     while (listIterator.hasNext()) {
       Ball ball = listIterator.next();
@@ -575,7 +574,7 @@ public class GameModel {
       // check collisions from the ball(s) with anything else
       checkBallCollisions(ball);
 
-      // ball cought in loop?
+      // ball caught in loop?
       if (maxLoopHitsCounter <= 0) {
         ball.nudgeBall();
         maxLoopHitsCounter = MAX_NUMBER_OF_LOOP_HITS;
@@ -637,7 +636,7 @@ public class GameModel {
   private void activatePower(final PowerPillType newType) {
     PowerPillType oldType = activePower.get();
 
-    LOG.info("Activiating power with {} from {}", newType, oldType);
+    LOG.info("Activating power with {} from {}", newType, oldType);
 
     // deactivate old power if necessary
     switch (oldType) {
@@ -694,12 +693,14 @@ public class GameModel {
         }
         break;
       case CATCH:
-        // is handled in paddle colission and updateBall
+        // is handled in paddle collision and updateBall
         break;
       case SLOW:
         assert ballManager.size() == 1;
-        final Ball b = ballManager.get(0);
-        b.setVelocity(b.getYVelocity() * 0.8f);
+        if (!DISABLE_SLOW) {
+          final Ball ball = ballManager.get(0);
+          ball.setVelocity(ball.getYVelocity() * 0.8f);
+        }
         break;
       case BREAK:
         // clear matrix and advance to next level
@@ -723,6 +724,9 @@ public class GameModel {
         increaeRemainingLives();
         break;
     }
+
+    // increase score
+    increaseScore(1_000);
   }
 
   /**
@@ -756,7 +760,7 @@ public class GameModel {
   }
 
   /**
-   * Checks if all bricks are gone and if so icreases level and launches new ball.
+   * Checks if all bricks are gone and if so increases level and launches new ball.
    */
   private void updateLevel() {
     if (brickLayout.getNumberOfBricks() == 0) {
@@ -781,10 +785,10 @@ public class GameModel {
 
     /*
      * We use intermediate discrete (<1) steps to avoid "tunneling" through objects.
-     * We use the last know ball position and we divide the the path from the last know position to the
-     * current position (after the moveBall() step) into x parts (x=velocity of ball). With this we should get
-     * steps in X and Y direction which are smaller than 1 and therefore should detect collisions very
-     * accurately.
+     * We use the last know ball position and we divide the the path from the last
+     * known position to the current position (after the moveBall() step) into x parts
+     * (x=velocity of ball). With this we should get steps in X and Y direction which
+     * are smaller than 1 and therefore should detect collisions very accurately.
      */
 
     // convenience variables
@@ -836,7 +840,7 @@ public class GameModel {
       // ************************
 
       /*
-       * Instead of having an list of all bricks to check against we use the fact that bricks
+       * Instead of having a list of all bricks to check against we use the fact that bricks
        * are positioned in a regular matrix of 13 columns and 18 rows. Collision could therefore
        * be reduced to calculate the position of the ball within in this matrix. When the cell
        * the ball is in has a brick then there is a collision.
@@ -951,6 +955,7 @@ public class GameModel {
 
         // check if we should catch the ball
         if (activePower.get().equals(PowerPillType.CATCH)
+            && !DISABLE_CATCH
             && !ballCatchedFlag // not already catched
             && ballManager.size() == 1) { // only when only one ball in play
           ballCatchedFlag = true;
@@ -1033,9 +1038,12 @@ public class GameModel {
     // which type
     BrickType brickType = brickLayout.getBrick(row, col).getType();
     // hit the brick / get points for every destroyed brick
-    final int hitBrickScore = brickLayout.hitBrick(row, col);
+    int hitBrickScore = brickLayout.hitBrick(row, col);
+    if (brickType.equals(BrickType.SILVER)) { // Silver brick is special case
+      hitBrickScore = currentLevel.get() * hitBrickScore;
+    }
     // increase score
-    increaseScore(brickType, hitBrickScore);
+    increaseScore(hitBrickScore);
     // count destroyed bricks
     if (hitBrickScore > 0) {
       // relevant Hit
@@ -1071,8 +1079,7 @@ public class GameModel {
       fireEvent(new GameEvent(GameEventType.GAME_OVER));
     }
     // new highscore (1st to 15th place)
-    if (highScoreManager.getList().size() < HIGHSCORE_MAX_PLACE - 1
-        || currentScore.get() > highScoreManager.getList().get(HIGHSCORE_MAX_PLACE - 1).score) {
+    if (highScoreManager.isHighScore(currentScore.get())) {
       final HighScore.HighScoreEntry entry =
               new HighScore.HighScoreEntry(
                       playerName.get(), currentScore.get(), currentLevel.get(), LocalDateTime.now());
@@ -1084,15 +1091,11 @@ public class GameModel {
   /**
    * Increases score and adds lives at certain score main.resources.levels
    *
-   * @param brickType
-   * @param hitBrickScore
+   * @param scoreToAdd
    */
-  private void increaseScore(final BrickType brickType, int hitBrickScore) {
-    if (brickType.equals(BrickType.SILVER)) { // Silver brick is special case
-      hitBrickScore = currentLevel.get() * hitBrickScore;
-    }
+  private void increaseScore(int scoreToAdd) {
     final int previousScore = currentScore.get();
-    final int newScore = previousScore + hitBrickScore;
+    final int newScore = previousScore + scoreToAdd;
     currentScore.set(newScore);
     // add new lives after 20.000 and after every 60.000 points
     if (previousScore < 20000 && newScore > 20000) {
