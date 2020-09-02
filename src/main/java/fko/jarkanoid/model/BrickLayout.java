@@ -26,13 +26,15 @@ package fko.jarkanoid.model;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 
 /**
  * BrickLayout
  *
- * <p>A <code>BrickLayout</code> holds a 18x13 matrix of <code>Brick</code>s. Bricks will be erased
+ * <p>A {@code BrickLayout} holds a 18x13 matrix of {@code Brick}s. Bricks will be erased
  * after they have been hit by the ball the necessary number of times.<br>
  * The matrix is top down - row 0 is the uppermost row.<br>
  * This class also calculates the measurements and positions of bricks based on the playfield size
@@ -44,6 +46,8 @@ import java.util.Arrays;
  * @author Frank Kopp
  */
 public class BrickLayout {
+
+  private static final Logger LOG = LoggerFactory.getLogger(BrickLayout.class);
 
   public static final int ROWS = 18;
   public static final int COLUMNS = 13;

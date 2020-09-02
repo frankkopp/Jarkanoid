@@ -106,7 +106,7 @@ public class GameModel {
   private static final double INITIAL_BALL_FRAMERATE = 120;
 
   // Speeds of items - these are all dependent on ball frame rate
-  private static final double BALL_INITIAL_SPEED = 5.0;
+  private static final double BALL_INITIAL_SPEED = 15.0;
   private static final double LASER_SPEED = 5;
   private static final double POWER_PILL_FALLING_SPEED = 2;
 
@@ -117,7 +117,7 @@ public class GameModel {
   // power up constants
   // how many destroyed bricks between power ups (needs to be >0)
   private static final int NEXT_POWERUP_OFFSET = 3;
-  // power up randomly after 0 to 10 destroyed bricks after offset
+  // power up randomly after 0 to 8 destroyed bricks after offset
   private static final int POWER_UP_FREQUENCY = 8;
 
   // the maximum number the ball may bounce without hitting the paddle or destroying a brick
@@ -125,7 +125,7 @@ public class GameModel {
   private static final int MAX_NUMBER_OF_LOOP_HITS = 25;
 
   /*
-   * These values determine the size and dimension of elements in Breakout.
+   * These values determine the size and dimension of elements in Jarkanoid.
    * In normal MVC the View would use them to build the View elements. As we
    * us JavaFX and FXML with Scene Builder these values are already set by the FXML.
    * Therefore we duplicate them in den model and make sure they stay synchronized through
@@ -181,13 +181,13 @@ public class GameModel {
   private boolean paddleRight;
 
   // to delay the start of the ball and to be able to stop a game before this timer delay runs out
+  @SuppressWarnings("rawtypes")
   private ScheduledFuture scheduledStart;
 
   // count all destroyed bricks
   private int destroyedBricksCounter = 0;
 
   // power ups
-  private int lastPowerUp = 0;
   private int nextPowerUp = getNextPowerUp();
   private PowerPill nextPowerPill;
   private final ListProperty<PowerPill> fallingPowerPills = new SimpleListProperty<>();
@@ -196,10 +196,10 @@ public class GameModel {
   private boolean ballCatchedFlag = false;
 
   // count each time the game loop is called and some other statistics
-  private long frameLoopCounter = 0;
-  private long frameLoopCounterTimeStamp = System.nanoTime();
-  private long lastloopTime;
-  private long commulativeLoopTime;
+  private long                 frameLoopCounter = 0;
+  private long                 frameLoopCounterTimeStamp = System.nanoTime();
+  private long                 lastLoopTime;
+  private long                 cumulativeLoopTime;
   private final DoubleProperty fps = new SimpleDoubleProperty(INITIAL_BALL_FRAMERATE);
 
   // grower and shrinker timeline of paddles
@@ -433,7 +433,7 @@ public class GameModel {
   }
 
   /**
-   * Called by the <code>mainGameLoop</code> animation event to make a new frame of the game.<br>
+   * Called by the {@code mainGameLoop} animation event to make a new frame of the game.<br>
    */
   private void gameLoop() {
     if (!isPlaying()) return;
@@ -442,8 +442,8 @@ public class GameModel {
 
     updateGameState();
 
-    lastloopTime = System.nanoTime() - startLoopTime;
-    commulativeLoopTime += lastloopTime;
+    lastLoopTime = System.nanoTime() - startLoopTime;
+    cumulativeLoopTime += lastLoopTime;
 
     updateFPS();
   }
@@ -457,7 +457,7 @@ public class GameModel {
       double timeSinceLastFPS = (System.nanoTime() - frameLoopCounterTimeStamp);
       fps.set(1e9f * (frameLoopCounter / timeSinceLastFPS));
 
-      double tLoop = ((commulativeLoopTime / frameLoopCounter) / 1e6f);
+      double tLoop = ((cumulativeLoopTime / frameLoopCounter) / 1e6f);
       double tFrame = 1000 / INITIAL_BALL_FRAMERATE;
       // System.out.printf("Avg. Time for loop: %.6f ms (framelimit %.6f ms) %n", tLoop, tFrame);
       if (tLoop > tFrame) {
@@ -468,7 +468,7 @@ public class GameModel {
         }
       }
 
-      commulativeLoopTime = 0;
+      cumulativeLoopTime = 0;
       frameLoopCounter = 0;
       frameLoopCounterTimeStamp = System.nanoTime();
     }
@@ -522,7 +522,7 @@ public class GameModel {
       }
       // move the laser shot up
       ls.moveStep();
-      // check collisions from the ball(s) with anything else
+      // check collisions from the shot(s) with anything else
       checkLaserCollisions(ls);
     }
   }
@@ -610,10 +610,9 @@ public class GameModel {
       else if (pill.getY() + pill.getHeight() >= paddleY.get()
                && pill.getY() <= paddleY.get() + paddleHeight.get()
                && pill.getX() + pill.getWidth() >= paddleX.get()
-               && pill.getX() <= paddleX.get() + paddleWidth.get()) {
-
+               && pill.getX() <= paddleX.get() + paddleWidth.get())
+      {
         powerPillListIterator.remove();
-
         activatePowerPill(pill);
       }
     }
@@ -623,9 +622,6 @@ public class GameModel {
    * Activates the current power pill
    */
   private void activatePowerPill(PowerPill pill) {
-    if (activePower == null) {
-      activePower.set(PowerPillType.NONE);
-    }
     PowerPillType newType = pill.getPowerPillType();
     activatePower(newType);
   }
@@ -696,7 +692,6 @@ public class GameModel {
         // is handled in paddle collision and updateBall
         break;
       case SLOW:
-        assert ballManager.size() == 1;
         if (!DISABLE_SLOW) {
           final Ball ball = ballManager.get(0);
           ball.setVelocity(ball.getYVelocity() * 0.8f);
@@ -721,7 +716,7 @@ public class GameModel {
         break;
       case PLAYER:
         // adds a player live
-        increaeRemainingLives();
+        increaseRemainingLives();
         break;
     }
 
@@ -800,8 +795,8 @@ public class GameModel {
     final double bpY = ball.getPreviousCenterY();
     final double bpX = ball.getPreviousCenterX();
 
-    double cbY = bpY; // current Y set up previous Y
-    double cbX = bpX; // current
+    double bcY = bpY; // current Y set up previous Y
+    double bcX = bpX; // current
 
     // step sizes
     final double stepY = vY / ball.getVelocity();
@@ -825,14 +820,14 @@ public class GameModel {
     for (int t = 1; t <= ball.getVelocity(); t++) {
 
       // advance current ball center position by 1 step
-      cbY += stepY;
-      cbX += stepX;
+      bcY += stepY;
+      bcX += stepX;
 
       if (LOG.isDebugEnabled()) { // to not even create the string when not logging
         LOG.debug(
                 String.format(
                         "STEP: vY: %6.2f  vX: %6.2f  v: %6.2f  INTERMEDIATE: Y: %8.2f X: %8.2f",
-                        stepY, stepX, stepV, cbY, cbX));
+                        stepY, stepX, stepV, bcY, bcX));
       }
 
       // ************************
@@ -853,14 +848,14 @@ public class GameModel {
        */
 
       // calculate ball center's brick cell
-      final int ballCenterRow = (int) (cbY / (brickLayout.getBrickHeight()));
-      final int ballCenterCol = (int) (cbX / (brickLayout.getBrickWidth()));
+      final int ballCenterRow = (int) (bcY / (brickLayout.getBrickHeight()));
+      final int ballCenterCol = (int) (bcX / (brickLayout.getBrickWidth()));
 
       // calculate ball edge's brick cell
-      final int ballUpperRow = (int) ((cbY - radius) / brickLayout.getBrickHeight());
-      final int ballLowerRow = (int) ((cbY + radius) / brickLayout.getBrickHeight());
-      final int ballLeftCol = (int) ((cbX - radius) / brickLayout.getBrickWidth());
-      final int ballRightCol = (int) ((cbX + radius) / brickLayout.getBrickWidth());
+      final int ballUpperRow = (int) ((bcY - radius) / brickLayout.getBrickHeight());
+      final int ballLowerRow = (int) ((bcY + radius) / brickLayout.getBrickHeight());
+      final int ballLeftCol = (int) ((bcX - radius) / brickLayout.getBrickWidth());
+      final int ballRightCol = (int) ((bcX + radius) / brickLayout.getBrickWidth());
 
       // determine where we had a collision and add it to a bit map
       int hitBitmap = 0;
@@ -888,8 +883,8 @@ public class GameModel {
         fireEvent(new GameEvent(GameEventType.HIT_BRICK, ballUpperRow, ballCenterCol, ball));
         ball.inverseYdirection();
         // actually set the ball exactly onto the intermediate location and return for the next step
-        ball.setCenterX(cbX - stepX);
-        ball.setCenterY(cbY - stepY);
+        ball.setCenterX(bcX - stepX);
+        ball.setCenterY(bcY - stepY);
         // relevant Hit?
         maxLoopHitsCounter--;
         return;
@@ -901,8 +896,8 @@ public class GameModel {
         fireEvent(new GameEvent(GameEventType.HIT_BRICK, ballCenterRow, ballRightCol, ball));
         ball.inverseXdirection();
         // actually set the ball exactly onto the intermediate location and return for the next step
-        ball.setCenterX(cbX - stepX);
-        ball.setCenterY(cbY - stepY);
+        ball.setCenterX(bcX - stepX);
+        ball.setCenterY(bcY - stepY);
         // relevant Hit?
         maxLoopHitsCounter--;
         return;
@@ -914,8 +909,8 @@ public class GameModel {
         fireEvent(new GameEvent(GameEventType.HIT_BRICK, ballCenterRow, ballLeftCol, ball));
         ball.inverseXdirection();
         // actually set the ball exactly onto the intermediate location and return for the next step
-        ball.setCenterX(cbX - stepX);
-        ball.setCenterY(cbY - stepY);
+        ball.setCenterX(bcX - stepX);
+        ball.setCenterY(bcY - stepY);
         // relevant Hit?
         maxLoopHitsCounter--;
         return;
@@ -927,8 +922,8 @@ public class GameModel {
         fireEvent(new GameEvent(GameEventType.HIT_BRICK, ballLowerRow, ballCenterCol, ball));
         ball.inverseYdirection();
         // actually set the ball exactly onto the intermediate location and return for the next step
-        ball.setCenterX(cbX - stepX);
-        ball.setCenterY(cbY - stepY);
+        ball.setCenterX(bcX - stepX);
+        ball.setCenterY(bcY - stepY);
         // relevant Hit?
         maxLoopHitsCounter--;
         return;
@@ -965,8 +960,8 @@ public class GameModel {
           fireEvent(new GameEvent(GameEventType.HIT_PADDLE, ball));
           // actually set the ball exactly onto the intermediate location and return for the next
           // step
-          ball.setCenterX(cbX);
-          ball.setCenterY(cbY);
+          ball.setCenterX(bcX);
+          ball.setCenterY(bcY);
           return;
         }
       }
@@ -979,8 +974,8 @@ public class GameModel {
         fireEvent(new GameEvent(GameEventType.HIT_WALL, ball));
         ball.inverseXdirection();
         // actually set the ball exactly onto the intermediate location and return for the next step
-        ball.setCenterX(cbX);
-        ball.setCenterY(cbY);
+        ball.setCenterX(bcX);
+        ball.setCenterY(bcY);
         // relevant Hit?
         maxLoopHitsCounter--;
         return;
@@ -988,8 +983,8 @@ public class GameModel {
         fireEvent(new GameEvent(GameEventType.HIT_WALL, ball));
         ball.inverseXdirection();
         // actually set the ball exactly onto the intermediate location and return for the next step
-        ball.setCenterX(cbX);
-        ball.setCenterY(cbY);
+        ball.setCenterX(bcX);
+        ball.setCenterY(bcY);
         // relevant Hit?
         maxLoopHitsCounter--;
         return;
@@ -1002,8 +997,8 @@ public class GameModel {
         fireEvent(new GameEvent(GameEventType.HIT_WALL, ball));
         ball.inverseYdirection();
         // actually set the ball exactly onto the intermediate location and return for the next step
-        ball.setCenterX(cbX);
-        ball.setCenterY(cbY);
+        ball.setCenterX(bcX);
+        ball.setCenterY(bcY);
         // relevant Hit?
         maxLoopHitsCounter--;
         return;
@@ -1020,8 +1015,8 @@ public class GameModel {
           ball.markForRemoval();
           // actually set the ball exactly onto the intermediate location and return for the next
           // step
-          ball.setCenterX(cbX);
-          ball.setCenterY(cbY);
+          ball.setCenterX(bcX);
+          ball.setCenterY(bcY);
           // relevant Hit?
           maxLoopHitsCounter = MAX_NUMBER_OF_LOOP_HITS;
         }
@@ -1099,12 +1094,12 @@ public class GameModel {
     currentScore.set(newScore);
     // add new lives after 20.000 and after every 60.000 points
     if (previousScore < 20000 && newScore > 20000) {
-      increaeRemainingLives();
+      increaseRemainingLives();
     } else if (previousScore > 20000) {
       int modBefore = previousScore / 60000;
       int modAfter = newScore / 60000;
       if (modAfter > modBefore) {
-        increaeRemainingLives();
+        increaseRemainingLives();
       }
     }
   }
@@ -1112,7 +1107,7 @@ public class GameModel {
   /**
    * adds a live after score thresholds or Player PowerType
    */
-  private void increaeRemainingLives() {
+  private void increaseRemainingLives() {
     currentRemainingLives.set(currentRemainingLives.get() + 1);
     fireEvent(new GameEvent(GameEventType.NEW_LIFE));
     LOG.info("Increased number of lives to {}", currentRemainingLives.get());
