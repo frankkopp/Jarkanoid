@@ -125,6 +125,7 @@ public class HighScoreListView {
 
     try {
       column.impl_setReorderable(false);
+//      column.setReorderable(true);
       // In Java 9 the above codes would break because of removal of impl_.
       // Despite these changes, it introduces convenient public methods that you can use which are:
       // setReorderable(boolean value)
